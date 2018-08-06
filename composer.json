@@ -1,0 +1,24 @@
+{
+    "name": "fauss/caemf",
+    "authors": [
+        {
+            "name": "FAUSSURIER Marc",
+            "email": "faussurier.marc@icloud.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/iPolitic/Workerman"
+        }
+    ],
+    "require": {
+        "twig/twig": "^2.5",
+        "workerman/workerman": "master",
+        "bike/router": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": { "App\\": ["src/", "bundles/"] }
+    }
+}
