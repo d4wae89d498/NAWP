@@ -7,7 +7,9 @@
  */
 
 namespace App\iPolitic\NawpCore;
+
 use Bike\Router;
+
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
@@ -35,21 +37,24 @@ class ControllerCollection extends Collection {
      * @throws \Exception
      */
     public function handle(&$response, $requestType, $requestArgs): void {
-        $queue = $this->getOrderdByPriority();
-        var_dump($queue);
-        foreach($queue as $func => $funcArr) {
-            if($funcArr["router"][1] === "*") {
+        // for each controller methods ordered by prioriy
+        foreach($this->getOrderdByPriority() as $controllerMehod) {
+            // we force a match if wildcard used
+            if($controllerMehod["router"][1] === "*") {
                 $routerResponse = ["dot let me empty so I can match"];
             } else {
+                // create a new router for that method
                 $dynamicRouter = new Router();
-                $dynamicRouter->add($funcArr["controller"]."::".$funcArr["method"], [
-                    "method" => $funcArr["router"][0],
-                    "route" => $funcArr["router"][1]
+                // add the route then match
+                $dynamicRouter->add($controllerMehod["controller"]."::".$controllerMehod["method"], [
+                    "method" => $controllerMehod["router"][0],
+                    "route" => $controllerMehod["router"][1]
                 ]);
                 $routerResponse = $dynamicRouter->match("POST", "http://home.com/");
             }
+            // execute controller method if router matched or wildecas used
             if(!empty($routerResponse)) {
-                if ($this->getByName($funcArr["controller"])->call($response, $funcArr["method"], $routerResponse)) {
+                if ($this->getByName($controllerMehod["controller"])->call($response, $controllerMehod["method"], $routerResponse)) {
                     break;
                 }
             }

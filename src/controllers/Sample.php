@@ -10,7 +10,7 @@ namespace App\Controllers;
 use App\iPolitic\NawpCore\Controller;
 use App\iPolitic\NawpCore\Kernel;
 
-
+$registration = function() { Kernel::$controllerCollection->append( new Sample () );};
 class Sample extends Controller
 {
     public $methods = [
@@ -34,12 +34,10 @@ class Sample extends Controller
         $httpResponse = "HOMMME";
         return false;
     }
+    
     public function notFound(string &$httpResponse, $args = []): bool {
         $httpResponse = "404";
         return true;
     }
 }
-Kernel::$controllerCollection->append(new Sample());
-
-// TODO : Load Controller in bundle, and load bundles in kernel
-
+$registration();

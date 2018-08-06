@@ -8,34 +8,31 @@
 namespace App\Workers;
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\NArray;
+use Workerman\WebServer;
+use Workerman\Worker;
 
 class Main
 {
+    public $worker;
     public function __construct()
     {
+        // needed lines for startup
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
         $kernel = new Kernel();
-            // var_dump( join([__DIR__, "..", "..", "src"]))->join(DIRECTORY_SEPARATOR);
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
-        $response = "";
-        var_dump($kernel->handle($response, "http", "test"));
-        var_dump($response);
-        //var_dump(Kernel::$controllerCollection);
-
-        //Kernel::requireAll(join(DIRECTORY_SEPARATOR, [__DIR__, ".."]));
-        //Kernel::requireAll(join(DIRECTORY_SEPARATOR, ["..", "..", "bundles"]));
-    /*    echo "Starting Main Worker...";
-        echo "Starting Memcache ... ";
-        $memcache = new \Memcache;
-        $memcache->connect('127.0.0.1', 11211);
-        $memcache->set('var_key', 'AAAAAA', MEMCACHE_COMPRESSED, 50);
-        echo $memcache->get('var_key');
-        echo "\n";
-*/
-
+        //todo : set kernel in memcached here.
+        //todo : set webserver in the http worker.
+        $this->worker = new WebServer("http://0.0.0.0:4980", [], function(&$connection)use($kernel){
+            $response = "";
+            $kernel->handle($response, "http", $_SERVER["REQUEST_URI"]);
+            $connection->send($response);
+        });
+        $this->worker->name = "http";
+        $this->worker->count = 1;
+        $this->worker->addRoot("127.0.0.1", join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","public"]));
+        Worker::runAll();
     }
 }
 // Instanciate the file class if it was launched using a terminal
-(isset($argv) && isset($argv[0]) ? new Main() : null);
+isset($argv) && isset($argv[0]) ? new Main() : null;

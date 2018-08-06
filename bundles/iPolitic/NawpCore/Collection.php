@@ -1,10 +1,12 @@
 <?php
 namespace App\iPolitic\NawpCore;
+
 /**
  * Class ArrayObject
  * @package App\iPolitic\NawpCore
  */
 class Collection extends \ArrayObject {
+
     /**
      * Collection constructor.
      * @param array $input

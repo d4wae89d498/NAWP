@@ -5,10 +5,14 @@
  * Date: 8/5/2018
  * Time: 7:46 PM
  */
-
 namespace App\iPolitic\NawpCore;
 
+/**
+ * The controller class, convert requests to states rendered as a json 
+ * or as a standard html template with custom js
+ */
 class Controller {
+    
     /**
      * The controller name
      * @var string

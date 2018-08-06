@@ -9,6 +9,6 @@
   },
   "scripts": {
     "memcache": "memcached.exe",
-    "start": "php src/workers/Main.php src/workers/Http.php"
+    "start": "php src/workers/Main.php"
   }
 }

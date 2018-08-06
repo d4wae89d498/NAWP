@@ -10,20 +10,25 @@ namespace App\iPolitic\NawpCore;
  */
 
 class Kernel {
+
     /**
      * @var ControllerCollection
      */
     public static $controllerCollection;
+
     /**
      * Kernel constructor.
      */
     public function __construct()
     {
         $this->boot();
-        echo "core built";
     }
 
-    public static function loadDir($directory): void {
+    /**
+     * Wil recursivly require_once all filesinthe given directory
+     * @param string $directory
+     */
+    public static function loadDir(string $directory): void {
         if(is_dir($directory)) {
             $scan = scandir($directory);
             unset($scan[0], $scan[1]); //unset . and ..
@@ -58,6 +63,9 @@ class Kernel {
         self::$controllerCollection = new ControllerCollection();
     }
 
+    /**
+     * Wakeup magic funcion, used to reinit thhe controllerCollection 
+     */
     public function __wakeup()
     {
         // TODO: Implement __wakeup() method.
