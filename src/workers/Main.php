@@ -17,8 +17,8 @@ class Main
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
         $kernel = new Kernel();
             // var_dump( join([__DIR__, "..", "..", "src"]))->join(DIRECTORY_SEPARATOR);
-        Kernel::loadDir( join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
-        Kernel::loadDir( join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
+        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
+        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
         $response = "";
         var_dump($kernel->handle($response, "http", "test"));
         var_dump($response);

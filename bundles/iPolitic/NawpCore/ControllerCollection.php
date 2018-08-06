@@ -7,13 +7,24 @@
  */
 
 namespace App\iPolitic\NawpCore;
-
+use Bike\Router;
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
  * @package App\iPolitic\NawpCore
  */
 class ControllerCollection extends Collection {
+    
+     /**
+     * ControllerCollection constructor.
+     * @param array $input
+     * @param int $flags
+     * @param string $iterator_class
+     */
+    public function __construct($input = array(), int $flags = 0, string $iterator_class = "ArrayIterator")
+    {
+        parent::__construct($input, $flags, $iterator_class);
+    }
     /**
      *  Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRUE
@@ -27,7 +38,21 @@ class ControllerCollection extends Collection {
         $queue = $this->getOrderdByPriority();
         var_dump($queue);
         foreach($queue as $func => $funcArr) {
-           var_dump($this->getByName($funcArr["controller"])->call($response, $funcArr["method"], $requestArgs));
+            if($funcArr["router"][1] === "*") {
+                $routerResponse = ["dot let me empty so I can match"];
+            } else {
+                $dynamicRouter = new Router();
+                $dynamicRouter->add($funcArr["controller"]."::".$funcArr["method"], [
+                    "method" => $funcArr["router"][0],
+                    "route" => $funcArr["router"][1]
+                ]);
+                $routerResponse = $dynamicRouter->match("POST", "http://home.com/");
+            }
+            if(!empty($routerResponse)) {
+                if ($this->getByName($funcArr["controller"])->call($response, $funcArr["method"], $routerResponse)) {
+                    break;
+                }
+            }
         }
     }
 

@@ -18,23 +18,24 @@ class Sample extends Controller
         [
             "method" => "home",
             "type" => "http",
-            "router" => ["*", "/"],
+            "router" => ["*", "/:page"],
             "priority" => 0
         ],
         // 404
         [
             "method" => "notFound",
             "type" => "http",
-            "router" => ["*", "/"],
+            "router" => ["*", "*"],
             "priority" => -1
         ],
     ];
 
     public function home(string &$httpResponse, $args = []): bool {
         $httpResponse = "HOMMME";
-        return true;
+        return false;
     }
     public function notFound(string &$httpResponse, $args = []): bool {
+        $httpResponse = "404";
         return true;
     }
 }
