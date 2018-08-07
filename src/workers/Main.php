@@ -21,6 +21,10 @@ class Main
         $kernel = new Kernel();
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
+        $m = new \Memcached();
+        $m->addServer('localhost', 11211);
+        $m->set("KERNEL", $kernel);
+        echo "Kernel set in RAM";
         //todo : set kernel in memcached here.
         //todo : set webserver in the http worker.
         $this->worker = new WebServer("http://0.0.0.0:4980", [], function(&$connection)use($kernel){
