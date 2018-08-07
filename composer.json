@@ -10,12 +10,18 @@
         {
             "type": "vcs",
             "url": "https://github.com/iPolitic/Workerman"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/iPolitic/Solex"
         }
     ],
     "require": {
         "twig/twig": "^2.5",
         "workerman/workerman": "master",
-        "bike/router": "dev-master"
+        "ipolitic/solex": "dev-master",
+        "zendframework/zend-diactoros": "^1.8@dev",
+        "workerman/phpsocket.io": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

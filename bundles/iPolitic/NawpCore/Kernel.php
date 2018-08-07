@@ -11,18 +11,15 @@ namespace App\iPolitic\NawpCore;
 
 class Kernel {
 
+    public function __construct()
+    {
+        $this->init();
+    }
+
     /**
      * @var ControllerCollection
      */
-    public static $controllerCollection;
-
-    /**
-     * Kernel constructor.
-     */
-    public function __construct()
-    {
-        $this->boot();
-    }
+    public $controllerCollection;
 
     /**
      * Wil recursivly require_once all filesinthe given directory
@@ -36,8 +33,10 @@ class Kernel {
                 if(is_dir($directory."/".$file)) {
                     self::loadDir($directory."/".$file);
                 } else {
-                    if(strpos($file, '.php') !== false) {
-                        include_once($directory."/".$file);
+                    if (!file_exists($directory."/.noInclude")) {
+                        if(strpos($file, '.php') !== false) {
+                            require_once($directory."/".$file);
+                        }
                     }
                 }
             }
@@ -52,23 +51,48 @@ class Kernel {
      * @throws \Exception
      */
     public function handle(&$response, string $requestType, $requestArgs): void {
-        self::$controllerCollection->handle($response, $requestType, $requestArgs);
+        $this->controllerCollection->handle($response, $requestType, $requestArgs);
     }
 
     /**
      * Will boot the
      */
-    public function boot(): void
+    public function init(): void
     {
-        self::$controllerCollection = new ControllerCollection();
+        $this->controllerCollection = new ControllerCollection();
     }
 
     /**
-     * Wakeup magic funcion, used to reinit thhe controllerCollection 
+     * Will instantiate all controllers declared in a "controllers" folder following PSR standars
      */
-    public function __wakeup()
-    {
-        // TODO: Implement __wakeup() method.
-        $this->boot();
+    public function instantiateControllers(): void {
+        // foreach controllers
+        array_map
+        (
+            function($controller) {
+                /**
+                 * @var Controller $controller the controller instance that will be added to the controller collection
+                 */
+                $this->controllerCollection->append($controller);
+            },
+            (
+            // remove null values
+            array_filter
+            (
+                // convert declared class name to controller instance if match, or null value
+                array_map
+                (
+                    function ($class) {
+                        /**
+                         * @var string $class
+                         */
+                        //
+                        return (stristr($class, "\\Controllers\\") !== false) ? new $class() : null;
+                    },
+                    // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
+                    \get_declared_classes()
+                )
+            ))
+        );
     }
 }

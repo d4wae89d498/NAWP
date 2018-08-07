@@ -8,7 +8,7 @@
 
 namespace App\iPolitic\NawpCore;
 
-use Bike\Router;
+use iPolitic\Solex\Router;
 
 /**
  * Class ControllerCollection
@@ -23,7 +23,7 @@ class ControllerCollection extends Collection {
      * @param int $flags
      * @param string $iterator_class
      */
-    public function __construct($input = array(), int $flags = 0, string $iterator_class = "ArrayIterator")
+    public function __construct(array $input = [], int $flags = 0, string $iterator_class = "ArrayIterator")
     {
         parent::__construct($input, $flags, $iterator_class);
     }
@@ -39,6 +39,7 @@ class ControllerCollection extends Collection {
     public function handle(&$response, $requestType, $requestArgs): void {
         // for each controller methods ordered by prioriy
         foreach($this->getOrderdByPriority() as $controllerMehod) {
+            var_dump($controllerMehod);
             // we force a match if wildcard used
             if($controllerMehod["router"][1] === "*") {
                 $routerResponse = ["dot let me empty so I can match"];
@@ -50,7 +51,7 @@ class ControllerCollection extends Collection {
                     "method" => $controllerMehod["router"][0],
                     "route" => $controllerMehod["router"][1]
                 ]);
-                $routerResponse = $dynamicRouter->match("POST", "http://home.com/");
+                $routerResponse = $dynamicRouter->match($requestType, $requestArgs);
             }
             // execute controller method if router matched or wildecas used
             if(!empty($routerResponse)) {
@@ -58,6 +59,7 @@ class ControllerCollection extends Collection {
                     break;
                 }
             }
+            var_dump($routerResponse);
         }
     }
 

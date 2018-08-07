@@ -8,36 +8,52 @@
 namespace App\Controllers;
 
 use App\iPolitic\NawpCore\Controller;
-use App\iPolitic\NawpCore\Kernel;
 
-$registration = function() { Kernel::$controllerCollection->append( new Sample () );};
 class Sample extends Controller
 {
-    public $methods = [
-        // index
-        [
-            "method" => "home",
-            "type" => "http",
-            "router" => ["*", "/:page"],
-            "priority" => 0
-        ],
-        // 404
-        [
-            "method" => "notFound",
-            "type" => "http",
-            "router" => ["*", "*"],
-            "priority" => -1
-        ],
-    ];
+        /*_________________________________________________
+        |REQUEST TO CONTROLLER WINDOW        | - | [ ] | X |
+         __________________________________________________|
+        |*/ public $methods = [[/*=========================|
+        |*- - - Home method - - - - - - - - - - - - - - - -|/
+        |*/     "method" => "home",                       /*/
+        |*/     "router" => ["*", "/:page"],              /*/
+        |*/     "priority" => 0,                          /*
+        |*/],[ /*- 404 method - - - - - - - - - - -        | <|--- Riemann's critic line
+        |*/     "method" => "notFound",                   /*/
+        |*/     "router" => ["*", "*"],                   /*/
+        |*/     "priority" => -1,                         /*
+        |*/  ],[ /* Socket demo - - - - - - - - - -        |/
+        |*/     "method" => "socketNotFound",             /*/
+        |*/     "router" => ["SOCKET", "*"],              /* <|--- Riemann's zeros
+        |*/     "priority" => -1,                         /*/
+        |*/ ],];/*=======================================*/
 
+
+    /**
+     * display a homepage
+     * @param string $httpResponse
+     * @param array $args
+     * @return bool
+     */
     public function home(string &$httpResponse, $args = []): bool {
         $httpResponse = "HOMMME";
-        return false;
+        return true;
     }
-    
+
+    /**
+     * return a
+     * @param string $httpResponse
+     * @param array $args
+     * @return bool
+     */
     public function notFound(string &$httpResponse, $args = []): bool {
         $httpResponse = "404";
         return true;
     }
+
+    public function socketNotFound(string &$httpResponse, $args = []): bool {
+        $httpResponse = "404";
+        return true;
+    }
 }
-$registration();

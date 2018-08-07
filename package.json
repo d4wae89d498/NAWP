@@ -10,6 +10,6 @@
   "scripts": {
     "memcache32": "x86/memcached.exe",
     "memcache64": "x64/memcached.exe",
-    "start": "php src/workers/Main.php"
+    "start": "php src/workers/Http.php"
   }
 }
