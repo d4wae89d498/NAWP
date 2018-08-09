@@ -1,3 +1,7 @@
 node_modules
 vendor
+.idea
+.vs
+.vscode
 atlas-config.php
+composer.lock
