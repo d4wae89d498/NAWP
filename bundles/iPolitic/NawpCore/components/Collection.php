@@ -1,5 +1,5 @@
 <?php
-namespace App\iPolitic\NawpCore;
+namespace App\iPolitic\NawpCore\Components;
 
 /**
  * Class ArrayObject

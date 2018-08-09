@@ -6,10 +6,11 @@
  * Time: 7:46 PM
  */
 
-namespace App\iPolitic\NawpCore;
+namespace App\iPolitic\NawpCore\Collections;
 
 use iPolitic\Solex\Router;
-
+use App\iPolitic\NawpCore\Components\{Collection};
+use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
@@ -73,12 +74,12 @@ class ControllerCollection extends Collection {
         $queue = [];
         /**
          * Copy all controllers methods to queue and add controller name as methods params
-         * @var $v Controller
+         * @var $v ControllerInterface
          */
         foreach ($this->getArrayCopy() as $v) {
-            if (isset($v->methods) && is_array($v->methods)) {
-                $arr = $v->methods;
-                foreach ($v->methods as $k => $u) {
+            if ($v instanceof ControllerInterface && is_array($methods = $v->getMethods())) {
+                $arr = $methods;
+                foreach ($methods as $k => $u) {
                     $arr[$k]["controller"] = $v->name;
                 }
                 $queue += $arr;
@@ -99,9 +100,15 @@ class ControllerCollection extends Collection {
      * @param string $controllerName
      * @return Controller
      */
-    public function getByName(string $controllerName): Controller {
-        return array_filter($this->getArrayCopy(), function($controller)use($controllerName){
-            return $controller->name === $controllerName;
-        })[0];
+    public function getByName(string $controllerName): ControllerInterface {
+        return array_filter
+        (
+            $this->getArrayCopy(),
+            function($controller)use($controllerName){
+                return $controller->name === $controllerName;
+            }
+        )
+        [0]
+        ;
     }
 }

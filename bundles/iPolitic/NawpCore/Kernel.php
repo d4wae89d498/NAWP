@@ -1,7 +1,4 @@
 <?php
-
-namespace App\iPolitic\NawpCore;
-
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -9,7 +6,13 @@ namespace App\iPolitic\NawpCore;
  * Time: 7:47 PM
  */
 
+namespace App\iPolitic\NawpCore;
+
+use App\iPolitic\NawpCore\Collections\ControllerCollection;
+
 class Kernel {
+    public $entityManager;
+
 
     public function __construct()
     {
@@ -59,7 +62,20 @@ class Kernel {
      */
     public function init(): void
     {
-        $this->controllerCollection = new ControllerCollection();
+        $this->controllerCollection = new ControllerCollection();/*
+        $config = Setup::createAnnotationMetadataConfiguration
+        (
+            [join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"])],
+            true
+        );
+        $conn = [
+            'driver' => 'pdo_sqlsrv',
+           'user' => 'sa',
+           'password' => '_e3oCWaW#',
+           'port'=> 1433,
+        ];
+        $this->entityManager = EntityManager::create($conn, $config);
+        var_dump($this->entityManager);*/
     }
 
     /**

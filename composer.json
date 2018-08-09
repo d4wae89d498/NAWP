@@ -21,7 +21,11 @@
         "workerman/workerman": "master",
         "ipolitic/solex": "dev-master",
         "zendframework/zend-diactoros": "^1.8@dev",
-        "workerman/phpsocket.io": "dev-master"
+        "workerman/phpsocket.io": "dev-master",
+        "atlas/orm": "2.*"
+    },
+    "require-dev": {
+      "atlas/cli": "1.*"
     },
     "minimum-stability": "dev",
     "autoload": {
