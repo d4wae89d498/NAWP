@@ -18,12 +18,13 @@ class Controller {
      * @var string
      */
     public $name = "";
-
+    public $atlas;
     /**
      * Controller constructor.
      */
-    public function __construct()
+    public function __construct($atlas)
     {
+        $this->atlas = $atlas;
         $this->name = get_class($this);
     }
 

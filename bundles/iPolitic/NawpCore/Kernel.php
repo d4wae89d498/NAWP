@@ -9,6 +9,16 @@
 namespace App\iPolitic\NawpCore;
 
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
+use Atlas\Orm\Mapper\Mapper;
+use Atlas\Orm\AtlasContainer;
+use App\DataSources\{
+    Categorie\CategorieMapper,
+    Log\LogMapper,
+    ContentsCategories\ContentsCategoriesMapper,
+    Translation\TranslationMapper,
+    User\UserMapper,
+    Content\ContentMapper
+};
 
 class Kernel {
     public $entityManager;
@@ -23,6 +33,7 @@ class Kernel {
      * @var ControllerCollection
      */
     public $controllerCollection;
+    public $atlas;
 
     /**
      * Wil recursivly require_once all filesinthe given directory
@@ -62,7 +73,23 @@ class Kernel {
      */
     public function init(): void
     {
-        $this->controllerCollection = new ControllerCollection();/*
+        $this->controllerCollection = new ControllerCollection();
+
+        $arr = include join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","..","atlas-config.php"]);
+
+        $atlasContainer = new AtlasContainer($arr[0], $arr[1], $arr[2]);
+
+        $atlasContainer->setMappers([
+            UserMapper::CLASS,
+            TranslationMapper::CLASS,
+            CategorieMapper::class,
+            ContentMapper::class,
+            LogMapper::class,
+            ContentsCategoriesMapper::class,
+        ]);
+
+        $this->atlas = $atlasContainer->getAtlas();
+        /*
         $config = Setup::createAnnotationMetadataConfiguration
         (
             [join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"])],
@@ -103,7 +130,7 @@ class Kernel {
                          * @var string $class
                          */
                         //
-                        return (stristr($class, "\\Controllers\\") !== false) ? new $class() : null;
+                        return (stristr($class, "\\Controllers\\") !== false) ? new $class($this->atlas) : null;
                     },
                     // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
                     \get_declared_classes()

@@ -22,7 +22,7 @@ class Http
         $kernel->instantiateControllers();
 
         // workerman setup
-        $this->worker = new WebServer("http://0.0.0.0:5606", [], function(&$connection)use(&$kernel){
+        $this->worker = new WebServer("http://0.0.0.0:5616", [], function(&$connection)use(&$kernel){
             $response = "var response must be of type string";
             $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
             $connection->send($response);

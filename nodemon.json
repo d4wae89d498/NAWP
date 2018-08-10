@@ -1,0 +1,4 @@
+{
+  "watch": ["public", "plugins"],
+  "ext": "php, scss, ts, txt, css, js"
+}

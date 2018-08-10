@@ -6,7 +6,7 @@
  * Time: 1:09 PM
  */
 namespace App\Controllers;
-
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 /**
@@ -43,7 +43,8 @@ class Sample extends Controller implements ControllerInterface
      * @return bool
      */
     public function home(string &$httpResponse, $args = []): bool {
-        $httpResponse = "HOMMME";
+        $templateLogger = new ViewLogger();
+        $httpResponse = new \App\Views\Pages\Home($templateLogger, ["name" => "test"]);
         return true;
     }
 
