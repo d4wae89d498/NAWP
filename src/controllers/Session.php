@@ -9,7 +9,7 @@ namespace App\Controllers;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use  \iPolitic\NawpCore\components\Session as SupSession;
+use  App\iPolitic\NawpCore\Components\Session as SupSession;
 use Workerman\Protocols\Http;
 
 /**
@@ -51,20 +51,10 @@ class Session extends Controller implements ControllerInterface
 
 
     public function sessionsMiddleware(string &$httpResponse, $args = []): bool {
-        /**
-         * If a prime number is generated, we check for token expirity
-         */
-        $a = 0; if(call_user_func_array(function ($n)use(&$a){for($i=~-$n**.5|0;$i&&$n%$i--;);return!$i&$n>2|$n==2; }, [$a = mt_rand()])) {
-            echo "PRIME GENERATED : " . $a;
-            SupSession::tokenExpireCheck();
-        }
-        $token = SupSession::getVisitorToken();
-        if(!SupSession::sessionIsloggedIn($token)) {
-            SupSession::sessionLogIn($token);
-        }
-
-        $httpResponse .= (SupSession::sessionIsset($token, "TEST") ? SupSession::sessionGet($token, "TEST") : "") . " " . SupSession::getVisitorToken();
-        SupSession::sessionSet($token, "TEST", "Pomme");
+        SupSession::tick();
+        $token = SupSession::id();
+        $httpResponse .= (SupSession::isset($token, "TEST") ? SupSession::get($token, "TEST") : "") . " " . SupSession::id();
+        SupSession::set($token, "TEST", "Pomme");
         return false;
     }
 

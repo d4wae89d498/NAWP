@@ -9,6 +9,7 @@
 namespace App\iPolitic\NawpCore;
 
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
+use App\iPolitic\NawpCore\Components\Session;
 use Atlas\Orm\Atlas;
 use Atlas\Orm\Mapper\Mapper;
 use Atlas\Orm\AtlasContainer;
@@ -75,11 +76,8 @@ class Kernel {
     public function init(): void
     {
         $this->controllerCollection = new ControllerCollection();
-
         $arr = include join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","..","atlas-config.php"]);
-
         $atlasContainer = new AtlasContainer($arr[0], $arr[1], $arr[2]);
-
         $atlasContainer->setMappers([
             UserMapper::CLASS,
             TranslationMapper::CLASS,
@@ -90,6 +88,7 @@ class Kernel {
         ]);
 
         $this->atlas = $atlasContainer->getAtlas();
+        Session::init();
         /*
         $config = Setup::createAnnotationMetadataConfiguration
         (
