@@ -21,9 +21,15 @@ class Http
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
         $kernel->instantiateControllers();
 
+        /*
+        $atlas = $kernel->getAtlas();
+        $categoryRecord = $atlas->fetchRecord(\App\DataSources\User\UserMapper::CLASS, '2');
+        var_dump($categoryRecord);
+        */
+
         // workerman setup
         $this->worker = new WebServer("http://0.0.0.0:5616", [], function(&$connection)use(&$kernel){
-            $response = "var response must be of type string";
+            $response = "test";
             $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
             $connection->send($response);
         });

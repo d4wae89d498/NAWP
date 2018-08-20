@@ -5,12 +5,11 @@
  * Date: 7/31/2018
  * Time: 9:23 PM
  */
-
 namespace App\Views\Elements;
-
 
 use App\iPolitic\NawpCore\Interfaces\ITwig;
 use App\iPolitic\NawpCore\Components\View;
+
 class OrderNow extends View implements ITwig
 {
     public function twig(): void { ?>

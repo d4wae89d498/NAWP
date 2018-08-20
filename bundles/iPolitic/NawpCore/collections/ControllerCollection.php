@@ -40,7 +40,7 @@ class ControllerCollection extends Collection {
     public function handle(&$response, $requestType, $requestArgs): void {
         // for each controller methods ordered by prioriy
         foreach($this->getOrderdByPriority() as $controllerMehod) {
-            var_dump($controllerMehod);
+            //var_dump($controllerMehod);
             // we force a match if wildcard used
             if($controllerMehod["router"][1] === "*") {
                 $routerResponse = ["dot let me empty so I can match"];
@@ -60,7 +60,7 @@ class ControllerCollection extends Collection {
                     break;
                 }
             }
-            var_dump($routerResponse);
+           // var_dump($routerResponse);
         }
     }
 

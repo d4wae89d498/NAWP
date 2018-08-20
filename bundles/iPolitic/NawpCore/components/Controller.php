@@ -36,7 +36,7 @@ class Controller {
      * @return bool
      */
     public function call(string &$response, string $method, $args): bool {
-        var_dump("IN CALLL" . $method);
+        //var_dump("IN CALLL" . $method);
         if (method_exists($this,$method)) {
             return $this->$method($response, $method, $args);
         } else {
