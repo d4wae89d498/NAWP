@@ -1,7 +1,6 @@
 <?php
 namespace App\iPolitic\NawpCore\Components;
 
-
 /**
  * ViewLogger will store all the data given to the template class
  *
@@ -82,20 +81,19 @@ class ViewLogger
      */
     public function generateJS(): string {
         return Utils::ocb(function() { ?>
-                window['templates'] = [];
-<?php  foreach($this->templatesData as $id => $template): ?>
-                if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
-                    window['templates'][<?=json_encode($id)?>] = {
-                        twig: (<?=json_encode(["twig" => $template["twig"]])?>)["twig"],
-                        states: (<?=json_encode(["states" => $template["states"]])?>)["states"]
-                    };
-                }
-<?php endforeach; ?>
-
-<?php  foreach($this->templatesData as $id => $template): ?>
-<?=$template["javascript"][0]?>
-<?php endforeach; ?>
-<?php
+            window['templates'] = [];
+            <?php  foreach($this->templatesData as $id => $template): ?>
+            if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
+                window['templates'][<?=json_encode($id)?>] = {
+                    twig: (<?=json_encode(["twig" => $template["twig"]])?>)["twig"],
+                    states: (<?=json_encode(["states" => $template["states"]])?>)["states"]
+                };
+            }
+            <?php endforeach; ?>
+            <?php  foreach($this->templatesData as $id => $template): ?>
+                <?=$template["javascript"][0]?>
+                <?php endforeach; ?>
+            <?php
         });
     }
 
@@ -105,9 +103,9 @@ class ViewLogger
      */
     public function generateCSS(): string {
         return Utils::ocb(function() { ?>
-<?php  foreach($this->templatesData as $template): ?>
-<?=$template["css"][0]?>
-<?php endforeach; ?>
-<?php });
+            <?php  foreach($this->templatesData as $template): ?>
+                <?=$template["css"][0]?>
+            <?php endforeach; ?>
+        <?php });
     }
 }

@@ -6,11 +6,11 @@
  * Time: 1:09 PM
  */
 namespace App\Controllers;
+
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 use  App\iPolitic\NawpCore\Components\Session as SupSession;
-use Workerman\Protocols\Http;
 
 /**
  * Class Sample
@@ -19,38 +19,38 @@ use Workerman\Protocols\Http;
 class Session extends Controller implements ControllerInterface
 {
 
-    /*_________________________________________________
-    |REQUEST TO CONTROLLER WINDOW          -   [ ]   X |
-    |__________________________________________________|
-    |*/ public function getMethods(): array { return [
-    [/*- 404 method - - - - - - - - - - - - - - -      |
-    |*/     "method"    => "sessionsMiddleware",      /*
-    |*/     "router"    => ["*", "*"],                /*
-    |*/     "priority"  => 99,                        /*
-    |                                                  |
-    |*/],[/*======|
-    |*- - - - Home method - - - - - - - - - - - - - - -|
-    |*/     "method"    => "home",                    /*
-    |*/     "router"    => ["GET", "/"],        /*
-    |*/     "priority"  => 0,                         /*
-    |                                                  |
-    |*/],[/*- 404 method - - - - - - - - - - - - - - - | <- critic line
-    |*/     "method"    => "notFound",                /*
-    |*/     "router"    => ["*", "*"],                /*
-    |*/     "priority"  => -1,                        /*
-    |                                                  |
-    |*/],[/*- Socket demo - - - - - - - - - -  - - - - |
-    |*/     "method"    => "socketNotFound",          /*
-    |*/     "router"    => ["SOCKET", "*"],           /*
-    |*/     "priority"  => -0.5,                      /*
-    |*/],[/*- Socket demo - - - - - - - - - -  - - - - |
-    |*/     "method"    => "admin",          /*
-    |*/     "router"    => ["*", "/admin"],           /*
-    |*/     "priority"  => -0.5,                     /* <- zeros
-    |*/]];}/*===================================== */
+    /**
+     * Describes controller methods
+     * @return array
+     */
+    public function getMethods(): array { return
+        [
+            [
+                "method"    => "sessionsMiddleware",
+                "router"    => ["*", "*"],
+                "priority"  => 9,
+            ],
+            [
+                "method"    => "home",
+                "router"    => ["GET", "/"],
+                "priority"  => 0,
+            ],
+            [
+                 "method"    => "notFound",
+                 "router"    => ["*", "*"],
+                 "priority"  => -1,
+            ],
+            [
+                 "method"    => "socketNotFound",
+                 "router"    => ["SOCKET", "*"],
+                 "priority"  => -0.5,
+            ]
+        ];
+    }
 
 
     public function sessionsMiddleware(string &$httpResponse, $args = []): bool {
+        die("session tick");
         SupSession::tick();
         $token = SupSession::id();
         $httpResponse .= (SupSession::isset($token, "TEST") ? SupSession::get($token, "TEST") : "") . " " . SupSession::id();
@@ -89,17 +89,6 @@ class Session extends Controller implements ControllerInterface
      */
     public function socketNotFound(string &$httpResponse, $args = []): bool {
         $httpResponse .= "404";
-        return true;
-    }
-
-    /**
-     * return a http admin page
-     * @param string $httpResponse
-     * @param array $args
-     * @return bool
-     */
-    public function admin(string &$httpResponse, $args = []): bool {
-        $httpResponse .= "";
         return true;
     }
 }

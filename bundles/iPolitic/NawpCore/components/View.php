@@ -49,10 +49,11 @@ abstract class View
      * @param $name
      * @param $value
      */
-    public function setState($name, $value) {
+    public function setState(string $name, $value): void {
         $tpl = $this->templateLogger->getTemplate($this->generatedID);
         $tpl["states"][$name] = $value;
         $this->templateLogger->setTemplate($this->generatedID, $tpl);
+        return;
     }
 
     /**
@@ -60,7 +61,7 @@ abstract class View
      * @param $name
      * @return mixed
      */
-    public function getState($name) {
+    public function getState(string $name) {
         return $this->templateLogger->getTemplate($this->generatedID)["states"][$name];
     }
 
@@ -69,10 +70,11 @@ abstract class View
      * @param $name
      * @param $value
      */
-    public function set($name, $value) {
+    public function set(string $name, $value): void {
         $tpl = $this->templateLogger->getTemplate($this->generatedID);
         $tpl[$name] = $value;
         $this->templateLogger->setTemplate($this->generatedID, $tpl);
+        return;
     }
 
     /**
@@ -80,7 +82,7 @@ abstract class View
      * @param $name
      * @return mixed
      */
-    public function get($name) {
+    public function get(string $name) {
         return $this->templateLogger->getTemplate($this->generatedID)[$name];
     }
 
@@ -92,7 +94,7 @@ abstract class View
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function __toString() {
+    public function __toString(): string {
         $twig = $this->get("twig");
         $str = 'giventwig';
         $twig = new Environment(new ArrayLoader(array(

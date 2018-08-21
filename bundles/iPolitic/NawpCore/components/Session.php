@@ -21,19 +21,16 @@ class Session
     /**
      * Session duration before expiration
      */
-    public const sessionSecondsDuration = 60 * 45; // 45 min
+    public const sessionSecondsDuration = 45 * 60; // 45 min
     /**
      * The session file name when is stored serialmized data
-     *
-     *
-     *
      */
     public const sessionFile = 'sessions.txt';
 
     /**
      * Will generate a unic token per visitor. Will not generate a single cookie
      */
-    public static function id() {
+    public static function id(): string {
         return sha1(base64_encode(print_r([$_SERVER["REMOTE_ADDR"], $_SERVER["HTTP_USER_AGENT"], $_SERVER["HTTP_COOKIE"]], 1)));
     }
 
@@ -54,8 +51,9 @@ class Session
      * @param string $value
      * @return string
      */
-    public static function set(string $visitorToken, string $key, string$value) {
-        return self::$session[$visitorToken][$key] = $value;
+    public static function set(string $visitorToken, string $key, string$value): void {
+        self::$session[$visitorToken][$key] = $value;
+        return;
     }
 
     /**
@@ -98,7 +96,7 @@ class Session
     /**
      * Will destroy all expired session
      */
-    public static function tokenExpireCheck() {
+    public static function tokenExpireCheck(): void {
         echo "checking expirity ..." . PHP_EOL;
         foreach (self::$session as $token => $v) {
             if(!isset(self::$session[$token]["expire_date"]) || (self::$session[$token]["expire_date"] <  strtotime(date("Y-m-d H:i:s")))) {
@@ -109,6 +107,7 @@ class Session
         // write serialized txt to self::sessionFile
         $handle = fopen(self::sessionFile, "wr+");
         fwrite($handle, serialize(self::$session));
+        return;
     }
 
     /**
@@ -124,7 +123,7 @@ class Session
     /**
      * Will tick the session and clean the expired ones if needed
      */
-    public static function tick() {
+    public static function tick(): void {
         /**
          * If a prime number is generated, we check for token expirity
          */
@@ -136,5 +135,6 @@ class Session
         if(!self::isLoggedIn($token)) {
             self::logIn($token);
         }
+        return;
     }
 }

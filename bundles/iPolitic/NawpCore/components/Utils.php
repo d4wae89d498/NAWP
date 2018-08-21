@@ -36,5 +36,4 @@ class Utils
         ob_end_clean();
         return $res;
     }
-
 }
