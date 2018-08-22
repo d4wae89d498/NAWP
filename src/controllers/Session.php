@@ -50,7 +50,7 @@ class Session extends Controller implements ControllerInterface
 
 
     public function sessionsMiddleware(string &$httpResponse, $args = []): bool {
-        die("session tick");
+        //die("session tick");
         SupSession::tick();
         $token = SupSession::id();
         $httpResponse .= (SupSession::isset($token, "TEST") ? SupSession::get($token, "TEST") : "") . " " . SupSession::id();

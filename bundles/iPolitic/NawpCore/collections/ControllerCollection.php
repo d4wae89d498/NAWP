@@ -79,9 +79,10 @@ class ControllerCollection extends Collection {
         foreach ($this->getArrayCopy() as $v) {
             if ($v instanceof ControllerInterface && is_array($methods = $v->getMethods())) {
                 foreach ($methods as $k => $u) {
+                  //  echo "method : " . $u["method"] . PHP_EOL;
                     $methods[$k]["controller"] = $v->name;
+                    array_push($queue, $methods[$k]);
                 }
-                $queue += $methods;
             } else {
                 throw new \Exception("Empty controller");
             }
@@ -91,15 +92,13 @@ class ControllerCollection extends Collection {
         {
             return ($a["priority"] === $b["priority"]) ? 0 : ($a["priority"] > $b["priority"]) ? -1 : 1;
         });
-        echo "controllers queue : " . PHP_EOL;
-        var_dump($queue);
         return $queue;
     }
 
     /**
      * Will return a new controller using its namespaced name
      * @param string $controllerName
-     * @return Controller
+     * @return ControllerInterface
      */
     public function getByName(string $controllerName): ControllerInterface {
         $match = null;

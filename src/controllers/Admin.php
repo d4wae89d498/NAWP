@@ -10,7 +10,6 @@ namespace App\Controllers;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use  App\iPolitic\NawpCore\Components\Session as SupSession;
 
 /**
  * Class Admin
