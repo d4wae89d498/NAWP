@@ -9,14 +9,15 @@
 namespace App\Views\Elements;
 
 
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
-class Footer extends View implements ITwig
+class Footer extends View implements TwigInterface
 {
     public $states = [
         "js" => [
-            0 => "/assets/js/jquery.min.js",
+            0 => "/main.js",
+            //0 => "/assets/js/jquery.min.js",
             1 => "/assets/js/bootstrap.min.js",
             2 => "/assets/js/jquery.touchSwipe.min.js",
             3 => "/assets/js/theme.js",
@@ -94,7 +95,7 @@ class Footer extends View implements ITwig
         <!-- Footer_Wrapper End-->
         <!-- helper js-->
         {% for jsfile in js %}
-            <script src="{{jsfile}}"></script>
+            <script src="{{ jsfile }}"></script>
         {% endfor %}
     </body>
 </html>

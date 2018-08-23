@@ -5,21 +5,25 @@
  * Date: 7/21/2018
  * Time: 1:06 AM
  */
-namespace App\Views\Pages;
-
+namespace App\Views\Pages\Admin;
 
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
-use App\Views\Elements as Elements;
+use App\Views\Elements\Admin as Elements;
 
-class Home extends View implements TwigInterface
+class Page extends View implements TwigInterface
 {
-    public $states = ["name" => "default", "elements" => []];
+    public $states = [
+        "name" => "default",
+        "elements" => [],
+        "usePageBlock" => true
+    ];
 
     public function twig() : void
-    {?>
+    {
+        ?>
         {% for element in elements %}
-            {{ element | raw }}
+            {{ element | raw}}
         {% endfor %}
         <?php
     }

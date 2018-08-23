@@ -22,7 +22,7 @@ function sourceMap() {
 config = {
     mode: 'development',
     entry: {
-        main: ['./plugins/plugins.ts']
+        main: ['./bundles/bundles.ts', './src/bundles.ts']
     },
     output: {
         filename: '[name].js',

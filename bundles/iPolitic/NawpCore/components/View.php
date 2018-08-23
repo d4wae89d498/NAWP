@@ -40,7 +40,11 @@ abstract class View
         //we  reassign the template logger
         $this->templateLogger = &$templateLogger;
         $id = $this->generatedID = $this->templateLogger->generateTemplateID($this);
-        $this->states = ((count($params) > 0 ) ? $params : $this->states);
+        if (count($params) > 0 ) {
+          foreach ($params as $k => $v) {
+              $this->states[$k] = $v;
+          }
+        }
         $this->templateLogger->setTemplate($id,$this);
     }
 

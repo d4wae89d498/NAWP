@@ -7,10 +7,10 @@
  */
 namespace App\Views\Elements;
 
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
-class OrderNow extends View implements ITwig
+class OrderNow extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- Stop_Location Start-->

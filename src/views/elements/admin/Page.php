@@ -8,21 +8,15 @@
 namespace App\Views\Elements\Admin;
 
 use App\iPolitic\NawpCore\Components\View;
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 
-class Menu extends View implements ITwig
+class Page extends View implements TwigInterface
 {
-    public $states = [];
+    public $states = ["tpl" => null];
 
     public function twig(): void {
         ?>
-        <!-- ============================================================== -->
-        <!-- Preloader - style you can find in spinners.css -->
-        <!-- ============================================================== -->
-        <div class="preloader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
-        </div>
+
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
         <!-- ============================================================== -->
@@ -546,6 +540,10 @@ class Menu extends View implements ITwig
                     <!-- item--><a href="" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a> </div>
                 <!-- End Bottom points-->
             </aside>
+
+            {{ tpl | raw }}
+
+        </div>
         <?php
     }
 }

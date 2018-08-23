@@ -7,10 +7,10 @@
  */
 namespace App\Views\Elements;
 
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
-class Services extends View implements ITwig
+class Services extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- Services Start-->

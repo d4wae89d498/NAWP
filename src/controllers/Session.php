@@ -66,7 +66,20 @@ class Session extends Controller implements ControllerInterface
      */
     public function home(string &$httpResponse, $args = []): bool {
         $templateLogger = new ViewLogger();
-        $httpResponse .= new \App\Views\Pages\Home($templateLogger, ["name" => "test"]);
+        $httpResponse .= new \App\Views\Pages\Home($templateLogger, ["name" => "test", "elements" => [
+            new \App\Views\Elements\Header($templateLogger, []),
+            new \App\Views\Elements\Menu($templateLogger, []),
+            new \App\Views\Elements\Banner($templateLogger, []),
+            new \App\Views\Elements\BannerBlocks($templateLogger, []),
+            new \App\Views\Elements\Services($templateLogger, []),
+            new \App\Views\Elements\Gallery($templateLogger, []),
+            new \App\Views\Elements\OrderNow($templateLogger, []),
+            new \App\Views\Elements\Testimonial($templateLogger, []),
+            new \App\Views\Elements\Map($templateLogger, []),
+            new \App\Views\Elements\BlogWrapper($templateLogger, []),
+            new \App\Views\Elements\Footer($templateLogger, []),
+        ]]);
+
         return true;
     }
 

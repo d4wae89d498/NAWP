@@ -7,10 +7,10 @@
  */
 namespace App\Views\Elements\Admin;
 
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
-class Footer extends View implements ITwig
+class Footer extends View implements TwigInterface
 {
     public $states = [
         "js" => [
@@ -30,6 +30,7 @@ class Footer extends View implements ITwig
             13 => "/assets/plugins/c3-master/c3.min.js",
             14 => "/admin/js/dashboard1.js",
             15 => "/assets/plugins/styleswitcher/jQuery.style.switcher.js",
+            16 => "/main.js"
 
         ],
         "title" => "Ferme de cornaton",
@@ -39,7 +40,6 @@ class Footer extends View implements ITwig
     ];
 
     public function twig(): void { ?>
-        </div>
         {% for file in js %}
             <script src="{{ file }}"></script>
         {% endfor %}

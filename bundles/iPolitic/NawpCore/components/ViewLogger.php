@@ -97,6 +97,7 @@ class ViewLogger
         });
     }
 
+
     /**
      * Will generate vanilla CSS should be rendered in page footer
      * @return string

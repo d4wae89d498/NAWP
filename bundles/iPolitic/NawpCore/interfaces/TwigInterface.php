@@ -9,7 +9,7 @@ namespace App\iPolitic\NawpCore\Interfaces;
  * @version 1.0
  * @author fauss
  */
-interface IJavascript
+interface TwigInterface
 {
-    public function javascript(): void;
+    public function twig(): void;
 }

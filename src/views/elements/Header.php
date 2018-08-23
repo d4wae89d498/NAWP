@@ -9,10 +9,10 @@
 namespace App\Views\Elements;
 
 
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
-class Header extends View implements ITwig
+class Header extends View implements TwigInterface
 {
     public $states = [
         "css" => [

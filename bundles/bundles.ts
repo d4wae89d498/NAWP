@@ -1,1 +1,1 @@
-import "iPolitic/bundles.ts";
+console.log("bundles.ts hello");

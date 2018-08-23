@@ -9,7 +9,7 @@ namespace App\iPolitic\NawpCore\Interfaces;
  * @version 1.0
  * @author fauss
  */
-interface ICss
+interface CssInterface
 {
     public function css(): void;
 }

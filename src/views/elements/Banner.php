@@ -9,10 +9,10 @@
 namespace App\Views\Elements;
 
 
-use App\iPolitic\NawpCore\Interfaces\ITwig;
+use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
-class Banner extends View implements ITwig
+class Banner extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- BannerCol Start-->
