@@ -25,7 +25,7 @@ export class noRedirection {
                     e.preventDefault();
                     let formAction: string = $(e.target).prop('action');
                     let formData: object = $(e.target).serializeArray();
-                    this.SocketClient.socket.emit("packet", "world");
+                    this.SocketClient.socket.emit("packet", {data: {name: "john"}, url: "/hello"});
                     // logging it
                     console.log("form redirection canceled");
                     console.log("form action : ");

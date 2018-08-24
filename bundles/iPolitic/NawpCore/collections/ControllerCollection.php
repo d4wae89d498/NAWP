@@ -28,6 +28,7 @@ class ControllerCollection extends Collection {
     {
         parent::__construct($input, $flags, $iterator_class);
     }
+
     /**
      *  Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRUE

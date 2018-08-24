@@ -7,7 +7,8 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use Workerman\ {Worker, WebServer};
+use Workerman\ {Worker};
+use App\iPolitic\NawpCore\Components\Hsptp;
 
 class SocketIO
 {
@@ -19,13 +20,21 @@ class SocketIO
         $kernel = new Kernel();
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
+
+        $hsptp = new Hsptp();
+        $img = $hsptp->encrypt("HELLO WORLD", 1);
+        var_dump($img);
+        $r = $hsptp->decrypt($img);
+        var_dump($r);
         $kernel->instantiateControllers();
 
         $this->worker = new \PHPSocketIO\SocketIO(8070);
         $this->worker->on('connection', function ($socket) use (&$kernel) {
             echo "got connection" . PHP_EOL;
-            $this->worker->on('packet', function ($data) use ($socket, &$kernel) {
-                echo "got packet" . PHP_EOL;
+            $socket->on('packet', function ($data) use (&$kernel) {
+                echo "got packet : " . PHP_EOL;
+                var_dump($data);
+                $response = "";
                 $kernel->handle($response, "SOCKET", $data);
             });
         });
