@@ -23,7 +23,9 @@ class SocketIO
 
         $this->worker = new \PHPSocketIO\SocketIO(8070);
         $this->worker->on('connection', function ($socket) use (&$kernel) {
+            echo "got connection" . PHP_EOL;
             $this->worker->on('packet', function ($data) use ($socket, &$kernel) {
+                echo "got packet" . PHP_EOL;
                 $kernel->handle($response, "SOCKET", $data);
             });
         });

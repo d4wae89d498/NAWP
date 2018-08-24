@@ -23,22 +23,25 @@ use App\DataSources\{
 };
 
 class Kernel {
-    public $entityManager;
+    /**
+     * @var ControllerCollection
+     */
+    public $controllerCollection;
+    /**
+     * @var Atlas
+     */
+    public $atlas;
 
-
+    /**
+     * Kernel constructor.
+     */
     public function __construct()
     {
         $this->init();
     }
 
     /**
-     * @var ControllerCollection
-     */
-    public $controllerCollection;
-    public $atlas;
-
-    /**
-     * Wil recursivly require_once all filesinthe given directory
+     * Wil recursivly require_once all files in the given directory
      * @param string $directory
      */
     public static function loadDir(string $directory): void {
@@ -89,20 +92,6 @@ class Kernel {
 
         $this->atlas = $atlasContainer->getAtlas();
         Session::init();
-        /*
-        $config = Setup::createAnnotationMetadataConfiguration
-        (
-            [join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"])],
-            true
-        );
-        $conn = [
-            'driver' => 'pdo_sqlsrv',
-           'user' => 'sa',
-           'password' => '_e3oCWaW#',
-           'port'=> 1433,
-        ];
-        $this->entityManager = EntityManager::create($conn, $config);
-        var_dump($this->entityManager);*/
     }
 
     /**
@@ -139,6 +128,10 @@ class Kernel {
         );
     }
 
+    /**
+     * Returns a new Atlas instance
+     * @return Atlas
+     */
     public function getAtlas() : Atlas {
         $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "atlas-config.php"]);
         $atlasContainer = new AtlasContainer($arr[0], $arr[1], $arr[2]);
@@ -151,6 +144,5 @@ class Kernel {
             ContentsCategoriesMapper::class,
         ]);
         return $atlasContainer->getAtlas();
-
     }
 }
