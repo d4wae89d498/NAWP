@@ -26,8 +26,19 @@ class SocketIO
         var_dump($img);
         $r = $hsptp->decrypt($img);
         var_dump($r);
-        $kernel->instantiateControllers();
-
+        /**
+         * Used for logging views
+         */
+        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
+        /**
+         * Used for creating controllers instance
+         */
+        $atlasInstance = &$kernel->atlas;
+        $params = [&$viewLogger, []];
+        $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
+        $params = [&$atlasInstance];
+        $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
+        var_dump($kernel->viewCollection);
         $this->worker = new \PHPSocketIO\SocketIO(8070);
         $this->worker->on('connection', function ($socket) use (&$kernel) {
             echo "got connection" . PHP_EOL;

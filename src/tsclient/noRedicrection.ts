@@ -8,6 +8,7 @@ export class noRedirection {
     public SocketClient: SocketClient;
     public constructor() {
         this.SocketClient = new SocketClient();
+        this.applyForm();
     }
 
     /**
@@ -35,6 +36,7 @@ export class noRedirection {
                     // todo : send a socketio call
                 });
         }
+        console.log("form to ajax applied");
         return;
     }
 }

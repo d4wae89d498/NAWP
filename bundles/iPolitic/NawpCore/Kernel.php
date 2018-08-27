@@ -9,7 +9,10 @@
 namespace App\iPolitic\NawpCore;
 
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
+use App\iPolitic\NawpCore\Collections\ViewCollection;
+use App\iPolitic\NawpCore\Components\Collection;
 use App\iPolitic\NawpCore\Components\Session;
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
 use Atlas\Orm\Mapper\Mapper;
 use Atlas\Orm\AtlasContainer;
@@ -27,6 +30,10 @@ class Kernel {
      * @var ControllerCollection
      */
     public $controllerCollection;
+    /**
+     * @var ViewCollection
+     */
+    public $viewCollection;
     /**
      * @var Atlas
      */
@@ -79,6 +86,7 @@ class Kernel {
     public function init(): void
     {
         $this->controllerCollection = new ControllerCollection();
+        $this->viewCollection = new ViewCollection();
         $arr = include join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","..","atlas-config.php"]);
         $atlasContainer = new AtlasContainer($arr[0], $arr[1], $arr[2]);
         $atlasContainer->setMappers([
@@ -95,17 +103,18 @@ class Kernel {
     }
 
     /**
-     * Will instantiate all controllers declared in a "controllers" folder following PSR standars
+     * Will instantiate all components declared in a "$components" folder following PSR standars
+     * @param string $componentName
      */
-    public function instantiateControllers(): void {
+    public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName): void {
         // foreach controllers
         array_map
         (
-            function($controller) {
+            function($component) use (&$collection) {
                 /**
                  * @var Controller $controller the controller instance that will be added to the controller collection
                  */
-                $this->controllerCollection->append($controller);
+                $collection->append($component);
             },
             (
             // remove null values
@@ -114,12 +123,24 @@ class Kernel {
                 // convert declared class name to controller instance if match, or null value
                 array_map
                 (
-                    function ($class) {
-                        /**
-                         * @var string $class
-                         */
-                        //
-                        return (stristr($class, "\\Controllers\\") !== false) ? new $class($this->atlas) : null;
+
+                    function (string $className) use ($componentName, &$arguments) {
+                        // if a valid $className was given, we continue
+                        if( stristr($className, "\\" . ucfirst($componentName) . "\\") !== false ) {
+                            // if the $arguments array is no empty, we simply instantiate $componentName
+                            if(count($arguments) == 0)
+                                $obj = new $componentName;
+                            // else we call $className constructor using given $arguments and Reflection class
+                            else {
+                                $r = new \ReflectionClass($className);
+                                $obj = $r->newInstanceArgs($arguments);
+                            }
+                            return $obj;
+                        }
+                        // else we stop with a null that will be filtered later
+                        else {
+                            return null;
+                        }
                     },
                     // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
                     \get_declared_classes()

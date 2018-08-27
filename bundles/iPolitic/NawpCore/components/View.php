@@ -36,10 +36,11 @@ abstract class View
      * @param \App\iPolitic\NawpCore\Components\ViewLogger $templateLogger
      * @param null $params
      */
-    public function __construct(ViewLogger &$templateLogger, $params) {
+    public function __construct(ViewLogger &$templateLogger, array $params = []) {
         //we  reassign the template logger
         $this->templateLogger = &$templateLogger;
         $id = $this->generatedID = $this->templateLogger->generateTemplateID($this);
+        // if the given $params array is non empty, we set all $states elements using $params key and values
         if (count($params) > 0 ) {
           foreach ($params as $k => $v) {
               $this->states[$k] = $v;

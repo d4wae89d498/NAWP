@@ -19,7 +19,18 @@ class Http
         $kernel = new Kernel();
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
-        $kernel->instantiateControllers();
+        /**
+         * Used for logging views
+         */
+        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
+        /**
+         * Used for creating controllers instance
+         */
+        $atlasInstance = &$kernel->atlas;
+        $params = [&$viewLogger, []];
+        $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
+        $params = [&$atlasInstance];
+        $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
 
         /*
         $atlas = $kernel->getAtlas();

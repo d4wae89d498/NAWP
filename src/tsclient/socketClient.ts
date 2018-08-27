@@ -11,7 +11,5 @@ export class SocketClient {
      */
     public constructor() {
         this.socket = io("http://127.0.0.1:8070");
-        this.socket.emit("packet", {data: {name: "john"}, url: "/hello"});
-        console.log("socketcli built");
     }
 }
