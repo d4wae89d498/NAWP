@@ -1,4 +1,4 @@
-import { noRedirection  }from './tsclient/noRedicrection';
+import { noRedirection } from './tsclient/noRedicrection';
 
 console.log("ab123456");
 const noRedirectionInstance: noRedirection = new noRedirection();

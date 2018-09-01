@@ -43,10 +43,11 @@ class SocketIO
         $this->worker->on('connection', function ($socket) use (&$kernel) {
             echo "got connection" . PHP_EOL;
             $socket->on('packet', function ($data) use (&$kernel) {
+
                 echo "got packet : " . PHP_EOL;
                 var_dump($data);
                 $response = "";
-                $kernel->handle($response, "SOCKET", $data);
+                $kernel->handle($response, "SOCKET", http_build_query($data));
             });
         });
         Worker::runAll();

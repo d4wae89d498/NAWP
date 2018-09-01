@@ -95,6 +95,7 @@ class ViewLogger
                 <?php endforeach; ?>
             <?php
         });
+        // todo : générer $_server encrypté
     }
 
 

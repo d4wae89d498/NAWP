@@ -4,25 +4,30 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@types/socket.io-client": "^1.4.32",
-    "concurrently": "^3.6.1",
+    "@types/node": "^10.9.3",
+    "concurrently": "^4.0.1",
+    "css-loader": "^1.0.0",
+    "inline-source-map": "^0.6.2",
     "jquery": "^3.3.1",
+    "node-sass": "^4.9.3",
     "nodemon": "^1.18.3",
+    "sass-loader": "^7.1.0",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.0",
     "ts-loader": "^4.5.0",
     "typescript": "^3.0.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"
   },
   "scripts": {
-    "memcache32": "x86/memcached.exe",
-    "memcache64": "x64/memcached.exe",
     "start": "php src/workers/Http.php src/workers/SocketIO.php",
     "watch": "concurrently \"npm run watch-client\" \"npm run watch-server\"",
-    "watch-client": "webpack --watch",
-    "build": "webpack",
+    "watch-client": "webpack --config webpack.config.js --watch --progress --color",
+    "build": "webpack --config webpack.config.js --mode development",
+    "build.prod": "webpack --config webpack.config.js --mode production",
     "watch-server": "nodemon --exec \"npm run start\""
   },
-  "devDependencies": {
-    "@types/jquery": "^3.3.6"
-  }
+  "devDependencies": {},
+  "repository": "https://github.com/MarcFaussurier/NawpCore.git",
+  "author": "Faussurier Marc <faussurier.marc@icloud.com>"
 }

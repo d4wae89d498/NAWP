@@ -1,63 +1,37 @@
-const webpack = require('webpack');
 const path = require('path');
+const DESTINATION = path.resolve(__dirname, './public/');
 
-function getPlugin() {
-    if(process.env.NODE_ENV === 'production') {
-       return [
-            new webpack.optimize.UglifyJsPlugin()
-        ];
-    } else {
-        return [
-        ];
-    }
-}
-
-function sourceMap() {
-    if (process.env.NODE_ENV !== 'production') {
-        return "sourcemap";
-    } else {
-        return null;
-    }
-}
-config = {
-    mode: 'development',
+module.exports = {
     entry: {
-        main: ['./bundles/bundles.ts', './src/bundles.ts']
+        'main': ['./bundles/bundles.ts', './src/bundles.ts']
     },
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, './public/')
-    },
-    resolve: {
-        // Add '.ts' and '.tsx' as a resolvable extension.
-        extensions:['.ts', '.tsx', '.js'],
-        alias: {
-
-        }
+        filename: '[name].bundle.js',
+        path: DESTINATION
     },
     module: {
         rules: [
             {
+                test: [/\.tsx$/, /\.ts$/, /\.js$/],
+                use: 'ts-loader',
+                exclude: /node_modules/
+            },
+            {
                 test: /\.scss$/,
                 use: [
-                    'style-loader',
-                    {
-                        loader: 'css-loader',
-                        options: { 
-                            minimize: true
-                        }
-                    },
-                    'sass-loader?sourceMap'
-                ]
-            },
-            {   
-                test: /\.tsx?$/,
-                use: 'ts-loader'
+                    "style-loader", // creates style nodes from JS strings
+                    "css-loader", // translates CSS into CommonJS
+                    "sass-loader" // compiles Sass to CSS, using Node Sass by default
+                ],
+                exclude: /node_modules/
             }
+
         ]
     },
-    plugins: getPlugin(),
-    devtool: sourceMap()
+    resolve: {
+        extensions: [ '.tsx', '.ts', '.js' ]
+    },
+    devtool: 'inline-source-map',
 };
 
-module.exports = config;
+

@@ -14,9 +14,10 @@ export class noRedirection {
     /**
      * Will apply the no redirection rule to all the dom form tags
      */
+
     public applyForm(): void {
         // we retrive all forms
-        let formElements: JQuery = $('form');
+        let formElements: any = $('form');
         // foreach forms
         for (let formElement in formElements) {
             // when submitting formElement
