@@ -1,5 +1,5 @@
 ## **IPOLITIC/NAWP** 
-###### The best future-proof and high performance network oriented framework. Uses combo of both modern typescript and php. 
+###### A simple but powerful future-proof and high performance network oriented framework. It uses combo of both modern typescript and php to deliver amazing performances. 
 
 To install the project, simply run `npm install` or `yarn` in your terminal.
 Then, you'll have to create a `configs/.env` file using the `configs/.env.dist` one as sample.
