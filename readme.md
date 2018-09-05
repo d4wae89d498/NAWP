@@ -4,6 +4,15 @@
 To install the project, simply run `npm install` or `yarn` in your terminal.
 Then, you'll have to create a `configs/.env` file using the `configs/.env.dist` one as sample.
 
+## Minimum requirements 
+- PHP >= 7.2.0 
+- NodeJS  >= 10.0.0 
+- Supported os : Windows || MacOS || Linux 
+- Database engine : Microsoft SQL Server 2017 *
+- _(optional)_ yarn
+
+_* : (you might be able to switch to a different database engine if you succeed in converting the current mssql databases to somewhat else, logic itself is already abstracted using atlas)_
+
 ## Project commands 
 
 use `yarn` or `npm run` following one of these following commands :
@@ -31,6 +40,18 @@ use `yarn` or `npm run` following one of these following commands :
  - **Friendly configuration** :  _using **SYMFONTY/DOTENV** component_
  - **Base skeleton** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
  - **Extendable architecture** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
+
+## Mainly used packages
+
+- `twig.js` 1.12.0
+- `jquery` 3.3.1
+- `webpack` 4.17.1
+- `typescript` 3.0.1
+- `node-sass` 4.9.3
+- `socket.io-client` 1.3 
+- `nodemon` 1.18.4
+- `iPolitic/Workerman` dev-master 
+- `iPolitic/Bike` dev-master
 
 ## Project architecture 
 
