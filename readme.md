@@ -1,4 +1,5 @@
 ## **IPOLITIC/NAWP** 
+###### The best future-proof and high performance network oriented framework. Uses combo of both modern typescript and php. 
 
 To install the project, simply run `npm install` or `yarn` in your terminal.
 Then, you'll have to create a `configs/.env` file using the `configs/.env.dist` one as sample.
@@ -41,27 +42,27 @@ use `yarn` or `npm run` following one of these following commands :
  - **Extendable architecture** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
 
 
-## project architecture 
+## Project architecture 
 
 **Package manifests**
 
-`- composer.json` : Contains the PHP glues between all your PHP files using composer. 
+- `- composer.json` : Contains the PHP glues between all your PHP files using composer. 
 
-`- package.json` : Contains the Node.JS glues between all your JAVASCRIPT files using nodejs.
+- `- package.json` : Contains the Node.JS glues between all your JAVASCRIPT files using nodejs.
 
 **VCS**
 
-`- .gitignore` : _Contains git paths that should be ignored._
+- `- .gitignore` : _Contains git paths that should be ignored._
 
-**Lib configs**
+**Libraries config files**
 
-`- nodemon.json` : _Contains nodemon rules for watching sourcecode (see the `watch` command) and performing a command when a modification is done._
+- `- nodemon.json` : _Contains nodemon rules for watching sourcecode (see the `watch` command) and performing a command when a modification is done._
 
-`- .babelrc` : _Contains babel configuration._
+- `- .babelrc` : _Contains babel configuration._
 
-`- tsconfig.json` : _Contains typescript settings._
+- `- tsconfig.json` : _Contains typescript settings._
 
-`- tslint.json` : _Contains tslint settings (code highlighting)._ 
+- `- tslint.json` : _Contains tslint settings (code highlighting)._ 
 
 **Framework directories**
 
@@ -81,7 +82,7 @@ use `yarn` or `npm run` following one of these following commands :
 
 - `- src` : _Contains all your own app source code, in typescript, php or sass._
 
-**Languages libraries**
+**Language libraries**
 
 - `- node_modules` : _Contains JAVASCRIPT (Node.JS) packages._
 
