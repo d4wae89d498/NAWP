@@ -4,6 +4,10 @@
 To install the project, simply run `npm install` or `yarn` in your terminal.
 Then, you'll have to create a `configs/.env` file using the `configs/.env.dist` one as sample.
 
+If the project is already using a database, you'll have to attach it using SQL Server Management Studio or SQL Operations Studio. Else you'll have to design your database and generate your models with Atlas.
+
+Project database is available here (.MDF / .LDF files)  :  http://google.com 
+
 ## Minimum requirements 
 - PHP >= 7.2.0 
 - NodeJS  >= 10.0.0 
@@ -41,17 +45,19 @@ use `yarn` or `npm run` following one of these following commands :
  - **Base skeleton** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
  - **Extendable architecture** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
 
-## Mainly used packages
-
-- `twig.js` 1.12.0
-- `jquery` 3.3.1
-- `webpack` 4.17.1
-- `typescript` 3.0.1
-- `node-sass` 4.9.3
-- `socket.io-client` 1.3 
-- `nodemon` 1.18.4
-- `iPolitic/Workerman` dev-master 
-- `iPolitic/Bike` dev-master
+## We are using the best packages out there
+- `twig` 2.5 _For server-side rendering_
+- `twig.js` 1.12.0 _For client-side rendering_
+- `jquery` 3.3.1 _For dom manipulation but with our own javascript states system for perfs. gains._
+- `webpack` 4.17.1 _Fast modules and source code web packing_ 
+- `typescript` 3.0.1 _Enjoy the best of the javascript powers_
+- `atlas` 2.x-dev _Models, Models generation and nothing else_
+- `node-sass` 4.9.3 _.scss files are supported ;)_
+- `socket.io-client` 1.3 _Talk to the php server with this client socektio implementation._ 
+- `nodemon` 1.18.4 _Enjoy server refresh on sourcecode changes !_ 
+- `iPolitic/phpsocket.io` dev-master _LIsten for inc. socket.io packets_ 
+- `iPolitic/Workerman` dev-master _Our own fork of workerman_
+- `iPolitic/Bike` dev-master _Our own router, forked from Bike_
 
 ## Project architecture 
 
