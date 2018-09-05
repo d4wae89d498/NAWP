@@ -6,4 +6,6 @@ vendor
 .vs
 .vscode
 atlas-config.php
-composer.lock 
+composer.lock
+yarn.lock
+yarn-error.log
