@@ -23,9 +23,7 @@
     "watch": "concurrently \"npm run watch-client\" \"npm run watch-server\" --kill-others",
     "watch-client": "webpack -d --config=configs/webpack/dev.js --watch",
     "watch-server": "nodemon --exec \"npm run start\"",
-    "lint": "npm run lint:ts && npm run lint:sass",
-    "lint:ts": "tslint './src/**/*.ts*' --format stylish --force",
-    "lint:sass": "stylelint ./src/**/*.scss"
+    "lint": "tslint './src/**/*.ts*' --format stylish --force"
   },
   "devDependencies": {
     "@types/node": "^10.7.1",
