@@ -34,10 +34,13 @@ class SocketIO
          * Used for creating controllers instance
          */
         $atlasInstance = &$kernel->atlas;
+        Kernel::setKernel($kernel);
         $params = [&$viewLogger, []];
         $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
         $params = [&$atlasInstance];
+        Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
+        Kernel::setKernel($kernel);
         var_dump($kernel->viewCollection);
         $this->worker = new \PHPSocketIO\SocketIO(8070);
         $this->worker->on('connection', function ($socket) use (&$kernel) {

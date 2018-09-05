@@ -1,33 +1,58 @@
 {
   "name": "caemf",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Starter kit for React, Webpack (with Hot Module Replacement), Typescript and Babel.",
+  "keywords": [
+    "react",
+    "webpack",
+    "typescript",
+    "babel",
+    "sass",
+    "hmr",
+    "starter",
+    "boilerplate"
+  ],
   "license": "MIT",
-  "dependencies": {
-    "@types/node": "^10.9.3",
-    "concurrently": "^4.0.1",
-    "css-loader": "^1.0.0",
-    "inline-source-map": "^0.6.2",
-    "jquery": "^3.3.1",
-    "node-sass": "^4.9.3",
-    "nodemon": "^1.18.3",
-    "sass-loader": "^7.1.0",
-    "source-map-loader": "^0.2.4",
-    "style-loader": "^0.23.0",
-    "ts-loader": "^4.5.0",
-    "typescript": "^3.0.1",
-    "webpack": "^4.17.1",
-    "webpack-cli": "^3.1.0"
-  },
+  "repository": "https://github.com/MarcFaussurier/NawpCore.git",
+  "author": "Faussurier Marc <faussurier.marc@icloud.com>",
+  "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "start": "php src/workers/Http.php src/workers/SocketIO.php",
-    "watch": "concurrently \"npm run watch-client\" \"npm run watch-server\"",
-    "watch-client": "webpack --config webpack.config.js --watch --progress --color",
-    "build": "webpack --config webpack.config.js --mode development",
-    "build.prod": "webpack --config webpack.config.js --mode production",
-    "watch-server": "nodemon --exec \"npm run start\""
+    "build-dev": "webpack -d --config=configs/webpack/dev.js",
+    "build-prod": "webpack -p --config=configs/webpack/prod.js",
+    "watch": "webpack -d --config=configs/webpack/dev.js --watch",
+    "watch-server": "nodemon --exec \"npm run start\"",
+    "lint": "npm run lint:ts && npm run lint:sass",
+    "lint:ts": "tslint './src/**/*.ts*' --format stylish --force",
+    "lint:sass": "stylelint ./src/**/*.scss"
   },
-  "devDependencies": {},
-  "repository": "https://github.com/MarcFaussurier/NawpCore.git",
-  "author": "Faussurier Marc <faussurier.marc@icloud.com>"
+  "devDependencies": {
+    "@types/node": "^10.7.1",
+    "awesome-typescript-loader": "^5.2.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "express": "^4.16.3",
+    "file-loader": "^2.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "image-webpack-loader": "^4.3.1",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.22.1",
+    "stylelint-config-standard": "^18.2.0",
+    "stylelint-webpack-plugin": "^0.10.5",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-merge": "^4.1.4"
+  },
+  "dependencies": {
+    "nodemon": "^1.18.4",
+    "stylelint-config-bootstrap": "^0.1.0"
+  }
 }

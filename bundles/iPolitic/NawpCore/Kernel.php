@@ -38,6 +38,24 @@ class Kernel {
      * @var Atlas
      */
     public $atlas;
+    /**
+     * @var Kernel
+     */
+    public static $kernel;
+
+    /**
+     * @param $kernel
+     */
+    public static function setKernel(&$kernel): void {
+        self::$kernel = $kernel;
+    }
+
+    /**
+     * @return Kernel
+     */
+    public static function getKernel() {
+        return self::$kernel;
+    }
 
     /**
      * Kernel constructor.

@@ -1,6 +1,8 @@
 <?php
 namespace App\iPolitic\NawpCore\Components;
 
+use App\iPolitic\NawpCore\Kernel;
+
 /**
  * ViewLogger will store all the data given to the template class
  *
@@ -74,13 +76,15 @@ class ViewLogger
         }
         return $tyName;
     }
-
     /**
      * Will generate vanilla JS should be rendered in page footer
      * @return string
      */
     public function generateJS(): string {
-        return Utils::ocb(function() { ?>
+
+        $socketAdapter = new SocketAdapter();
+
+        return Utils::ocb(function() use (&$socketAdapter) { ?>
             window['templates'] = [];
             <?php  foreach($this->templatesData as $id => $template): ?>
             if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
@@ -90,9 +94,11 @@ class ViewLogger
                 };
             }
             <?php endforeach; ?>
-            <?php  foreach($this->templatesData as $id => $template): ?>
-                <?=$template["javascript"][0]?>
-                <?php endforeach; ?>
+            window['baseTemplates'] = [];
+            <?php foreach((Kernel::getKernel())->viewCollection as $k => $v): ?>
+                window['baseTemplates']['<?=$k?>'] = <?=json_encode($v)?>;
+            <?php endforeach; ?>
+            window['clientVar'] = <?=json_encode($socketAdapter->getCryptedDServer())?>;
             <?php
         });
         // todo : générer $_server encrypté

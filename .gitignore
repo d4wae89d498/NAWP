@@ -1,7 +1,4 @@
-node_modules
-vendor
-.idea
-.vs
-.vscode
-atlas-config.php
-composer.lock
+.idea/
+public/
+node_modules/
+configs/.env

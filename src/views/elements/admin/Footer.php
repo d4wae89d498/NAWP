@@ -43,6 +43,9 @@ class Footer extends View implements TwigInterface
         {% for file in js %}
             <script src="{{ file }}"></script>
         {% endfor %}
+        <script>
+            <?=$this->templateLogger->generateJS();?>
+        </script>
         </body>
     </html>
     <?php }

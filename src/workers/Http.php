@@ -28,10 +28,14 @@ class Http
          */
         $atlasInstance = &$kernel->atlas;
         $params = [&$viewLogger, []];
+        Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
         $params = [&$atlasInstance];
+        Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
-
+        Kernel::setKernel($kernel);
+        echo "kernel instance : " . PHP_EOL;
+        var_dump($kernel);
         /*
         $atlas = $kernel->getAtlas();
         $categoryRecord = $atlas->fetchRecord(\App\DataSources\User\UserMapper::CLASS, '2');
