@@ -2,3 +2,8 @@
 public/js/
 node_modules/
 configs/.env
+vendor
+.vs
+.vscode
+atlas-config.php
+composer.lock 
