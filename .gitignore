@@ -1,4 +1,4 @@
 .idea/
-public/
+public/js/
 node_modules/
 configs/.env
