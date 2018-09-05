@@ -11,7 +11,7 @@ module.exports = merge(commonConfig, {
       "./bundles/index.ts" // the entry point of our bundles
   ],
   output: {
-    filename: "js/bundle.[hash].min.js",
+    filename: "generated_js/app.min.js",
     path: resolve(__dirname, "../../public"),
     publicPath: "/",
   },

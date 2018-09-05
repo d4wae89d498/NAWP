@@ -30,8 +30,7 @@ class Footer extends View implements TwigInterface
             13 => "/assets/plugins/c3-master/c3.min.js",
             14 => "/admin/js/dashboard1.js",
             15 => "/assets/plugins/styleswitcher/jQuery.style.switcher.js",
-            16 => "/main.js"
-
+            16 => "/generated_js/app.min.js"
         ],
         "title" => "Ferme de cornaton",
         "page" => "Admin",

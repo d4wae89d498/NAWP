@@ -1,5 +1,5 @@
 .idea/
-public/js/
+public/generated_js/
 node_modules/
 configs/.env
 vendor
@@ -9,3 +9,4 @@ atlas-config.php
 composer.lock
 yarn.lock
 yarn-error.log
+*.html

@@ -1,4 +1,4 @@
-// import * as io from './socket.io-client/socket.io';
+import * as io from "socket.io-client";
 
 export class SocketClient {
     /*
@@ -10,7 +10,7 @@ export class SocketClient {
      * The SocketClient constructor
      */
     public constructor() {
-        this.socket = null; //io("http://127.0.0.1:8070");
+        this.socket = io("http://127.0.0.1:8070");
         console.log("socket built");
         console.log("aaa");
     }

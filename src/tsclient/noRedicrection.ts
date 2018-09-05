@@ -1,10 +1,10 @@
-import * as $ from 'jquery';
+import * as $ from "jquery";
 import {SocketClient} from "./socketClient";
 
 /**
  * The noRedirection class
  */
-export class noRedirection {
+export class NoRedirection {
     public SocketClient: SocketClient;
     public constructor() {
         this.SocketClient = new SocketClient();
@@ -17,7 +17,7 @@ export class noRedirection {
 
     public applyForm(): void {
         // we retrive all forms
-        let formElements: any = $('form');
+        let formElements: any = $("form");
         // foreach forms
         for (let formElement in formElements) {
             // when submitting formElement
@@ -25,9 +25,9 @@ export class noRedirection {
                 (e: Event) => {
                     // we prevent it from reloading
                     e.preventDefault();
-                    let formAction: string = $(e.target).prop('action');
+                    let formAction: string = $(e.target).prop("action");
                     let formData: object = $(e.target).serializeArray();
-                    this.SocketClient.socket.emit("packet", {data: {name: "john"}, url: "/hello", clientVar: window['clientVar'], templates: window['templates']});
+                    this.SocketClient.socket.emit("packet", {data: {name: "john"}, url: "/hello", clientVar: window["clientVar"], templates: window["templates"]});
                     // logging it
                     console.log("form redirection canceled");
                     console.log("form action : ");

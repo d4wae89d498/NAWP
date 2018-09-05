@@ -16,12 +16,12 @@ class Footer extends View implements TwigInterface
 {
     public $states = [
         "js" => [
-            0 => "/main.js",
             //0 => "/assets/js/jquery.min.js",
-            1 => "/assets/js/bootstrap.min.js",
-            2 => "/assets/js/jquery.touchSwipe.min.js",
-            3 => "/assets/js/theme.js",
-            4 => "/assets/js/responsive_bootstrap_carousel.js",
+            0 => "/assets/js/bootstrap.min.js",
+            1 => "/assets/js/jquery.touchSwipe.min.js",
+            2 => "/assets/js/theme.js",
+            3 => "/assets/js/responsive_bootstrap_carousel.js",
+            4 => "/generated_js/app.min.js",
         ]
     ];
 
