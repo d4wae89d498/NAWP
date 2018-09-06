@@ -35,33 +35,34 @@ class ControllerCollection extends Collection {
      * @param $response
      * @param $requestType
      * @param $requestArgs
-     * @return bool
-     * @throws \Exception
+     * @param bool $useRouterResult
+     * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, $requestType, $requestArgs): void {
-        // for each controller methods ordered by prioriy
-        foreach($this->getOrderdByPriority() as $controllerMehod) {
+    public function handle(&$response, $requestType, $requestArgs, bool $useRouterResult = true): void {
+        // for each controller methods ordered by priority
+        foreach($this->getOrderdByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
             // we force a match if wildcard used
-            if($controllerMehod["router"][1] === "*") {
-                $routerResponse = ["dot let me empty so I can match"];
+            if($controllerMethod["router"][1] === "*") {
+                $routerResponse = [""];
             } else {
                 // create a new router for that method
                 $dynamicRouter = new Router();
                 // add the route then match
-                $dynamicRouter->add($controllerMehod["controller"]."::".$controllerMehod["method"], [
-                    "method" => $controllerMehod["router"][0],
-                    "route" => $controllerMehod["router"][1]
+                $dynamicRouter->add($controllerMethod["controller"]."::".$controllerMethod["method"], [
+                    "method" => $controllerMethod["router"][0],
+                    "route" => $controllerMethod["router"][1]
                 ]);
                 $routerResponse = $dynamicRouter->match($requestType, $requestArgs);
             }
+            $routerResponse = $useRouterResult ? $routerResponse : $requestArgs;
+            $response = "";
             // execute controller method if router matched or wildecas used
             if(!empty($routerResponse)) {
-                if ($this->getByName($controllerMehod["controller"])->call($response, $controllerMehod["method"], $routerResponse)) {
+                if ($this->getByName($controllerMethod["controller"])->call($response, $controllerMethod["method"], $routerResponse, $requestType)) {
                     break;
                 }
             }
-           // var_dump($routerResponse);
         }
     }
 

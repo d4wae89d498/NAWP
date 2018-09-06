@@ -19,6 +19,7 @@ class Controller {
      */
     public $name = "";
     public $atlas;
+    public const DEFAULT_REQUEST_TYPE = "POST";
     /**
      * Controller constructor.
      */
@@ -32,13 +33,14 @@ class Controller {
      * Will call a controller method
      * @param string $response
      * @param string $method
-     * @param mixed $args
+     * @param array $args
+     * @param string $requestType
      * @return bool
      */
-    public function call(string &$response, string $method, $args): bool {
+    public function call(string &$response, string $method, $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         //var_dump("IN CALLL" . $method);
         if (method_exists($this,$method)) {
-            return $this->$method($response, $method, $args);
+            return $this->$method($response, $args, $requestType);
         } else {
             return false;
         }

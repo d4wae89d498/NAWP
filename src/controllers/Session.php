@@ -48,8 +48,8 @@ class Session extends Controller implements ControllerInterface
         ];
     }
 
+    public function sessionsMiddleware(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
 
-    public function sessionsMiddleware(string &$httpResponse, $args = []): bool {
         //die("session tick");
         SupSession::tick();
         $token = SupSession::id();
@@ -59,27 +59,26 @@ class Session extends Controller implements ControllerInterface
     }
 
     /**
-     * display a homepage
+     * display the homepage
      * @param string $httpResponse
      * @param array $args
      * @return bool
      */
-    public function home(string &$httpResponse, $args = []): bool {
+    public function home(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         $templateLogger = new ViewLogger();
         $httpResponse .= new \App\Views\Pages\Home($templateLogger, ["name" => "test", "elements" => [
             new \App\Views\Elements\Header($templateLogger, []),
-            new \App\Views\Elements\Menu($templateLogger, []),
-            new \App\Views\Elements\Banner($templateLogger, []),
-            new \App\Views\Elements\BannerBlocks($templateLogger, []),
-            new \App\Views\Elements\Services($templateLogger, []),
-            new \App\Views\Elements\Gallery($templateLogger, []),
-            new \App\Views\Elements\OrderNow($templateLogger, []),
-            new \App\Views\Elements\Testimonial($templateLogger, []),
-            new \App\Views\Elements\Map($templateLogger, []),
-            new \App\Views\Elements\BlogWrapper($templateLogger, []),
+                new \App\Views\Elements\Menu($templateLogger, []),
+                    new \App\Views\Elements\Banner($templateLogger, []),
+                    new \App\Views\Elements\BannerBlocks($templateLogger, []),
+                    new \App\Views\Elements\Services($templateLogger, []),
+                    new \App\Views\Elements\Gallery($templateLogger, []),
+                    new \App\Views\Elements\OrderNow($templateLogger, []),
+                    new \App\Views\Elements\Testimonial($templateLogger, []),
+                    new \App\Views\Elements\Map($templateLogger, []),
+                    new \App\Views\Elements\BlogWrapper($templateLogger, []),
             new \App\Views\Elements\Footer($templateLogger, []),
         ]]);
-
         return true;
     }
 
@@ -89,8 +88,8 @@ class Session extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      */
-    public function notFound(string &$httpResponse, $args = []): bool {
-        $httpResponse.= "404";
+    public function notFound(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+        $httpResponse .= " ERROR 404";
         return true;
     }
 
@@ -100,8 +99,8 @@ class Session extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      */
-    public function socketNotFound(string &$httpResponse, $args = []): bool {
-        $httpResponse .= "404";
+    public function socketNotFound(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+        $httpResponse .= " ERROR 404";
         return true;
     }
 }

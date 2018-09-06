@@ -92,10 +92,11 @@ class Kernel {
      * @param $response
      * @param string $requestType
      * @param $requestArgs
-     * @throws \Exception
+     * @param bool $useRouterResult
+     * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, string $requestType, $requestArgs): void {
-        $this->controllerCollection->handle($response, $requestType, $requestArgs);
+    public function handle(&$response, string $requestType, $requestArgs,  bool $useRouterResult = true): void {
+        $this->controllerCollection->handle($response, $requestType, $requestArgs, $useRouterResult);
     }
 
     /**

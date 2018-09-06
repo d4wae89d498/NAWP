@@ -39,7 +39,14 @@ class Admin extends Controller implements ControllerInterface
         ];
     }
 
-    public function login(string &$httpResponse, $args = []): bool {
+    /**
+     * Bind the login page of the admin backend
+     * @param string $httpResponse
+     * @param array $args
+     * @param string $requestType
+     * @return bool
+     */
+    public function login(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         $templateLogger = new ViewLogger();
         $httpResponse = new \App\Views\Pages\Admin\Page
         (
@@ -61,9 +68,13 @@ class Admin extends Controller implements ControllerInterface
      * The admin middleware function
      * @param string $httpResponse
      * @param array $args
+     * @param string $requestType
      * @return bool
      */
-    public function adminMiddleware(string &$httpResponse, $args = []): bool {
+    public function adminMiddleware(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+        echo "IN ADMINMIDDLEWARE OF REQUEST : ";
+        var_dump($args);
+        echo PHP_EOL;
         if(stristr($_SERVER["REQUEST_URI"], "/admin")) {
             $user_token = SupSession::id();
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
@@ -76,18 +87,5 @@ class Admin extends Controller implements ControllerInterface
         }
         // We continue request flow
         return false;
-    }
-
-    /**
-     * return a http admin page
-     * @param string $httpResponse
-     * @param array $args
-     * @return bool
-     */
-    public function admin(string &$httpResponse, $args = []): bool {
-        $templateLogger = new ViewLogger();
-        $httpResponse = new \App\Views\Pages\Admin\Page($templateLogger, ["name" => "test"]);
-        // We release the request
-        return true;
     }
 }
