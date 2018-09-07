@@ -42,17 +42,19 @@ class SocketIO
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
         var_dump($kernel->viewCollection);
-        $this->worker = new \PHPSocketIO\SocketIO(8070);
-        $this->worker->on('connection', function ($socket) use (&$kernel) {
+        $io = new \PHPSocketIO\SocketIO(8070);
+        $io->on('connection', function ($socket) use (&$kernel) {
+            $socket->addedUser = false;
             echo "got connection" . PHP_EOL;
-            $socket->on('packet', function ($data) use (&$kernel) {
+            $socket->on("packet", function ($data) use (&$kernel, $socket) {
                 echo "got packet : " . PHP_EOL;
                 var_dump($data);
                 $response = "";
                 $packet = new \App\iPolitic\NawpCore\components\Packet($data);
                 var_dump($packet);
-                $kernel->handle($response, "SOCKET", $packet, false);
-                $this->worker->emit($response);
+                $kernel->handle($response, "SOCKET", $packet->toArray(), false);
+                $socket->emit("packetout", "pomme");
+                echo "sent";
             });
         });
         Worker::runAll();

@@ -10,6 +10,10 @@
     "repositories": [
         {
             "type": "vcs",
+            "url": "https://github.com/iPolitic/phpsocket.io"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/iPolitic/Workerman"
         },
         {

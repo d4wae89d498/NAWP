@@ -1,4 +1,4 @@
-import * as io from "socket.io-client";
+import * as io from "./socket.io-client/socket.io.js";
 
 export class SocketClient {
     /*
@@ -11,7 +11,11 @@ export class SocketClient {
      */
     public constructor() {
         this.socket = io("http://127.0.0.1:8070");
+        this.socket.on("packetout", function(data){
+            alert("test");
+            console.log("got packet");
+            console.log(data);
+        });
         console.log("socket built");
-        console.log("aaa");
     }
 }

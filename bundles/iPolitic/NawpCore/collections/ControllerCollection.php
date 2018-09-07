@@ -9,7 +9,9 @@
 namespace App\iPolitic\NawpCore\Collections;
 
 use iPolitic\Solex\Router;
-use App\iPolitic\NawpCore\Components\{Collection};
+use App\iPolitic\NawpCore\Components\{
+    Collection, Controller
+};
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 /**
  * Class ControllerCollection
@@ -53,13 +55,17 @@ class ControllerCollection extends Collection {
                     "method" => $controllerMethod["router"][0],
                     "route" => $controllerMethod["router"][1]
                 ]);
-                $routerResponse = $dynamicRouter->match($requestType, $requestArgs);
+                $routerResponse = $dynamicRouter->match($requestType, is_array($requestArgs) && isset($requestArgs['url']) ? $requestArgs['url'] : (is_string($requestArgs) ? $requestArgs : ""));
             }
             $routerResponse = $useRouterResult ? $routerResponse : $requestArgs;
             $response = "";
             // execute controller method if router matched or wildecas used
             if(!empty($routerResponse)) {
-                if ($this->getByName($controllerMethod["controller"])->call($response, $controllerMethod["method"], $routerResponse, $requestType)) {
+                /**
+                 * @var $controller Controller
+                 */
+                $controller = $this->getByName($controllerMethod["controller"]);
+                if ($controller->call($response, $controllerMethod["method"], $routerResponse, $requestType)) {
                     break;
                 }
             }

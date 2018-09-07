@@ -6,7 +6,7 @@ Then, you'll have to create a `configs/.env` file using the `configs/.env.dist` 
 
 If the project is already using a database, you'll have to attach it using SQL Server Management Studio or SQL Operations Studio. Else you'll have to design your database and generate your models with Atlas.
 
-Project database is available here (.MDF / .LDF files)  :  http://google.com 
+Demo project database is available here (.MDF / .LDF files)  :  http://google.com 
 
 ## Minimum requirements 
 - PHP >= 7.2.0 
