@@ -48,7 +48,7 @@ class SocketIO
             echo "got connection" . PHP_EOL;
             $socket->on("packet", function ($data) use (&$kernel, $socket) {
                 echo "got packet : " . PHP_EOL;
-                var_dump($data);
+                var_dump($data);!!!!!!!!!!!!!!!!!!!!   
                 $response = "";
                 $packet = new \App\iPolitic\NawpCore\components\Packet($data);
                 var_dump($packet);

@@ -12,10 +12,10 @@ use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
 use App\iPolitic\NawpCore\Components\Session;
-use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
 use Atlas\Orm\Mapper\Mapper;
 use Atlas\Orm\AtlasContainer;
+use Symfony\Component\Dotenv\Dotenv;
 use App\DataSources\{
     Categorie\CategorieMapper,
     Log\LogMapper,
@@ -62,6 +62,8 @@ class Kernel {
      */
     public function __construct()
     {
+        $dotEnv = new Dotenv();
+        $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
         $this->init();
     }
 
@@ -106,18 +108,7 @@ class Kernel {
     {
         $this->controllerCollection = new ControllerCollection();
         $this->viewCollection = new ViewCollection();
-        $arr = include join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","..","atlas-config.php"]);
-        $atlasContainer = new AtlasContainer($arr[0], $arr[1], $arr[2]);
-        $atlasContainer->setMappers([
-            UserMapper::CLASS,
-            TranslationMapper::CLASS,
-            CategorieMapper::class,
-            ContentMapper::class,
-            LogMapper::class,
-            ContentsCategoriesMapper::class,
-        ]);
-
-        $this->atlas = $atlasContainer->getAtlas();
+        $this->atlas = $this->getAtlas();
         Session::init();
     }
 
