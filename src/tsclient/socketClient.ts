@@ -1,4 +1,4 @@
-import * as io from "./socket.io-client/socket.io.js";
+import * as io from "socket.io-client";
 
 export class SocketClient {
     /*
