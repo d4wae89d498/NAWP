@@ -14,8 +14,8 @@ class Hsptp {
 
     public function racines($img) {
         $delta = self::B * self::B - (4 * self::A * (self::C - $img));
-        echo "delta : " ;
-        var_dump($delta);
+        //echo "delta : " ;
+        //var_dump($delta);
         if ($delta > 0) {
             return [
                 (-self::B - sqrt($delta)) / (2 * self::A),

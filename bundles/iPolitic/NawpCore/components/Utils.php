@@ -13,6 +13,16 @@ namespace App\iPolitic\NawpCore\Components;
 class Utils
 {
     /**
+     * Will print a var to the console
+     * @param $var
+     */
+    public static function p($var, bool $exitScript = false): void {
+        var_dump($var);
+        if($exitScript) {
+            exit;
+        }
+    }
+    /**
      * Will return the
      * @param string $input
      * @param string $tag

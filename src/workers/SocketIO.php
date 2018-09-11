@@ -7,53 +7,64 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
+use App\iPolitic\NawpCore\Components\Utils;
+use App\iPolitic\NawpCore\Components\Packet;
 use Workerman\ {Worker};
-use App\iPolitic\NawpCore\Components\Hsptp;
 
 class SocketIO
 {
     public $worker;
     public function __construct()
     {
-        // needed lines for startup
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
+
         $kernel = new Kernel();
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
 
-        $hsptp = new Hsptp();
-        $img = $hsptp->encrypt("HELLO WORLD", 1);
-        var_dump($img);
-        $r = $hsptp->decrypt($img);
-        var_dump($r);
-        /**
-         * Used for logging views
-         */
-        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
-        /**
-         * Used for creating controllers instance
-         */
         $atlasInstance = &$kernel->atlas;
         Kernel::setKernel($kernel);
+
+        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
         $params = [&$viewLogger, []];
         $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
         $params = [&$atlasInstance];
         Kernel::setKernel($kernel);
+
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
-        var_dump($kernel->viewCollection);
+
+       /* $rsa = new phpseclib\Crypt\RSA();
+
+        define('CRYPT_RSA_EXPONENT', 65537);
+        define('CRYPT_RSA_SMALLEST_PRIME', 64); // makes it so multi-prime RSA is used
+
+        $keyPair = $rsa->createKey(1024); // == $rsa->createKey(1024) where 1024 is the key size
+        $rsa->setPublicKey($keyPair);
+        $rsa->
+        Utils::p($keyPair, true);
+*/
         $io = new \PHPSocketIO\SocketIO(8070);
         $io->on('connection', function ($socket) use (&$kernel) {
             $socket->addedUser = false;
             echo "got connection" . PHP_EOL;
             $socket->on("packet", function ($data) use (&$kernel, $socket) {
-                echo "got packet : " . PHP_EOL;
-                var_dump($data);!!!!!!!!!!!!!!!!!!!!   
+                /**
+                 * @var $socket \PHPSocketIO\Socket
+                 */
                 $response = "";
-                $packet = new \App\iPolitic\NawpCore\components\Packet($data);
-                var_dump($packet);
-                $kernel->handle($response, "SOCKET", $packet->toArray(), false);
-                $socket->emit("packetout", "pomme");
+
+                $kernel->handle
+                (
+                    $response,
+                    "SOCKET",
+                    (new Packet($data, true))
+                     ->useAdaptor()
+                     ->toArray(),
+                    false
+                );
+
+                $socket->emit("packetout", $_SERVER["REQUEST_URI"]);
                 echo "sent";
             });
         });
