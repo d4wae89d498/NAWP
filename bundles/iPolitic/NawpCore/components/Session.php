@@ -36,60 +36,66 @@ class Session
 
     /**
      * Will return a session value using a vistor token
-     * @param string $visitorToken
+     * @param string $id
      * @param string $key
      * @return mixed
      */
-    public static function get(string $visitorToken, string $key) {
-        return self::$session[$visitorToken][$key];
+    public static function get(string $key, string $id = "") {
+        $id = $id !== "" ? $id : Session::id();
+        return self::$session[$id][$key];
     }
 
     /**
      * Will set a session value using a key
-     * @param string $visitorToken
+     * @param string $id
      * @param string $key
-     * @param string $value
-     * @return string
+     * @param mixed $value
+     * @return void
      */
-    public static function set(string $visitorToken, string $key, string$value): void {
-        self::$session[$visitorToken][$key] = $value;
+    public static function set(string $key, $value, string $id = ""): void {
+        $id = $id !== "" ? $id : Session::id();
+        self::$session[$id][$key] = $value;
         return;
     }
 
     /**
      * Return true if the key exists for this visitorToken
-     * @param string $visitorToken
+     * @param string $id
      * @param string $key
      * @return bool
      */
-    public static function isset(string $visitorToken, string $key) : bool {
-        return isset(self::$session[$visitorToken][$key]);
+    public static function isset(string $key, string $id = "") : bool {
+        $id = $id !== "" ? $id : Session::id();
+        return isset(self::$session[$id][$key]);
     }
 
     /**
      * Returns true if visitorToken (current user) is loggen in
-     * @param string $visitorToken
+     * @param string $id
      * @return bool
      */
-    public static function isLoggedIn(string $visitorToken) : bool {
-        return isset(self::$session[$visitorToken]);
+    public static function isLoggedIn(string $id = "") : bool {
+        $id = $id !== "" ? $id : Session::id();
+        return isset(self::$session[$id]);
     }
 
     /**
      * Will destroy a session
-     * @param string $visitorToken
+     * @param string $id
      */
-    public static function destroy(string $visitorToken) : void {
-        unset(self::$session[$visitorToken]);
+    public static function destroy(string $id = "") : void {
+        $id = $id !== "" ? $id : Session::id();
+        unset(self::$session[$id]);
     }
 
     /**
      * Will log in the given vistorToken, a generate its expire date
-     * @param $visitorToken
+     * @param $id
      */
-    public static function logIn($visitorToken): void {
-        self::$session[$visitorToken] = [];
-        self::$session[$visitorToken]["expire_date"] = strtotime(date("Y-m-d H:i:s", strtotime('+'.self::sessionSecondsDuration.' seconds')));
+    public static function logIn(string $id = ""): void {
+        $id = $id !== "" ? $id : Session::id();
+        self::$session[$id] = [];
+        self::$session[$id]["expire_date"] = strtotime(date("Y-m-d H:i:s", strtotime('+'.self::sessionSecondsDuration.' seconds')));
         return;
     }
 

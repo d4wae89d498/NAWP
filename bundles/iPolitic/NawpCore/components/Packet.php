@@ -19,7 +19,7 @@ class Packet implements \ArrayAccess {
 
     /**
      * The socket adapter
-     * @var SocketAdapter
+     * @var PacketAdapter
      */
     private $socketAdapter;
     /**
@@ -35,7 +35,7 @@ class Packet implements \ArrayAccess {
      * @throws \Exception
      */
     public function __construct(array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false) {
-        $this->socketAdapter = new SocketAdapter();
+        $this->socketAdapter = new PacketAdapter();
         $nData = [];
         if (gettype($data) === "array")
         {
@@ -107,6 +107,9 @@ class Packet implements \ArrayAccess {
         foreach ($this->container["clientVar"] as $k => $v) {
             if ($k === "REQUEST_URI") {
                 $v = $this->container["url"];
+            }
+            if ($k === "data") {
+                $v = $this->container['data'];
             }
             $_SERVER[$k] = $v;
             $GLOBALS["_SERVER"][$k] = $v;

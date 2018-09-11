@@ -10,7 +10,7 @@ namespace App\Controllers;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use  App\iPolitic\NawpCore\Components\Session as SupSession;
+use  App\iPolitic\NawpCore\Components\Session as CSession;
 
 /**
  * Class Sample
@@ -51,10 +51,9 @@ class Session extends Controller implements ControllerInterface
     public function sessionsMiddleware(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
 
         //die("session tick");
-        SupSession::tick();
-        $token = SupSession::id();
-        $httpResponse .= (SupSession::isset($token, "TEST") ? SupSession::get($token, "TEST") : "") . " " . SupSession::id();
-        SupSession::set($token, "TEST", "Pomme");
+        CSession::tick();
+        $httpResponse .= (CSession::isset("TEST") ? CSession::get("TEST") : "") . " " . CSession::id();
+        CSession::set("TEST", "Pomme");
         return false;
     }
 

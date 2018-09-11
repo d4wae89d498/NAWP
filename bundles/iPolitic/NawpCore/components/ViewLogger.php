@@ -82,7 +82,7 @@ class ViewLogger
      */
     public function generateJS(): string {
 
-        $socketAdapter = new SocketAdapter();
+        $socketAdapter = new PacketAdapter();
 
         return Utils::ocb(function() use (&$socketAdapter) { ?>
             window['templates'] = [];

@@ -10,7 +10,7 @@ namespace App\Controllers;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use App\iPolitic\NawpCore\Components\Session as SupSession;
+use App\iPolitic\NawpCore\Components\Session;
 use Workerman\Protocols\Http;
 use Workerman\Protocols\HttpCache;
 
@@ -76,9 +76,8 @@ class Admin extends Controller implements ControllerInterface
         var_dump($args);
         echo PHP_EOL;
         if(stristr($_SERVER["REQUEST_URI"], "/admin")) {
-            $user_token = SupSession::id();
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
-            if (!SupSession::isset($user_token, "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
+            if (!Session::isset( "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
                 Http::header('Location: /admin/login');
                 // We release the request

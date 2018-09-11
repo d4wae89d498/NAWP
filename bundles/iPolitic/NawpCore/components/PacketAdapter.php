@@ -9,7 +9,7 @@
 namespace App\iPolitic\NawpCore\components;
 
 
-class SocketAdapter
+class PacketAdapter
 {
     /**
      * @var Hsptp

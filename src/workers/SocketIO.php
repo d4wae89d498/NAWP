@@ -34,16 +34,6 @@ class SocketIO
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
 
-       /* $rsa = new phpseclib\Crypt\RSA();
-
-        define('CRYPT_RSA_EXPONENT', 65537);
-        define('CRYPT_RSA_SMALLEST_PRIME', 64); // makes it so multi-prime RSA is used
-
-        $keyPair = $rsa->createKey(1024); // == $rsa->createKey(1024) where 1024 is the key size
-        $rsa->setPublicKey($keyPair);
-        $rsa->
-        Utils::p($keyPair, true);
-*/
         $io = new \PHPSocketIO\SocketIO(8070);
         $io->on('connection', function ($socket) use (&$kernel) {
             $socket->addedUser = false;
