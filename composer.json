@@ -7,6 +7,11 @@
             "email": "faussurier.marc@icloud.com"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "7.2.1"
+        }
+    },
     "repositories": [
         {
             "type": "vcs",
@@ -26,6 +31,7 @@
         }
     ],
     "require": {
+        "php": ">= 7.2.1",
         "twig/twig": "^2.5",
         "workerman/workerman": "master",
         "ipolitic/solex": "dev-master",
@@ -35,6 +41,7 @@
         "symfony/dotenv": "^4.2@dev",
         "phpseclib/phpseclib": "dev-master"
     },
+
     "require-dev": {
       "atlas/cli": "1.*"
     },

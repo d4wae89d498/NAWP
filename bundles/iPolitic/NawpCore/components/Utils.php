@@ -46,4 +46,22 @@ class Utils
         ob_end_clean();
         return $res;
     }
+
+    /**
+     * Will decompress a string
+     * @param string $string
+     * @return string*
+     */
+    public static function compress(string $string): string {
+        return gzdeflate($string, 9);
+    }
+
+    /**
+     * Will compress a string
+     * @param string $string
+     * @return string
+     */
+    public static function decompress(string $string): string {
+        return gzinflate($string);
+    }
 }

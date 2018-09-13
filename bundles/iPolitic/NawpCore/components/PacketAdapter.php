@@ -8,50 +8,90 @@
 
 namespace App\iPolitic\NawpCore\components;
 
+use App\iPolitic\NawpCore\Kernel;
 
 class PacketAdapter
 {
-    /**
-     * @var Hsptp
-     */
-    public $hsptp;
+    public const PACKET_ADAPTER_FOLDER = "packet_adapter";
 
-    public function __construct()
-    {
-        $this->hsptp = new Hsptp();
+    public static function init(): void {
+        $files = glob(
+            join(
+                DIRECTORY_SEPARATOR, [
+                Kernel::getKernel()->cachePath, self::PACKET_ADAPTER_FOLDER , "*"]
+            ));
+        foreach($files as $file){ // iterate files
+            if(!is_dir($file)) {
+                unlink($file); // delete file
+            }
+        }
     }
-
     /**
-     * Will return a crypted $_server representation string
+     * Will cache a packetAdapter file and return an ID
      * @return string
      * @throws \Exception
      */
-    public function getCryptedDServer(): string {
-        $var = @serialize($_SERVER);
-        // if serialisation succeeed
-        if ($var !== false) {
-            return $this->hsptp->encrypt($var);
+    public static function storeAndGet(): string {
+        $list = glob(
+            join(
+                DIRECTORY_SEPARATOR, [
+                Kernel::getKernel()->cachePath,
+                self::PACKET_ADAPTER_FOLDER,
+               "*___" . Session::id() . ".txt"
+        ]));
+        if(isset($list[0])) {
+            $split = explode("/", $list[0]);
+            $id = explode("___", $split[count($split) - 1])[0];
+        } else {
+            $id = self::generateId();
         }
-        // else serialisation failed
-        else {
-            throw new \Exception("Serialisation failed");
-        }
+        $filePath = join(DIRECTORY_SEPARATOR, [
+            Kernel::getKernel()->cachePath,
+            self::PACKET_ADAPTER_FOLDER,
+            $id . "___" . Session::id() . ".txt",]);
+        $fp = fopen($filePath, "w+");
+        fwrite($fp, (serialize($_SERVER)));
+        return $id;
     }
 
     /**
-     *      * Wil return a decrypted $_server var
-     * @param string $cryptedString
+     * Will return a packetAdapter cached file
+     * @param string $id
      * @return array
+     */
+    public static function get(string $id): array {
+        $list = glob(
+        join(
+        DIRECTORY_SEPARATOR, [
+            Kernel::getKernel()->cachePath,
+            "packet_adapter",
+            $id. "___*.txt"
+        ]));
+        if (isset($list[0])) {
+            $filePath = $list[0]; // Assuming there'll only be one match for each day.
+            if (file_exists($filePath)) {
+                $fp = fopen($filePath, 'r') or die('cant open file');
+                return unserialize(fread($fp, filesize($filePath)));
+            }
+        }
+        // todo :: send refresh packet here
+        exit;
+    }
+
+    /**
+     * Will generate a new ID
+     * @param int $length
+     * @return string
      * @throws \Exception
      */
-    public function getDecryptedDServer(string $cryptedString ): array {
-        $decryptedString = $this->hsptp->decrypt($cryptedString);
-        $output = @unserialize($decryptedString);
-        // if unserialisation succeed
-        if($output !== false) {
-            return $output;
+    public static function  generateId(int $length = 20): string {
+        if (function_exists("random_bytes")) {
+            $bytes = random_bytes(ceil($length / 2));
+        } elseif (function_exists("openssl_random_pseudo_bytes")) {
+            $bytes = openssl_random_pseudo_bytes(ceil($length / 2));
         } else {
-            throw new \Exception("Unserialisation failed");
+            throw new \Exception("no cryptographically secure random function available");
         }
+        return substr(bin2hex($bytes), 0, $length);
     }
 }

@@ -5,7 +5,6 @@ configs/.env
 vendor
 .vs
 .vscode
-atlas-config.php
 composer.lock
 yarn.lock
 yarn-error.log

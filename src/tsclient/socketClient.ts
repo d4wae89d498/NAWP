@@ -12,7 +12,7 @@ export class SocketClient {
     public constructor() {
         this.socket = io("http://127.0.0.1:8070");
         this.socket.on("packetout", function(data) {
-            alert("test");
+            // alert("test");
             console.log("got packet");
             console.log(data);
         });

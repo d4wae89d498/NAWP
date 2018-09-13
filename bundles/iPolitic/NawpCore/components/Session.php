@@ -6,6 +6,8 @@
  * Time: 5:24 PM
  */
 namespace App\iPolitic\NawpCore\Components;
+use App\iPolitic\NawpCore\Kernel;
+
 /**
  * Class Session
  * Provide php native session replacement
@@ -25,7 +27,15 @@ class Session
     /**
      * The session file name when is stored serialmized data
      */
-    public const sessionFile = 'sessions.txt';
+    public const SESSION_FILE = 'sessions.txt';
+
+    /**
+     * Will return the full path to self::SESSION_FILE
+     * @return string
+     */
+    public static function getFilePath(): string {
+        return join(DIRECTORY_SEPARATOR, [Kernel::getKernel()->cachePath, self::SESSION_FILE]);
+    }
 
     /**
      * Will generate a unic token per visitor. Will not generate a single cookie
@@ -111,7 +121,7 @@ class Session
             }
         }
         // write serialized txt to self::sessionFile
-        $handle = fopen(self::sessionFile, "wr+");
+        $handle = fopen(self::getFilePath(), "wr+");
         fwrite($handle, serialize(self::$session));
         return;
     }
@@ -120,9 +130,13 @@ class Session
      * Will load the session var using a serialized txt file if one
      */
     public static function init() {
-        if(empty(self::$session) && file_exists(self::sessionFile)) {
-            $handle = fopen(self::sessionFile, "r+");
-            self::$session = unserialize(fread($handle, filesize(self::sessionFile)));
+        if(file_exists(self::getFilePath()) && (filesize(self::getFilePath()) > 0)) {
+            $handle = fopen(self::getFilePath(), "r");
+            self::$session = unserialize(fread($handle, filesize(self::getFilePath())));
+        } else {
+            $handle = fopen(self::getFilePath(), "w+");
+            self::$session = [];
+            fwrite($handle, serialize(self::$session));
         }
     }
 
@@ -133,7 +147,8 @@ class Session
         /**
          * If a prime number is generated, we check for token expirity
          */
-        $a = 0; if(call_user_func_array(function ($n)use(&$a){for($i=~-$n**.5|0;$i&&$n%$i--;);return!$i&$n>2|$n==2; }, [$a = mt_rand()])) {
+        $a = 0;
+        if(call_user_func_array(function ($n)use(&$a){for($i=~-$n**.5|0;$i&&$n%$i--;);return!$i&$n>2|$n==2; }, [$a = mt_rand()])) {
             echo "PRIME GENERATED : " . $a;
             self::tokenExpireCheck();
         }

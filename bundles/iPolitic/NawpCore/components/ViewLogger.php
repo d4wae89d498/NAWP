@@ -82,9 +82,9 @@ class ViewLogger
      */
     public function generateJS(): string {
 
-        $socketAdapter = new PacketAdapter();
+        $packetAdapter = new PacketAdapter();
 
-        return Utils::ocb(function() use (&$socketAdapter) { ?>
+        return Utils::ocb(function() use (&$packetAdapter) { ?>
             window['templates'] = [];
             <?php  foreach($this->templatesData as $id => $template): ?>
             if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
@@ -98,7 +98,7 @@ class ViewLogger
             <?php foreach((Kernel::getKernel())->viewCollection as $k => $v): ?>
                 window['baseTemplates']['<?=$k?>'] = <?=json_encode($v)?>;
             <?php endforeach; ?>
-            window['clientVar'] = <?=json_encode($socketAdapter->getCryptedDServer())?>;
+            window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
             <?php
         });
         // todo : générer $_server encrypté

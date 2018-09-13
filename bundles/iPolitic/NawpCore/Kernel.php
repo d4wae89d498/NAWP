@@ -11,10 +11,12 @@ namespace App\iPolitic\NawpCore;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
+use App\iPolitic\NawpCore\components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use Atlas\Orm\Atlas;
 use Atlas\Orm\Mapper\Mapper;
 use Atlas\Orm\AtlasContainer;
+use phpseclib\Crypt\RSA;
 use Symfony\Component\Dotenv\Dotenv;
 use App\DataSources\{
     Categorie\CategorieMapper,
@@ -26,6 +28,17 @@ use App\DataSources\{
 };
 
 class Kernel {
+    public const CACHE_FOLDER_NAME = "cache";
+    public const RSA_FILE_NAME = "rsa.txt";
+    public const DEFAULT_RSA_KEYS = [];
+    /**
+     * @var array
+     */
+    public $rsaKeys = self::DEFAULT_RSA_KEYS;
+    /**
+     * @var string
+     */
+    public $cachePath = "";
     /**
      * @var ControllerCollection
      */
@@ -53,7 +66,7 @@ class Kernel {
     /**
      * @return Kernel
      */
-    public static function getKernel() {
+    public static function getKernel(): Kernel {
         return self::$kernel;
     }
 
@@ -106,9 +119,13 @@ class Kernel {
      */
     public function init(): void
     {
+        $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
         $this->controllerCollection = new ControllerCollection();
         $this->viewCollection = new ViewCollection();
         $this->atlas = $this->getAtlas();
+        //$this->loadRSA();
+        self::setKernel($this);
+        PacketAdapter::init();
         Session::init();
     }
 
@@ -176,4 +193,20 @@ class Kernel {
         ]);
         return $atlasContainer->getAtlas();
     }
+
+    public function loadRSA(): void {
+        $rsaFilePath = join(DIRECTORY_SEPARATOR, [$this->cachePath, self::RSA_FILE_NAME]);
+        $keys = [];
+        if (!file_exists($rsaFilePath)) {
+            $handle = fopen($rsaFilePath, "w+");
+            $rsa = new RSA();
+            $keys = $rsa->createKey(1024);
+            fwrite($handle, serialize($keys));
+        } else {
+            $handle = fopen($rsaFilePath, "r+");
+            $keys = unserialize(fread($handle, filesize($rsaFilePath)));
+        }
+        $this->rsaKeys = $keys;
+    }
+
 }

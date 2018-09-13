@@ -41,11 +41,10 @@ class Packet implements \ArrayAccess {
         {
             $nData = $data;
         }
-
         foreach ($this->container as $k => $v) {
             if(isset($nData[$k])){
                 if ($k === "clientVar" && $decryptClientVar) {
-                    $this->container[$k] = $this->socketAdapter->getDecryptedDServer($nData[$k]);
+                    $this->container[$k] = $this->socketAdapter->get($nData[$k]);
                 } else {
                     $this->container[$k] = $nData[$k];
                 }

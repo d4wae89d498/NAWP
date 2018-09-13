@@ -34,18 +34,20 @@ class Http
         Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
-       // echo "kernel instance : " . PHP_EOL;
-       // var_dump($kernel);
+
         /*
         $atlas = $kernel->getAtlas();
         $categoryRecord = $atlas->fetchRecord(\App\DataSources\User\UserMapper::CLASS, '2');
         var_dump($categoryRecord);
         */
-
         // workerman setup
+
         $this->worker = new WebServer("http://0.0.0.0:5616", [], function(&$connection)use(&$kernel){
+            $a = microtime(true);
             $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
             $connection->send($response);
+            $b = microtime(true);
+            //echo "[HTTP]" .((string) $b - $a ). PHP_EOL;
         });
         $this->worker->name = "http";
         $this->worker->count = 1;

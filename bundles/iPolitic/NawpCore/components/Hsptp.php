@@ -2,8 +2,17 @@
 
 namespace App\iPolitic\NawpCore\Components;
 
-class Hsptp {
+use App\iPolitic\NawpCore\Kernel;
+use phpseclib\Crypt\RSA;
 
+/**
+ * The HSPTP encryption class
+ * Class Hsptp
+ * @package App\iPolitic\NawpCore\Components
+ */
+class Hsptp {
+    public const USE_COMPRESSION = false;
+    public const USE_RSA = false;
     public const A = -50;
     public const B = -300;
     public const C = 2;
@@ -12,7 +21,7 @@ class Hsptp {
         return self::A * $x * $x + self::B * $x + self::C;
     }
 
-    public function racines($img) {
+    public function racines(float $img) {
         $delta = self::B * self::B - (4 * self::A * (self::C - $img));
         //echo "delta : " ;
         //var_dump($delta);
@@ -26,45 +35,37 @@ class Hsptp {
                 (-self::B - sqrt(self::A * 2) ),
             ];
         } else {
-            // throw new \Exception("Complexes solutions are still not supported, please make sur your polynome verify -b/2a >= 0");
             return [0];
         }
     }
 
-    public function encrypt($string) {
+    public function encrypt(string $string) {
+        $rsa = new RSA();
+        if (self::USE_RSA) {
+            $rsaKeys = Kernel::getKernel()->rsaKeys;
+            $rsa->load($rsaKeys['publickey']);
+        }
         $arr = [];
         $characters = str_split($string);
         foreach ($characters as $char) {
             $int = ord($char);
-            $arr[] = $this->f($int);
+            $arr[] = (self::USE_RSA ? $rsa->encrypt($this->f($int)) : $this->f($int));
         }
-        return base64_encode(serialize($arr));
+        return self::USE_COMPRESSION ? Utils::compress(base64_encode(serialize($arr))) : base64_encode(serialize($arr));
     }
 
-    public function decrypt($string) {
+    public function decrypt(string $string) {
+        $string = self::USE_COMPRESSION ? Utils::decompress($string) : $string;
+        if (self::USE_RSA) {
+            $rsa = new RSA();
+            $rsaKeys = Kernel::getKernel()->rsaKeys;
+            $rsa->load($rsaKeys['privatekey']);
+        }
         $arr = unserialize(base64_decode($string));
         $str = "";
         foreach ($arr as $k => $v) {
-            $str .= chr($this->racines($v)[0]);
+            $str .= chr($this->racines((float)(self::USE_RSA ? $rsa->decrypt($v) : $v))[0]);
         }
         return $str;
-    }
-
-    public function strongEncrypt($str, $loopCount = 3) {
-        if ($loopCount > 0) {
-            $generatedString = $this->encrypt($str);
-            return $this->strongEncrypt($generatedString, --$loopCount);
-        } else {
-            return $str;
-        }
-    }
-
-    public function strongDecrypt($str, $loopCount = 3) {
-        if ($loopCount > 0) {
-            $generatedString = $this->decrypt($str);
-            return  $this->strongDecrypt($generatedString, --$loopCount);
-        } else {
-            return $str;
-        }
     }
 }
