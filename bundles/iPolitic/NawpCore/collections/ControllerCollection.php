@@ -32,7 +32,7 @@ class ControllerCollection extends Collection {
     }
 
     /**
-     *  Will run all controllers and reassign $response while the
+     * Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRUE
      * @param $response
      * @param $requestType

@@ -7,7 +7,6 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\Packet;
 use Workerman\ {Worker};
 
@@ -37,25 +36,31 @@ class SocketIO
         //Worker::$eventLoopClass = '\Workerman\Events\Ev';
         $io = new \PHPSocketIO\SocketIO(8070);
 
-        $io->on('connection', function ($socket) use (&$kernel) {
+        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {
             echo "got connection" . PHP_EOL;
-            $socket->on("packet", function ($data) use (&$kernel, $socket) {
+            $socket->on("packet", function (array $data) use (&$kernel, $socket) {
                 echo "got packet" . PHP_EOL;
-                /**
-                 * @var $socket \PHPSocketIO\Socket
-                 */
-                $response = "";
-                $obj = (new Packet($data, true))
-                    ->useAdaptor()
-                    ->toArray();
-                $kernel->handle
-                (
-                    $response,
-                    "SOCKET",
-                    $obj,
-                    false
-                );
-                $socket->emit("packetout", $_SERVER["REQUEST_URI"]);
+                try {
+                    /**
+                     * @var $socket \PHPSocketIO\Socket
+                     */
+                    $response = "";
+                    $obj = (new Packet($data, true))
+                        ->useAdaptor()
+                        ->toArray();
+                    $kernel->handle
+                    (
+                        $response,
+                        "SOCKET",
+                        $obj,
+                        false
+                    );
+                    $socket->emit("packetout", $_SERVER["REQUEST_URI"]);
+                } catch (Exception $ex) {
+                    throw new $ex;
+                } finally {
+                    $socket->emit("packetout", "ERROR");
+                }
                 echo PHP_EOL;
             });
         });
@@ -63,4 +68,8 @@ class SocketIO
         Worker::runAll();
     }
 }
-new SocketIO();
+try {
+    new SocketIO();
+} catch (Exception $exception) {
+    echo 'Caught worker startup exception: ',  $e->getMessage(), PHP_EOL;
+}

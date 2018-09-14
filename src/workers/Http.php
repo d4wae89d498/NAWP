@@ -7,6 +7,7 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
+use App\iPolitic\NawpCore\Components\Exception;
 use Workerman\ {Worker, WebServer};
 
 class Http
@@ -42,14 +43,31 @@ class Http
         */
         // workerman setup
 
-        $this->worker = new WebServer("http://0.0.0.0:5616", [], function(&$connection)use(&$kernel){
-            $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
-            $connection->send($response);
-        });
+        $this->worker = new WebServer(
+            "http://0.0.0.0:5616",
+            [],
+            function(Workerman\Connection\ConnectionInterface &$connection)use(&$kernel) {
+                try {
+                    $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
+                } catch (\Exception $exception) {
+                    throw $exception;
+                } finally {
+                    $connection->send(
+                        isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
+                        Exception::catch($exception)
+                        :
+                        "Our server is currently in maintenance mode. Please come back later."
+                    );
+                }
+            });
         $this->worker->name = "http";
         $this->worker->count = 1;
         $this->worker->addRoot("127.0.0.1", join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","public"]));
         Worker::runAll();
     }
 }
-new Http();
+try {
+    new Http();
+} catch (\Exception $exception) {
+    echo 'Caught worker startup exception: ',  $e->getMessage(), PHP_EOL;
+}
