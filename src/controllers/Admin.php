@@ -52,13 +52,11 @@ class Admin extends Controller implements ControllerInterface
         (
             $templateLogger,
             [
-                "elements" =>  [
-                    new \App\Views\Elements\Admin\Header($templateLogger, [
-                        "page" => "Login",
-                    ]),
-                    new \App\Views\Elements\Admin\Login($templateLogger, []),
-                    new \App\Views\Elements\Admin\Footer($templateLogger, []),
-                ]
+                "header" => new \App\Views\Elements\Admin\Header($templateLogger, [
+                    "page" => "Login",
+                ]),
+                "footer" => new \App\Views\Elements\Admin\Footer($templateLogger, []),
+                "pageElement" => new \App\Views\Elements\Admin\Login($templateLogger, []),
             ]
         );
         return true;

@@ -14,7 +14,7 @@ class Services extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- Services Start-->
-        <div class="service_bg wdt_100 pad_100_196">
+        <div data-id="{{id}}" class="service_bg wdt_100 pad_100_196">
             <div class="container">
                 <div class="wdt_100 service_mrbtm service_mrbtm1">
                     <h3 class="black-color service_head_br">Our <span class="lytgreen-head">Services</span></h3><a href="#" class="view_Service">View All Services</a>

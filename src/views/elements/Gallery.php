@@ -14,7 +14,7 @@ class Gallery extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- Project Start-->
-        <div class="project_Gal wdt_100">
+        <div data-id="{{id}}" class="project_Gal wdt_100">
             <div class="project_gal_left">
                 <h3 class="mar_btm23">Projects <span class="green-head">Gallery</span></h3>
                 <p>Lorem ipsum dolor sit amet, consecte tur adipisicing elit. Numquam quaerat atque, dolore amido ipsum dolor sit amet, consecte tur adipisicing elit. Lorem ipsum dolor sit amet, consecte tur adipisicing elit.</p><a href="gallery.html" class="checkmor_work">Checkout Our More Work</a>

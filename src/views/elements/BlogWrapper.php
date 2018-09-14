@@ -16,7 +16,7 @@ class BlogWrapper extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- Blog_Wrapper Start-->
-        <div class="pad_94_100 wdt_100">
+        <div data-id="{{id}}" class="pad_94_100 wdt_100">
             <div class="container">
                 <h3 class="black-color mar_btm40">Latest <span class="green-head">Blogs</span></h3>
                 <div class="row">

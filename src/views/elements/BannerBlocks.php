@@ -15,7 +15,7 @@ use App\iPolitic\NawpCore\Components\View;
 class BannerBlocks extends View implements TwigInterface
 {
     public function twig(): void { ?>
-        <div class="green_bg wdt_100">
+        <div data-id="{{id}}" class="green_bg wdt_100">
             <ul class="bnr_btm_services">
                 <li class="service_img1">
                     <h5>Excellent Service</h5>

@@ -81,11 +81,10 @@ class ViewLogger
      * @return string
      */
     public function generateJS(): string {
-
         $packetAdapter = new PacketAdapter();
-
         return Utils::ocb(function() use (&$packetAdapter) { ?>
             window['templates'] = [];
+            window['baseTemplates'] = [];
             <?php  foreach($this->templatesData as $id => $template): ?>
             if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
                 window['templates'][<?=json_encode($id)?>] = {
@@ -94,14 +93,12 @@ class ViewLogger
                 };
             }
             <?php endforeach; ?>
-            window['baseTemplates'] = [];
             <?php foreach((Kernel::getKernel())->viewCollection as $k => $v): ?>
                 window['baseTemplates']['<?=$k?>'] = <?=json_encode($v)?>;
             <?php endforeach; ?>
             window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
             <?php
         });
-        // todo : générer $_server encrypté
     }
 
 

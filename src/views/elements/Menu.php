@@ -14,7 +14,7 @@ class Menu extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- Header Topbar Start-->
-        <div class="hdr_variation2">
+        <div data-id="{{id}}" class="hdr_variation2">
             <div class="hdr_col">
                 <div class="container">
                     <div class="hdr_top_bar hdr_top_bar_var3">

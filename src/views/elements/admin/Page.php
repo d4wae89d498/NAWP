@@ -20,7 +20,7 @@ class Page extends View implements TwigInterface
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        <div id="main-wrapper">
+        <div data-id="{{id}}" id="main-wrapper">
             <!-- ============================================================== -->
             <!-- Topbar header - style you can find in pages.scss -->
             <!-- ============================================================== -->

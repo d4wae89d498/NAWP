@@ -16,7 +16,7 @@ class Banner extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- BannerCol Start-->
-        <div id="minimal-bootstrap-carousel" data-ride="carousel" class="carousel slide carousel-fade shop-slider">
+        <div data-id="{{id}}" id="minimal-bootstrap-carousel" data-ride="carousel" class="carousel slide carousel-fade shop-slider">
             <!-- Wrapper for slides-->
             <div role="listbox" class="carousel-inner ver_new_3_slider">
                 <div class="item active slide-1">

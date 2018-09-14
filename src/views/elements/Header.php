@@ -28,7 +28,7 @@ class Header extends View implements TwigInterface
 
     public function twig(): void { ?>
 <!DOCTYPE html>
-<html>
+<html data-id="{{id}}">
     <head>
         <meta charset="{{charset}}">
         <title>{{page}} | {{title}}</title>

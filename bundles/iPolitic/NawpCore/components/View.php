@@ -46,6 +46,7 @@ abstract class View
               $this->states[$k] = $v;
           }
         }
+        $this->states['id'] = $id;
         $this->templateLogger->setTemplate($id,$this);
     }
 

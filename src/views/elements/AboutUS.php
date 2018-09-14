@@ -16,7 +16,7 @@ class AboutUS extends View implements TwigInterface
 {
     public function twig(): void { ?>
         <!-- About_Us Start-->
-        <div class="pad_100 wdt_100">
+        <div data-id="{{id}}" class="pad_100 wdt_100">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><img src="images/home_page3/welcome_Dream_img.png"></div>

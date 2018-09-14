@@ -27,7 +27,7 @@ class Footer extends View implements TwigInterface
 
     public function twig(): void { ?>
         <!-- Footer_Wrapper Start-->
-        <footer class="wdt_100">
+        <footer data-id="{{id}}" class="wdt_100">
             <!-- Footer_Container Start-->
             <div class="container">
                 <div class="row">
