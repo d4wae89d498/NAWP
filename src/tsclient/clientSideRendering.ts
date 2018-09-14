@@ -1,8 +1,11 @@
 import * as $ from "jquery";
 
+/**
+ * The client side rendering class
+ */
 export class ClientSideRendering {
     /**
-     * Will render a string using its data-id
+     * Will render a template using its data-id, will append or replace using the given id.
      * @param {string} templateDataId
      * @param {object} states
      */
@@ -11,27 +14,52 @@ export class ClientSideRendering {
             $("[data-item-id=\"" + templateDataId + "\"]").after("");
             // re-render window["templates"][template] with states
         } else {
-            let nonDigit: string = templateDataId.replace(/[0-9]/g, "");
+            const nonDigit: string = this.IdToType(templateDataId);
             let maxId: number = 0;
-            const matches: Array<string> = [];
-            // for each current templates WITH THE SAME TYPE as the one given
-            // pushing its key to the matches array
             for (let tpl in window["templates"]) {
                 if (window["templates"].hasOwnProperty(tpl)) {
-                    let digit: number = parseInt(tpl.replace(/\D/g, ""));
-                    maxId = digit > maxId ? digit : maxId;
                     if (tpl.substr(0, tpl.length - (tpl.length - nonDigit.length)) === nonDigit) {
-                        matches.push(tpl);
+                        let digit: number = parseInt(tpl.replace(/\D/g, ""));
+                        maxId++;
                     }
                 }
             }
-           if (Object.keys(matches).length > 1) {
-                const newId = maxId + 1;
-                const newTplKey = nonDigit + newId;
+            if (maxId > 0) {
                 // append here
-                $("[data-item-id=\"" + newTplKey + "\"]").after("");
-           }
+                $("[data-item-id=\"" + this.getMaxType(templateDataId) + "\"]").after("");
+            }
         }
         return;
+    }
+
+    /**
+     * Convert id to type
+     * @param {string} id
+     * @returns {string}
+     * @constructor
+     */
+    public static IdToType(id: string): string {
+        let nonDigit: string = id.replace(/[0-9]/g, "");
+        return nonDigit;
+    }
+
+    /**
+     * Will generate a new type id using a template id/type
+     * @param {string} type
+     * @param {number} minus
+     * @returns {string}
+     */
+    public static getMaxType(type: string): string {
+        const nonDigit: string = this.IdToType(type);
+        let maxId: number = 0;
+        for (let tpl in window["templates"]) {
+            if (window["templates"].hasOwnProperty(tpl)) {
+                if (tpl.substr(0, tpl.length - (tpl.length - nonDigit.length)) === nonDigit) {
+                    let digit: number = parseInt(tpl.replace(/\D/g, ""));
+                    maxId = digit > maxId ? digit : maxId;
+                }
+            }
+        }
+        return nonDigit + maxId.toString();
     }
 }
