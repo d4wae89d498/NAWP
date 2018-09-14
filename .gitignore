@@ -1,5 +1,6 @@
 .idea/
 public/generated_js/
+cache
 node_modules/
 configs/.env
 vendor
