@@ -57,9 +57,8 @@ class SocketIO
                     );
                     $socket->emit("packetout", $_SERVER["REQUEST_URI"]);
                 } catch (Exception $ex) {
-                    throw new $ex;
-                } finally {
                     $socket->emit("packetout", "ERROR");
+                    throw new $ex;
                 }
                 echo PHP_EOL;
             });

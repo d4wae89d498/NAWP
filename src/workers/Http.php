@@ -50,14 +50,13 @@ class Http
                 try {
                     $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
                 } catch (\Exception $exception) {
-                    throw $exception;
-                } finally {
                     $connection->send(
                         isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
-                        Exception::catch($exception)
-                        :
-                        "Our server is currently in maintenance mode. Please come back later."
+                            Exception::catch($exception)
+                            :
+                            "Our server is currently in maintenance mode. Please come back later."
                     );
+                    throw $exception;
                 }
             });
         $this->worker->name = "http";
