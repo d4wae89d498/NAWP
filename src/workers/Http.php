@@ -49,6 +49,7 @@ class Http
             function(Workerman\Connection\ConnectionInterface &$connection)use(&$kernel) {
                 try {
                     $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
+                    $connection->send($response);
                 } catch (\Exception $exception) {
                     $connection->send(
                         isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
