@@ -47,8 +47,14 @@ class Http
             "http://0.0.0.0:5616",
             [],
             function(Workerman\Connection\ConnectionInterface &$connection)use(&$kernel) {
+                $response = [];
                 try {
-                    $kernel->handle($response, $_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
+                    $kernel->handle (
+                        $response,
+                        isset($_SERVER["REQUEST_METHOD"]) ?
+                        $_SERVER["REQUEST_METHOD"] : "GET",
+                        $_SERVER["REQUEST_URI"]
+                    );
                     $connection->send($response);
                 } catch (\Exception $exception) {
                     $connection->send(

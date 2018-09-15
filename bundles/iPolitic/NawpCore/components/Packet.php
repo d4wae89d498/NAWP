@@ -26,7 +26,7 @@ class Packet implements \ArrayAccess {
      * The packets components
      * @var array
      */
-    private $container = ["data" => [], "url" => "", "clientVar" => ""];
+    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => []];
 
     /**
      * Packet constructor.
@@ -113,6 +113,9 @@ class Packet implements \ArrayAccess {
             $_SERVER[$k] = $v;
             $GLOBALS["_SERVER"][$k] = $v;
         }
+        $_SERVER["REQUEST_URI"] = $this->container["url"];
+        $_POST = $this->container["data"];
+        $GLOBALS["_POST"] = $this->container["data"];
         return $this;
     }
 }

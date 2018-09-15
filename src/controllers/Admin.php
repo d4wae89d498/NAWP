@@ -41,22 +41,25 @@ class Admin extends Controller implements ControllerInterface
 
     /**
      * Bind the login page of the admin backend
+     * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
      * @param string $requestType
      * @return bool
      */
-    public function login(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
-        $templateLogger = new ViewLogger();
-        $httpResponse = new \App\Views\Pages\Admin\Page
+    public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+        $httpResponse .= new \App\Views\Pages\Admin\Page
         (
-            $templateLogger,
+
+            $viewLogger,
             [
-                "header" => new \App\Views\Elements\Admin\Header($templateLogger, [
-                    "page" => "Login",
-                ]),
-                "footer" => new \App\Views\Elements\Admin\Footer($templateLogger, []),
-                "pageElement" => new \App\Views\Elements\Admin\Login($templateLogger, []),
+                "html_header" => new \App\Views\Elements\Admin\Header($viewLogger, ["page" => "Login",]),
+                "html_elements" => [
+                    new \App\Views\Elements\Admin\Login($viewLogger, [
+                        "email" => isset($_POST["name"]) ? $_POST["name"] : null
+                    ]),
+                ],
+                "html_footer" => new \App\Views\Elements\Admin\Footer($viewLogger, []),
             ]
         );
         return true;
@@ -64,12 +67,13 @@ class Admin extends Controller implements ControllerInterface
 
     /**
      * The admin middleware function
+     * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
      * @param string $requestType
      * @return bool
      */
-    public function adminMiddleware(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+    public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         echo "IN ADMINMIDDLEWARE OF REQUEST : ";
         var_dump($args);
         echo PHP_EOL;

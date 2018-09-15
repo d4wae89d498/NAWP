@@ -106,6 +106,8 @@ abstract class View
         $twig = new Environment(new ArrayLoader(array(
             $str => $twig,
         )));
+       // exit;
+
         $html =  $twig->render($str, $this->get("states"));
         return $html;
     }

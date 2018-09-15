@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\iPolitic\NawpCore\Components\View;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
@@ -48,7 +49,14 @@ class Session extends Controller implements ControllerInterface
         ];
     }
 
-    public function sessionsMiddleware(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+    /**
+     * @param ViewLogger $viewLogger
+     * @param string $httpResponse
+     * @param array $args
+     * @param string $requestType
+     * @return bool
+     */
+    public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
 
         //die("session tick");
         CSession::tick();
@@ -59,46 +67,49 @@ class Session extends Controller implements ControllerInterface
 
     /**
      * display the homepage
+     * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
      * @return bool
      */
-    public function home(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
-        $templateLogger = new ViewLogger();
-        $httpResponse .= new \App\Views\Pages\Home($templateLogger, ["name" => "test", "elements" => [
-            new \App\Views\Elements\Header($templateLogger, []),
-                new \App\Views\Elements\Menu($templateLogger, []),
-                    new \App\Views\Elements\Banner($templateLogger, []),
-                    new \App\Views\Elements\BannerBlocks($templateLogger, []),
-                    new \App\Views\Elements\Services($templateLogger, []),
-                    new \App\Views\Elements\Gallery($templateLogger, []),
-                    new \App\Views\Elements\OrderNow($templateLogger, []),
-                    new \App\Views\Elements\Testimonial($templateLogger, []),
-                    new \App\Views\Elements\Map($templateLogger, []),
-                    new \App\Views\Elements\BlogWrapper($templateLogger, []),
-            new \App\Views\Elements\Footer($templateLogger, []),
+    public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+        $httpResponse .= new \App\Views\Pages\Home($viewLogger, ["name" => "test", "html_elements" => [
+            new \App\Views\Elements\Header($viewLogger, []),
+                new \App\Views\Elements\Menu($viewLogger, []),
+                    new \App\Views\Elements\Banner($viewLogger, []),
+                    new \App\Views\Elements\BannerBlocks($viewLogger, []),
+                    new \App\Views\Elements\Services($viewLogger, []),
+                    new \App\Views\Elements\Gallery($viewLogger, []),
+                    new \App\Views\Elements\OrderNow($viewLogger, []),
+                    new \App\Views\Elements\Testimonial($viewLogger, []),
+                    new \App\Views\Elements\Map($viewLogger, []),
+                    new \App\Views\Elements\BlogWrapper($viewLogger, []),
+            new \App\Views\Elements\Footer($viewLogger, []),
         ]]);
         return true;
     }
 
     /**
-     * return a http 404 page
+     * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
+     * @param string $requestType
      * @return bool
      */
-    public function notFound(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+    public function notFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         $httpResponse .= " ERROR 404";
         return true;
     }
 
     /**
      * return a socket 404 packet
+     * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
+     * @param string $requestType
      * @return bool
      */
-    public function socketNotFound(string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+    public function socketNotFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         $httpResponse .= " ERROR 404";
         return true;
     }

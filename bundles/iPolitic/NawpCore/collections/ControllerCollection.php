@@ -10,9 +10,11 @@ namespace App\iPolitic\NawpCore\Collections;
 
 use iPolitic\Solex\Router;
 use App\iPolitic\NawpCore\Components\{
-    Collection, Controller
+    Collection, Controller, ViewLogger
 };
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
+use phpseclib\Math\BigInteger\Engines\PHP;
+
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
@@ -33,14 +35,17 @@ class ControllerCollection extends Collection {
 
     /**
      * Will run all controllers and reassign $response while the
-     * Controller collection ->  handle() didn't returned TRUE
+     * Controller collection ->  handle() didn't returned TRU
      * @param $response
      * @param $requestType
      * @param $requestArgs
-     * @param bool $useRouterResult
+     * @param $packet
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, $requestType, $requestArgs, bool $useRouterResult = true): void {
+    public function handle(&$response, $requestType, $requestArgs, $packet = null): void {
+        $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
+        $response = "";
+        $viewLogger = new ViewLogger();
         // for each controller methods ordered by priority
         foreach($this->getOrderdByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
@@ -55,20 +60,51 @@ class ControllerCollection extends Collection {
                     "method" => $controllerMethod["router"][0],
                     "route" => $controllerMethod["router"][1]
                 ]);
-                $routerResponse = $dynamicRouter->match($requestType, is_array($requestArgs) && isset($requestArgs['url']) ? $requestArgs['url'] : (is_string($requestArgs) ? $requestArgs : ""));
+                $routerResponse = $dynamicRouter->match($requestType,
+                    is_array($requestArgs) && isset($requestArgs['url']) ?
+                        $requestArgs['url'] :
+                            (is_string($requestArgs) ? $requestArgs : ""));
+
             }
-            $routerResponse = $useRouterResult ? $routerResponse : $requestArgs;
-            $response = "";
             // execute controller method if router matched or wildecas used
             if(!empty($routerResponse)) {
                 /**
                  * @var $controller Controller
                  */
                 $controller = $this->getByName($controllerMethod["controller"]);
-                if ($controller->call($response, $controllerMethod["method"], $routerResponse, $requestType)) {
+                if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse, $requestType)) {
+                    // nothing special to do right now
                     break;
                 }
             }
+        }
+
+        if ($packet !== null) {
+            var_dump($packet);
+            $toSend = [];
+            $serverGenerated = $viewLogger->renderedTemplates;
+            foreach ($serverGenerated as $id => $array) {
+                if (!isset($packet['templates'][$id])) {
+                    $toSend[$id] = $serverGenerated[$id];
+                } else {
+                    $isDifferent = false;
+                    foreach ($array as $stateId => $stateVal) {
+                        if(explode("_", $stateId)[0] !== "html") {
+                            if(isset($packet['templates'][$id][$stateId])) {
+                                if(($stateVal !== $packet['templates'][$id][$stateId])) {
+                                    $isDifferent = true;
+                                }
+                            }
+                        }
+                    }
+                    if($isDifferent) {
+                        $toSend[$id] = $serverGenerated[$id];
+                    }
+                }
+            }
+            echo "got packet !!!!" . PHP_EOL;
+            //var_dump($toSend);
+            $response = $toSend;
         }
     }
 

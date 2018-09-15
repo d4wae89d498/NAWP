@@ -14,6 +14,7 @@ use App\iPolitic\NawpCore\Kernel;
  */
 class ViewLogger
 {
+    public $renderedTemplates = [];
     /**
      * Array that contains all the templates
      * @var mixed
@@ -23,7 +24,7 @@ class ViewLogger
      * All the custom template methods, and their associated tags
      * @var mixed
      */
-    public static $templatesFields = ["javascript" => "script", "css" => "style", "twig" => null];
+    public static $templatesFields = ["twig" => null];
 
     /**
      * Will assign a template, using a template instance, or a template data array
@@ -76,6 +77,17 @@ class ViewLogger
         }
         return $tyName;
     }
+
+    public function getTemplates(): array {
+        $array = [];
+        foreach($this->templatesData as $id => $template) {
+            if(explode("_", $id)[0] !== "html") {
+                $array[$id] = ["states" => $template["states"]];
+            }
+        }
+        return $array;
+     }
+
     /**
      * Will generate vanilla JS should be rendered in page footer
      * @return string
@@ -85,17 +97,26 @@ class ViewLogger
         return Utils::ocb(function() use (&$packetAdapter) { ?>
             window['templates'] = [];
             window['baseTemplates'] = [];
-            <?php  foreach($this->templatesData as $id => $template): ?>
+            <?php $this->renderedTemplates = [];
+            foreach($this->templatesData as $id => $template) {
+                $this->renderedTemplates[$id] = $template; ?>
             if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
                 window['templates'][<?=json_encode($id)?>] = {
                     twig: (<?=json_encode(["twig" => $template["twig"]])?>)["twig"],
                     states: (<?=json_encode(["states" => $template["states"]])?>)["states"]
                 };
             }
-            <?php endforeach; ?>
-            <?php foreach((Kernel::getKernel())->viewCollection as $k => $v): ?>
-                window['baseTemplates']['<?=$k?>'] = <?=json_encode($v)?>;
-            <?php endforeach; ?>
+            <?php } ?>
+            <?php foreach((Kernel::getKernel())->viewCollection as $k => $v) {
+            /**
+             * @var $v View
+             */ ?>
+            window['baseTemplates']['<?=$k?>'] = {
+                generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
+                twig: (<?=json_encode(["twig" => $v->get('twig')]) ?>)["twig"],
+                states: (<?=json_encode(["states" => $v->states])?>)["states"]
+            };
+            <?php } ?>
             window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
             <?php
         });

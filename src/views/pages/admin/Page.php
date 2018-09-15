@@ -15,19 +15,21 @@ class Page extends View implements TwigInterface
 {
     public $states = [
         "name" => "default",
-        "header" => null,
-        "footer" => null,
-        "pageElement" => null,
+        "html_header" => null,
+        "html_footer" => null,
+        "html_elements" => [],
     ];
 
     public function twig() : void
-    {?>
-
-        {{ header | raw }}
+    {
+        ?>
+        {{ html_header | raw }}
             <div data-id="{{id}}">
-                {{ pageElement | raw }}
+                {% for element in html_elements %}
+                {{ element | raw}}
+                {% endfor %}
             </div>
-        {{ footer | raw %}}
-
-<?php}
+        {{ html_footer | raw }}
+        <?php
+    }
 }

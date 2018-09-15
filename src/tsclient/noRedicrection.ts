@@ -28,7 +28,15 @@ export class NoRedirection {
                 e.stopImmediatePropagation();
                 let formAction: string = $(e.target).prop("action");
                 let formData: object = $(e.target).serializeArray();
-                this.SocketClient.socket.emit("packet", {data: {name: "john"}, url: "/hello", clientVar: window["clientVar"], templates: window["templates"]});
+                let templates: object = window["templates"];
+                let shortTemplate = {};
+                for (let template in templates) {
+                    shortTemplate[template] = templates[template];
+                    if (typeof shortTemplate[template]["twig"] !== "undefined") {
+                        delete shortTemplate[template]["twig"];
+                    }
+                }
+                this.SocketClient.socket.emit("packet", {data: {name: "john"}, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate});
                 // logging it
                 console.log($(e.target).attr("id"));
                 console.log("form redirection canceled");

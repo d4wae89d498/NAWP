@@ -12,6 +12,9 @@ use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 
 class Login extends View implements TwigInterface
 {
+    public $states = [
+      "email" => null,
+    ];
     public function twig(): void {
     ?>
     <!-- ============================================================== -->
@@ -25,7 +28,8 @@ class Login extends View implements TwigInterface
                         <h3 class="box-title m-b-20">Sign In</h3>
                         <div class="form-group ">
                             <div class="col-xs-12">
-                                <input class="form-control" name="email" type="email" required="" placeholder="Email"> </div>
+                                <input class="form-control" name="email" required="" placeholder="Email"
+                                       value="{% if not email is null %}{{email}}{% endif %}"> </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12">

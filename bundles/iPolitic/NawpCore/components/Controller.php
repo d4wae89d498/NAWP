@@ -31,16 +31,19 @@ class Controller {
 
     /**
      * Will call a controller method
+     *
+     * @param ViewLogger $viewLogger
      * @param string $response
      * @param string $method
      * @param array $args
      * @param string $requestType
      * @return bool
+     *
      */
-    public function call(string &$response, string $method, $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+    public function call(ViewLogger &$viewLogger, string &$response, string $method, $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
         //var_dump("IN CALLL" . $method);
         if (method_exists($this,$method)) {
-            return $this->$method($response, $args, $requestType);
+            return $this->$method($viewLogger, $response, $args, $requestType);
         } else {
             return false;
         }

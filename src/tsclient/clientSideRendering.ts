@@ -1,6 +1,5 @@
 import * as $ from "jquery";
-import Twig from "twig";
-
+import {twig, Template} from "twig";
 /**
  * The client side rendering class
  */
@@ -14,16 +13,17 @@ export class ClientSideRendering {
     public static render(templateDataId: string, states: object): void {
         // if this template id is already in memory
         if (typeof (window["templates"][templateDataId]) !== "undefined") {
+            console.log(this.TemplateNameToId(templateDataId));
+            console.log(this.TemplateNameToId(templateDataId, true));
             // we re-render it using twig.js and jquery
-            const template = Twig.twig({
-                data: window["baseTemplates"][this.IdToType(templateDataId)]
+            const template: Template = twig({
+                data: window["baseTemplates"][this.TemplateNameToId(templateDataId)]["twig"]
             });
-            let output: string = template.render(states);
-            $("[data-item-id=\"" + this.getMaxType(templateDataId) + "\"]").html(output);
+            $("[data-item-id=\"" + this.getMaxType(templateDataId) + "\"]").html(template.render(states));
         }
         // else, we try to append this template
         else {
-            const nonDigit: string = this.IdToType(templateDataId);
+            const nonDigit: string = this.TemplateNameToId(templateDataId, true);
             let maxId: number = 0;
             for (let tpl in window["templates"]) {
                 if (window["templates"].hasOwnProperty(tpl)) {
@@ -34,10 +34,10 @@ export class ClientSideRendering {
             }
             if (maxId > 0) {
                 // append here
-                const template = Twig.twig({
-                    data: window["baseTemplates"][this.IdToType(templateDataId)]
+                const template = twig({
+                    data: window["baseTemplates"][this.TemplateNameToId(templateDataId)]
                 });
-                let output: string = template.render(states);
+                let output: any = template.render(states);
                 $("[data-item-id=\"" + this.getMaxType(templateDataId) + "\"]").after(output);
             }
         }
@@ -50,9 +50,15 @@ export class ClientSideRendering {
      * @returns {string}
      * @constructor
      */
-    public static IdToType(id: string): string {
-        let nonDigit: string = id.replace(/[0-9]/g, "");
-        return nonDigit;
+    public static TemplateNameToId(id: string, idOnly: boolean = false): string {
+        const generatedID: string = id.replace(/[0-9]/g, "") + "0";
+        if (idOnly) {
+            return generatedID;
+        }
+        const foundIndex = window["baseTemplates"].findIndex(function(element) {
+            return element.generatedID === generatedID;
+        });
+        return foundIndex;
     }
 
     /**
@@ -62,7 +68,7 @@ export class ClientSideRendering {
      * @returns {string}
      */
     public static getMaxType(type: string): string {
-        const nonDigit: string = this.IdToType(type);
+        const nonDigit: string = this.TemplateNameToId(type, true);
         let maxId: number = 0;
         for (let tpl in window["templates"]) {
             if (window["templates"].hasOwnProperty(tpl)) {

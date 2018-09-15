@@ -14,7 +14,7 @@ use App\Views\Elements as Elements;
 
 class Home extends View implements TwigInterface
 {
-    public $states = ["name" => "default", "elements" => []];
+    public $states = ["name" => "default", "html_elements" => []];
 
     public function twig() : void
     {?>

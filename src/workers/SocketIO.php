@@ -45,22 +45,41 @@ class SocketIO
                      * @var $socket \PHPSocketIO\Socket
                      */
                     $response = "";
-                    $obj = (new Packet($data, true))
+                    $packet = (new Packet($data, true))
                         ->useAdaptor()
                         ->toArray();
                     $kernel->handle
                     (
                         $response,
                         "SOCKET",
-                        $obj,
-                        false
+                        $_SERVER["REQUEST_URI"],
+                        $packet
                     );
-                    $socket->emit("packetout", $_SERVER["REQUEST_URI"]);
+                    if(is_array($response)) {
+                        $newResponse = [];
+                        foreach ($response as $k => $v) {
+                            if(is_array($v)) {
+                                foreach ($v as $u => $w) {
+                                    if(is_array($w)) {
+                                        foreach ($w as $a => $b) {
+                                            if (strpos($a, "html_") === false) {
+                                                $newResponse[$k][$u][$a] = $b;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        $response = $newResponse;
+                    }
+                    $socket->emit("packetout", $response);
+                    echo "test";
+                    echo PHP_EOL;
+                    return;
                 } catch (Exception $ex) {
                     $socket->emit("packetout", "ERROR");
                     throw new $ex;
                 }
-                echo PHP_EOL;
             });
         });
 

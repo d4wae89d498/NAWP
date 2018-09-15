@@ -50,6 +50,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "@types/twig": "^1.12.1",
     "concurrently": "^4.0.1",
     "jquery": "^3.3.1",
     "nodemon": "^1.18.4",

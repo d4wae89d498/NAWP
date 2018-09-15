@@ -45,10 +45,7 @@ class PacketAdapter
         } else {
             $id = self::generateId();
         }
-        $filePath = join(DIRECTORY_SEPARATOR, [
-            Kernel::getKernel()->cachePath,
-            self::PACKET_ADAPTER_FOLDER,
-            $id . "___" . Session::id() . ".txt",]);
+        $filePath = join(DIRECTORY_SEPARATOR, [ dirname(__FILE__) , "..", "..", "..", "..", "cache", self::PACKET_ADAPTER_FOLDER, $id . "___" . Session::id() . ".txt",]);
         $fp = fopen($filePath, "w+");
         fwrite($fp, (serialize($_SERVER)));
         return $id;
@@ -73,9 +70,9 @@ class PacketAdapter
                 $fp = fopen($filePath, 'r') or die('cant open file');
                 return unserialize(fread($fp, filesize($filePath)));
             }
+        } else {
+            return [];
         }
-        // todo :: send refresh packet here
-        exit;
     }
 
     /**

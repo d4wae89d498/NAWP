@@ -32,10 +32,6 @@ class Footer extends View implements TwigInterface
             15 => "/assets/plugins/styleswitcher/jQuery.style.switcher.js",
             16 => "/generated_js/app.min.js"
         ],
-        "title" => "Ferme de cornaton",
-        "page" => "Admin",
-        "charset" => "UTF-8",
-        "viewport" => "width=device-width, initial-scale=1"
     ];
 
     public function twig(): void { ?>

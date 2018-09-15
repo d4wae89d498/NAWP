@@ -34,9 +34,8 @@ class Header extends View implements TwigInterface
     ];
 
     public function twig(): void { ?>
-        <!DOCTYPE html>
-        <html lang="en" data-id="{{id}}">
-
+    <!DOCTYPE html>
+    <html lang="en" data-id="{{id}}">
         <head>
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
