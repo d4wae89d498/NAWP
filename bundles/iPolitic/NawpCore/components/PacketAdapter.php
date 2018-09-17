@@ -6,7 +6,7 @@
  * Time: 12:06 PM
  */
 
-namespace App\iPolitic\NawpCore\components;
+namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
 
@@ -32,6 +32,7 @@ class PacketAdapter
      * @throws \Exception
      */
     public static function storeAndGet(): string {
+        // TODO : replace the session::id call by something else .
         $list = glob(
             join(
                 DIRECTORY_SEPARATOR, [
@@ -42,6 +43,8 @@ class PacketAdapter
         if(isset($list[0])) {
             $split = explode("/", $list[0]);
             $id = explode("___", $split[count($split) - 1])[0];
+            $exploded = explode("\\", $id);
+            $id = $exploded[count($exploded) - 1];
         } else {
             $id = self::generateId();
         }

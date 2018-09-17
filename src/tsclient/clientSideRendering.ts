@@ -11,15 +11,20 @@ export class ClientSideRendering {
      * @param {object} states
      */
     public static render(templateDataId: string, states: object): void {
+        window["csr"] = this;
         // if this template id is already in memory
         if (typeof (window["templates"][templateDataId]) !== "undefined") {
             console.log(this.TemplateNameToId(templateDataId));
             console.log(this.TemplateNameToId(templateDataId, true));
             // we re-render it using twig.js and jquery
             const template: Template = twig({
-                data: window["baseTemplates"][this.TemplateNameToId(templateDataId)]["twig"]
+                data: window["baseTemplates"].find((e) => {
+                    return e.generatedID === this.TemplateNameToId(templateDataId, true);
+                }).twig
             });
-            $("[data-item-id=\"" + this.getMaxType(templateDataId) + "\"]").html(template.render(states));
+            const selectedElement = $("[data-id=\"" + templateDataId + "\"]");
+            console.log("length : ( 1 ) : " + selectedElement.length);
+            selectedElement.outerHTML(template.render(states));
         }
         // else, we try to append this template
         else {
@@ -35,10 +40,15 @@ export class ClientSideRendering {
             if (maxId > 0) {
                 // append here
                 const template = twig({
-                    data: window["baseTemplates"][this.TemplateNameToId(templateDataId)]
+                    data: window["baseTemplates"].find((e) => {
+                        return e.generatedID === this.TemplateNameToId(templateDataId, true);
+                    }).twig
                 });
                 let output: any = template.render(states);
-                $("[data-item-id=\"" + this.getMaxType(templateDataId) + "\"]").after(output);
+                const selectedElement = $("[data-id=\"" + this.getMaxType(templateDataId) + "\"]");
+                selectedElement.after(output);
+                console.log("length : ( 1 ) : " + selectedElement.length);
+
             }
         }
         return;

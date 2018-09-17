@@ -45,6 +45,7 @@ class SocketIO
                      * @var $socket \PHPSocketIO\Socket
                      */
                     $response = "";
+                    // todo : check $_server after useAdaptor
                     $packet = (new Packet($data, true))
                         ->useAdaptor()
                         ->toArray();

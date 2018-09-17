@@ -2,7 +2,7 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
-
+use App\iPolitic\NawpCore\Components\ { Utils, PacketAdapter };
 /**
  * ViewLogger will store all the data given to the template class
  *
@@ -36,7 +36,7 @@ class ViewLogger
             $this->templatesData[$templateID] = $template;
         } else {
             foreach(self::$templatesFields as $k => $v) {
-                if (is_callable(array($template, $k))) {
+                if (is_callable([$template, $k])) {
                     $this->templatesData[$templateID][$k] = Utils::ocb(function() use ($template, $k) {
                         $template->$k();
                     });
@@ -75,14 +75,39 @@ class ViewLogger
             }
             $i++;
         }
-        return $tyName;
+        return str_replace("\\", "_", $tyName);
     }
 
+    /**
+     * Will filter the states to remove html_* like elements
+     * @param array $states
+     * @return array
+     */
+    public static function filterStates(array $states): array {
+        $array = [];
+        foreach($states as $x => $fx) {
+            if(explode("_", $x)[0] !== "html") {
+                $array[$x] = $fx;
+            }
+        }
+        return $array;
+    }
+
+    /**
+     * Will return all templates
+     * @return array
+     */
     public function getTemplates(): array {
         $array = [];
         foreach($this->templatesData as $id => $template) {
-            if(explode("_", $id)[0] !== "html") {
-                $array[$id] = ["states" => $template["states"]];
+            foreach($template as $k => $v) {
+                if($k === "states" && is_array($v)) {
+                    foreach(self::filterStates($v) as $x => $fx) {
+                        $array[$id][$k][$x] = $fx;
+                    }
+                } else {
+                    $array[$id][$k] = $v;
+                }
             }
         }
         return $array;
@@ -95,29 +120,38 @@ class ViewLogger
     public function generateJS(): string {
         $packetAdapter = new PacketAdapter();
         return Utils::ocb(function() use (&$packetAdapter) { ?>
-            window['templates'] = [];
-            window['baseTemplates'] = [];
+                window['templates'] = [];
+                window['baseTemplates'] = [];
             <?php $this->renderedTemplates = [];
-            foreach($this->templatesData as $id => $template) {
-                $this->renderedTemplates[$id] = $template; ?>
-            if (typeof window['templates'][<?=json_encode($id)?>] === 'undefined') {
-                window['templates'][<?=json_encode($id)?>] = {
-                    twig: (<?=json_encode(["twig" => $template["twig"]])?>)["twig"],
-                    states: (<?=json_encode(["states" => $template["states"]])?>)["states"]
-                };
-            }
-            <?php } ?>
-            <?php foreach((Kernel::getKernel())->viewCollection as $k => $v) {
-            /**
-             * @var $v View
-             */ ?>
-            window['baseTemplates']['<?=$k?>'] = {
+            foreach($this->getTemplates() as $id => $template) {
+                $this->renderedTemplates[$id] = $template;
+                if  (isset($template['twig']) &&
+                     isset($template['states'])) { ?>
+                if (typeof window['templates'][<?=json_encode($id) ?>] === 'undefined') {
+                    window['templates'][<?=json_encode($id) ?>] = {
+                        twig: (<?=json_encode(["twig" => $template["twig"]]) ?>)["twig"],
+                        states: (<?=json_encode(["states" => $template["states"]]) ?>)["states"]
+                    };
+                }
+            <?php }
+            } ?>
+            <?php foreach((Kernel::getKernel())->viewCollection as $k => $v) {/*
+               // var_dump($v);
+               // break; ?>
+                /**
+                 * @var $v View
+                 */
+                // TODO : REPLACE OCB BY SOMETHING ELSE FOR ALL THE BASE TEMPLATES? OR CACHE THIS AT SRV STARTUP
+                if(isset($v->states) && is_callable(array($v, "twig"))) { ?>
+                window['baseTemplates']['<?=$k?>'] = {
                 generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
-                twig: (<?=json_encode(["twig" => $v->get('twig')]) ?>)["twig"],
-                states: (<?=json_encode(["states" => $v->states])?>)["states"]
-            };
-            <?php } ?>
-            window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
+                twig: (<?=json_encode(["twig" => /*self::ocb(function() use($v) {
+                    $v->twig(); })*/null]) ?>)["twig"],
+                states: (<?=json_encode(["states" => self::filterStates($v->states)])?>)["states"]
+                };
+            <?php }
+            } ?>
+                window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
             <?php
         });
     }

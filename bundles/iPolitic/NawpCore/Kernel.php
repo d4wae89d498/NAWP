@@ -11,7 +11,7 @@ namespace App\iPolitic\NawpCore;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
-use App\iPolitic\NawpCore\components\PacketAdapter;
+use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use Atlas\Orm\Atlas;
 use Atlas\Orm\Mapper\Mapper;
@@ -119,6 +119,8 @@ class Kernel {
      */
     public function init(): void
     {
+        // set memory to 4go
+        ini_set('memory_limit','1024M');
         $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
         $this->controllerCollection = new ControllerCollection();
         $this->viewCollection = new ViewCollection();
