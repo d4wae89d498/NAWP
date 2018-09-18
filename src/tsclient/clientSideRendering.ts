@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import {twig, Template} from "twig";
+import {twig} from "twig";
 /**
  * The client side rendering class
  */
@@ -10,21 +10,24 @@ export class ClientSideRendering {
      * @param {string} templateDataId
      * @param {object} states
      */
-    public static render(templateDataId: string, states: object): void {
+    public static render(templateDataId: string, states: any): void {
         window["csr"] = this;
         // if this template id is already in memory
         if (typeof (window["templates"][templateDataId]) !== "undefined") {
             console.log(this.TemplateNameToId(templateDataId));
             console.log(this.TemplateNameToId(templateDataId, true));
-            // we re-render it using twig.js and jquery
-            const template: Template = twig({
-                data: window["baseTemplates"].find((e) => {
-                    return e.generatedID === this.TemplateNameToId(templateDataId, true);
-                }).twig
+            const baseTpl: any =  window["baseTemplates"].find((e) => {
+                return e.generatedID === this.TemplateNameToId(templateDataId, true);
             });
+            // we re-render it using twig.js and jquery
+            const template: any = twig({
+                data: baseTpl.twig
+            });
+            console.log(baseTpl);
             const selectedElement = $("[data-id=\"" + templateDataId + "\"]");
-            console.log("length : ( 1 ) : " + selectedElement.length);
-            selectedElement.outerHTML(template.render(states));
+            console.log("length : ( 1 ) : " + selectedElement.length + " states : " + Object.keys(states).length + " data : " +
+                baseTpl.twig.length);
+            selectedElement[0].outerHTML = template.render(states);
         }
         // else, we try to append this template
         else {

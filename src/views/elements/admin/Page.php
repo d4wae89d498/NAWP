@@ -12,7 +12,7 @@ use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 
 class Page extends View implements TwigInterface
 {
-    public $states = ["tpl" => null];
+    public $states = ["tpl" => ""];
 
     public function twig(): void {
         ?>

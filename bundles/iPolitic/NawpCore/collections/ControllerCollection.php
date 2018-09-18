@@ -42,10 +42,10 @@ class ControllerCollection extends Collection {
      * @param $packet
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, $requestType, $requestArgs, $packet = null): void {
+    public function handle(&$response, $requestType, $requestArgs, $packet = null, $array): void {
         $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
         $response = "";
-        $viewLogger = new ViewLogger();
+        $viewLogger = new ViewLogger($array);
         // for each controller methods ordered by priority
         foreach($this->getOrderdByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);

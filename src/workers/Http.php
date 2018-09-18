@@ -7,7 +7,7 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\Exception;
+use App\iPolitic\NawpCore\Components\{ Exception, Utils};
 use Workerman\ {Worker, WebServer};
 
 class Http
@@ -35,9 +35,15 @@ class Http
         Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
-
+        $array = [];
+        foreach($kernel->viewCollection as $k => $v) {
+            $array[$k] = str_replace("}", "²==//", str_replace("{", "==²//", Utils::ocb(function() use($v) {
+            })));
+        }
+        var_dump($array);
         /*
         $atlas = $kernel->getAtlas();
+
         $categoryRecord = $atlas->fetchRecord(\App\DataSources\User\UserMapper::CLASS, '2');
         var_dump($categoryRecord);
         */
@@ -46,14 +52,16 @@ class Http
         $this->worker = new WebServer(
             "http://0.0.0.0:5616",
             [],
-            function(Workerman\Connection\ConnectionInterface &$connection)use(&$kernel) {
+            function(Workerman\Connection\ConnectionInterface &$connection)use(&$kernel, &$array) {
                 $response = [];
                 try {
                     $kernel->handle (
                         $response,
                         isset($_SERVER["REQUEST_METHOD"]) ?
                         $_SERVER["REQUEST_METHOD"] : "GET",
-                        $_SERVER["REQUEST_URI"]
+                        $_SERVER["REQUEST_URI"],
+                        null,
+                        $array
                     );
                     $connection->send($response);
                 } catch (\Exception $exception) {

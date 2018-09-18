@@ -7,7 +7,7 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\Packet;
+use App\iPolitic\NawpCore\Components\{ Packet, Utils };
 use Workerman\ {Worker};
 
 class SocketIO
@@ -20,25 +20,28 @@ class SocketIO
         $kernel = new Kernel();
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
-
-        $atlasInstance = &$kernel->atlas;
-        Kernel::setKernel($kernel);
-
         $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
+        $atlasInstance = &$kernel->atlas;
         $params = [&$viewLogger, []];
+        Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
         $params = [&$atlasInstance];
         Kernel::setKernel($kernel);
-
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
+        $array = [];
+        foreach($kernel->viewCollection as $k => $v) {
+            $array[$k] = str_replace("}", "²==//", str_replace("{", "==²//", Utils::ocb(function() use($v) {
+            })));
+        }
+        var_dump($array);
 
         //Worker::$eventLoopClass = '\Workerman\Events\Ev';
         $io = new \PHPSocketIO\SocketIO(8070);
 
-        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {
+        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel, $array) {
             echo "got connection" . PHP_EOL;
-            $socket->on("packet", function (array $data) use (&$kernel, $socket) {
+            $socket->on("packet", function (array $data) use (&$kernel, $socket, $array) {
                 echo "got packet" . PHP_EOL;
                 try {
                     /**
@@ -54,7 +57,8 @@ class SocketIO
                         $response,
                         "SOCKET",
                         $_SERVER["REQUEST_URI"],
-                        $packet
+                        $packet,
+                        $array
                     );
                     if(is_array($response)) {
                         $newResponse = [];

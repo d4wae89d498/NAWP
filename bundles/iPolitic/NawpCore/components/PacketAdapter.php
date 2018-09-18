@@ -38,7 +38,7 @@ class PacketAdapter
                 DIRECTORY_SEPARATOR, [
                 Kernel::getKernel()->cachePath,
                 self::PACKET_ADAPTER_FOLDER,
-               "*___" . Session::id() . ".txt"
+               "*___" . microtime() . ".txt"
         ]));
         if(isset($list[0])) {
             $split = explode("/", $list[0]);
@@ -48,7 +48,7 @@ class PacketAdapter
         } else {
             $id = self::generateId();
         }
-        $filePath = join(DIRECTORY_SEPARATOR, [ dirname(__FILE__) , "..", "..", "..", "..", "cache", self::PACKET_ADAPTER_FOLDER, $id . "___" . Session::id() . ".txt",]);
+        $filePath = join(DIRECTORY_SEPARATOR, [ dirname(__FILE__) , "..", "..", "..", "..", "cache", self::PACKET_ADAPTER_FOLDER, $id . "___" . microtime() . ".txt",]);
         $fp = fopen($filePath, "w+");
         fwrite($fp, (serialize($_SERVER)));
         return $id;

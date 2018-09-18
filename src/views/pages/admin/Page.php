@@ -15,8 +15,8 @@ class Page extends View implements TwigInterface
 {
     public $states = [
         "name" => "default",
-        "html_header" => null,
-        "html_footer" => null,
+        "html_header" => "",
+        "html_footer" => "",
         "html_elements" => [],
     ];
 

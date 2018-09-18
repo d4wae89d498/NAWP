@@ -11,6 +11,7 @@ namespace App\iPolitic\NawpCore;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
+use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use Atlas\Orm\Atlas;
@@ -31,6 +32,10 @@ class Kernel {
     public const CACHE_FOLDER_NAME = "cache";
     public const RSA_FILE_NAME = "rsa.txt";
     public const DEFAULT_RSA_KEYS = [];
+    /**
+     * @var array
+     */
+    public static $twigArray = [];
     /**
      * @var array
      */
@@ -110,8 +115,8 @@ class Kernel {
      * @param bool $useRouterResult
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, string $requestType, $requestArgs,  $packet = null): void {
-        $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet);
+    public function handle(&$response, string $requestType, $requestArgs,  $packet = null, $array): void {
+        $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet, $array);
     }
 
     /**
@@ -120,7 +125,7 @@ class Kernel {
     public function init(): void
     {
         // set memory to 4go
-        ini_set('memory_limit','1024M');
+        ini_set('memory_limit','2048M');
         $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
         $this->controllerCollection = new ControllerCollection();
         $this->viewCollection = new ViewCollection();
@@ -133,6 +138,8 @@ class Kernel {
 
     /**
      * Will instantiate all components declared in a "$components" folder following PSR standars
+     * @param Collection $collection
+     * @param array $arguments
      * @param string $componentName
      */
     public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName): void {
@@ -141,7 +148,7 @@ class Kernel {
         (
             function($component) use (&$collection) {
                 /**
-                 * @var Controller $controller the controller instance that will be added to the controller collection
+                 * @var mixed $component the component instance that will be added to the collection
                  */
                 $collection->append($component);
             },
@@ -152,11 +159,10 @@ class Kernel {
                 // convert declared class name to controller instance if match, or null value
                 array_map
                 (
-
                     function (string $className) use ($componentName, &$arguments) {
                         // if a valid $className was given, we continue
                         if( stristr($className, "\\" . ucfirst($componentName) . "\\") !== false ) {
-                            // if the $arguments array is no empty, we simply instantiate $componentName
+                            // if the $arguments array is not empty, we simply instantiate $componentName
                             if(count($arguments) == 0)
                                 $obj = new $componentName;
                             // else we call $className constructor using given $arguments and Reflection class
@@ -210,5 +216,4 @@ class Kernel {
         }
         $this->rsaKeys = $keys;
     }
-
 }
