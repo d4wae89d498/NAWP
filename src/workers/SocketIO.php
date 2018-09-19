@@ -31,10 +31,10 @@ class SocketIO
         Kernel::setKernel($kernel);
         $array = [];
         foreach($kernel->viewCollection as $k => $v) {
-            $array[$k] = str_replace("}", "²==//", str_replace("{", "==²//", Utils::ocb(function() use($v) {
-            })));
+            $array[$k] = Utils::hideTwigIn(Utils::ocb(function() use($v) {
+                    $v->twig();
+            }));
         }
-        var_dump($array);
 
         //Worker::$eventLoopClass = '\Workerman\Events\Ev';
         $io = new \PHPSocketIO\SocketIO(8070);

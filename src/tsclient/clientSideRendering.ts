@@ -4,6 +4,16 @@ import {twig} from "twig";
  * The client side rendering class
  */
 export class ClientSideRendering {
+    /**
+     * Will reshow the twig previously hidden
+     * @param {string} str
+     * @return string
+     */
+    public static showTwigIn(str: string): string {
+        return str
+            .split("²==//") . join ( "}")
+            .split("==²//") . join ( "{");
+    }
 
     /**
      * Will render a template using its data-id, will append or replace using the given id.

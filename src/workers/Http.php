@@ -37,10 +37,10 @@ class Http
         Kernel::setKernel($kernel);
         $array = [];
         foreach($kernel->viewCollection as $k => $v) {
-            $array[$k] = str_replace("}", "²==//", str_replace("{", "==²//", Utils::ocb(function() use($v) {
-            })));
+            $array[$k] = Utils::HideTwigIn(Utils::ocb(function() use($v) {
+                $v->twig();
+            }));
         }
-        var_dump($array);
         /*
         $atlas = $kernel->getAtlas();
 
