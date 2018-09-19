@@ -44,7 +44,6 @@ export class NoRedirection {
                 console.log(formAction);
                 console.log("form data : ");
                 console.log(formData);
-                // todo : send a socketio call
             });
         // }
         console.log("form to ajax applied");

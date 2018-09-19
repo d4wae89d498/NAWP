@@ -32,7 +32,6 @@ class PacketAdapter
      * @throws \Exception
      */
     public static function storeAndGet(): string {
-        // TODO : replace the session::id call by something else .
         $list = glob(
             join(
                 DIRECTORY_SEPARATOR, [

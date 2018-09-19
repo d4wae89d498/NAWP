@@ -150,7 +150,6 @@ class ViewLogger
                 /**
                  * @var $v View
                  */
-                // TODO : REPLACE OCB BY SOMETHING ELSE FOR ALL THE BASE TEMPLATES? OR CACHE THIS AT SRV STARTUP
                 if(isset($v->states) && isset($this->array[$k])) { ?>
                 window['baseTemplates']['<?=$k?>'] = {
                 generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
