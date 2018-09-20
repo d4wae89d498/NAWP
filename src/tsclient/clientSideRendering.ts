@@ -4,6 +4,7 @@ import {twig} from "twig";
  * The client side rendering class
  */
 export class ClientSideRendering {
+    public static MAX_TPL_DEEP = 99;
     /**
      * Will reshow the twig previously hidden
      * @param {string} str
@@ -102,5 +103,44 @@ export class ClientSideRendering {
             }
         }
         return nonDigit + maxId.toString();
+    }
+
+    /**
+     * Will render recursivly the given templates states object without
+     * @param {object} states
+     * @param {number} deep
+     * @param {object} renderedArray
+     * @constructor
+     */
+    public static RenderStates(states: object, deep: number = 0, renderedArray: object = []): void {
+        // TODO : remove non anwsered html elements
+        // TODO : set window['templates'] values accordely
+        if  (deep > ClientSideRendering.MAX_TPL_DEEP) {
+            return;
+        } else {
+            for (let tplKey in states) {
+                if  (typeof (states[tplKey]["states"] !== "undefined")                  &&
+                    (states[tplKey]["states"]["references"] !== "undefined")            &&
+                    ((Object.keys(states[tplKey]["states"]["references"])).length > 0))  {
+                    for (let referenceKey in states[tplKey]["states"]["references"]) {
+                        if (typeof renderedArray[states[tplKey]["states"]["references"][referenceKey]] === "undefined") {
+                            renderedArray[states[tplKey]["states"]["references"][referenceKey]] = "BONJOUR";
+                            let statesArray: object = {};
+                            statesArray[states[tplKey]["states"]["references"][referenceKey]] = {
+                                states: states[states[tplKey]["states"]["references"][referenceKey]]
+                            };
+                            // TODO : Add if not loaded array here
+                            ClientSideRendering.RenderStates (
+                                statesArray,
+                                ++deep,
+                                renderedArray
+                            );
+                        }
+                    }
+                    ClientSideRendering.render(tplKey, states[tplKey]["states"]);
+                    return;
+                }
+            }
+        }
     }
 }
