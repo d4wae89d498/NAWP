@@ -48,20 +48,25 @@ class Admin extends Controller implements ControllerInterface
      * @return bool
      */
     public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
-        $httpResponse .= new \App\Views\Pages\Admin\Page
+        $httpResponse .=
+        new \App\Views\Elements\Admin\Header(
+            $viewLogger, ["page" => "Login",]
+        ) .
+        new \App\Views\Pages\Admin\Page
         (
 
             $viewLogger,
             [
-                "html_header" => new \App\Views\Elements\Admin\Header($viewLogger, ["page" => "Login",]),
+                "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                 "html_elements" => [
-                    new \App\Views\Elements\Admin\Login($viewLogger, [
+                    (
+                        new \App\Views\Elements\Admin\Login($viewLogger, [
                         "email" => isset($_POST["name"]) ? $_POST["name"] : null
-                    ]),
+                    ])),
                 ],
-                "html_footer" => new \App\Views\Elements\Admin\Footer($viewLogger, []),
             ]
-        );
+        ) .
+        new \App\Views\Elements\Admin\Footer($viewLogger, []);
         return true;
     }
 

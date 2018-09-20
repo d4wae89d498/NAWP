@@ -22,7 +22,7 @@ class PacketAdapter
             ));
         foreach($files as $file){ // iterate files
             if(!is_dir($file)) {
-                unlink($file); // delete file
+                @unlink($file); // delete file
             }
         }
     }

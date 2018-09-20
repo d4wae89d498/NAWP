@@ -73,8 +73,9 @@ class Session extends Controller implements ControllerInterface
      * @return bool
      */
     public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
-        $httpResponse .= new \App\Views\Pages\Home($viewLogger, ["name" => "test", "html_elements" => [
-            new \App\Views\Elements\Header($viewLogger, []),
+        $httpResponse =
+        new \App\Views\Elements\Header($viewLogger, []) .
+        new \App\Views\Pages\Home($viewLogger, ["name" => "test", "html_elements" => [
                 new \App\Views\Elements\Menu($viewLogger, []),
                     new \App\Views\Elements\Banner($viewLogger, []),
                     new \App\Views\Elements\BannerBlocks($viewLogger, []),
@@ -84,8 +85,9 @@ class Session extends Controller implements ControllerInterface
                     new \App\Views\Elements\Testimonial($viewLogger, []),
                     new \App\Views\Elements\Map($viewLogger, []),
                     new \App\Views\Elements\BlogWrapper($viewLogger, []),
-            new \App\Views\Elements\Footer($viewLogger, []),
-        ]]);
+        ]]) .
+        new \App\Views\Elements\Footer($viewLogger, []);
+
         return true;
     }
 

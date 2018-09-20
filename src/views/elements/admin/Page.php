@@ -8,11 +8,19 @@
 namespace App\Views\Elements\Admin;
 
 use App\iPolitic\NawpCore\Components\View;
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 
 class Page extends View implements TwigInterface
 {
-    public $states = ["tpl" => ""];
+    public $states = ["html_elements" => [], "pass" => ""];
+    public function __construct(ViewLogger $templateLogger, ?array $params = [])
+    {
+        echo "before build page" . PHP_EOL;
+        parent::__construct($templateLogger, $params);
+        echo "post build page" . PHP_EOL;
+        var_dump($this->states);
+    }
 
     public function twig(): void {
         ?>
@@ -20,7 +28,7 @@ class Page extends View implements TwigInterface
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        <div data-id="{{id}}" id="main-wrapper">
+        <div data-id="{{id}}" id="main-wrapper" {{pass}}>
             <!-- ============================================================== -->
             <!-- Topbar header - style you can find in pages.scss -->
             <!-- ============================================================== -->
@@ -541,7 +549,9 @@ class Page extends View implements TwigInterface
                 <!-- End Bottom points-->
             </aside>
 
-            {{ tpl | raw }}
+            {% for element in html_elements  %}
+                {{ element | raw }}
+            {% endfor %}
 
         </div>
         <?php

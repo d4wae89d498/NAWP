@@ -47,6 +47,15 @@ abstract class View
           }
         }
         $this->states['id'] = $id;
+        $this->states['references'] = [];
+        if (isset($this->states['html_elements'])) {
+            /**
+             * @var View $view
+             */
+            foreach($this->states['html_elements'] as $view) {
+                array_push($this->states['references'], $view->states['id']);
+            }
+        }
         $this->templateLogger->setTemplate($id,$this);
     }
 

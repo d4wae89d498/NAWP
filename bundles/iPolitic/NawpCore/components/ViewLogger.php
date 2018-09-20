@@ -14,6 +14,7 @@ use App\iPolitic\NawpCore\Components\ { Utils, PacketAdapter };
  */
 class ViewLogger
 {
+    public const HTML_STATES_PREFIX = "html_elements";
     public $array = [];
     public $renderedTemplates = [];
     public function __construct($array = null)
@@ -68,11 +69,11 @@ class ViewLogger
 
     /**
      * Will generate a new template ID for the given template instance
-     * @param Template $template
+     * @param View $view
      * @return string
      */
-    public function generateTemplateID(View $template): string {
-        $tplName = get_class($template);
+    public function generateTemplateID(View $view): string {
+        $tplName = get_class($view);
         $isAvailable = false;
         $i = 0;
         $tyName = "";
@@ -87,34 +88,20 @@ class ViewLogger
     }
 
     /**
-     * Will filter the states to remove html_* like elements
-     * @param array $states
-     * @return array
-     */
-    public static function filterStates(array $states): array {
-        $array = [];
-        foreach($states as $x => $fx) {
-            if(explode("_", $x)[0] !== "html") {
-                $array[$x] = $fx;
-            }
-        }
-        return $array;
-    }
-
-    /**
      * Will return all templates
      * @return array
      */
-    public function getTemplates(): array {
+    public function getStates(): array {
+        // will remove all html_ like states and replace
         $array = [];
         foreach($this->templatesData as $id => $template) {
-            foreach($template as $k => $v) {
-                if($k === "states" && is_array($v)) {
-                    foreach(self::filterStates($v) as $x => $fx) {
-                        $array[$id][$k][$x] = $fx;
+            $array[$id] = [];
+            if (isset($template['states']) && is_array($template['states'])) {
+                foreach($template['states'] as $k => $v) {
+                    if ($k !== self::HTML_STATES_PREFIX) {
+                        $array[$id][$k] = $v;
+                        //echo " template " . (string) $k . " added for " . $id . PHP_EOL;
                     }
-                } else {
-                    $array[$id][$k] = $v;
                 }
             }
         }
@@ -129,21 +116,18 @@ class ViewLogger
         // var_dump($this->array);
         $kernel = Kernel::getKernel();
         $packetAdapter = new PacketAdapter();
-        return Utils::ocb(function() use (&$packetAdapter, $kernel) { ?>
+        $output = Utils::ocb(function() use (&$packetAdapter, $kernel) { ?>
                 window['templates'] = [];
                 window['baseTemplates'] = [];
             <?php $this->renderedTemplates = [];
-            foreach($this->getTemplates() as $id => $template) {
-                $this->renderedTemplates[$id] = $template;
-                if  (isset($template['twig']) &&
-                     isset($template['states']) ) { ?>
+            foreach($this->getStates() as $id => $states) {
+                $this->renderedTemplates[$id] = $states; ?>
                 if (typeof window['templates'][<?=json_encode($id) ?>] === 'undefined') {
                     window['templates'][<?=json_encode($id) ?>] = {
-                        states: (<?=json_encode(["states" => $template["states"]]) ?>)["states"]
+                        states: (<?=json_encode(["states" => $states]) ?>)["states"]
                     };
                 }
-            <?php }
-            } ?>
+            <?php } ?>
             <?php foreach($kernel->viewCollection as $k => $v) {/*
                // var_dump($v);
                // break; ?>
@@ -154,13 +138,14 @@ class ViewLogger
                 window['baseTemplates']['<?=$k?>'] = {
                 generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
                 twig: (<?=json_encode(["twig" => $this->array[$k]]) ?>)["twig"],
-                states: (<?=json_encode(["states" => self::filterStates($v->states)])?>)["states"]
+                states: (<?=json_encode(["states" => $v->states])?>)["states"]
                 };
             <?php }
             } ?>
                 window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
             <?php
         });
+        return $output;
     }
 
 

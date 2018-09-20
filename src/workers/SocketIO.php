@@ -66,9 +66,7 @@ class SocketIO
                                 foreach ($v as $u => $w) {
                                     if(is_array($w)) {
                                         foreach ($w as $a => $b) {
-                                            if (strpos($a, "html_") === false) {
-                                                $newResponse[$k][$u][$a] = $b;
-                                            }
+                                            $newResponse[$k][$u][$a] = $b;
                                         }
                                     }
                                 }
