@@ -80,31 +80,11 @@ class ControllerCollection extends Collection {
         }
 
         if ($packet !== null) {
-            var_dump($packet);
+           // var_dump($packet);
             $toSend = [];
             $serverGenerated = $viewLogger->renderedTemplates;
-            foreach ($serverGenerated as $id => $array) {
-                if (!isset($packet['templates'][$id])) {
-                    $toSend[$id] = $serverGenerated[$id];
-                } else {
-                    $isDifferent = false;
-                    foreach ($array as $stateId => $stateVal) {
-                        if(explode("_", $stateId)[0] !== "html") {
-                            if(isset($packet['templates'][$id][$stateId])) {
-                                if(($stateVal !== $packet['templates'][$id][$stateId])) {
-                                    $isDifferent = true;
-                                }
-                            }
-                        }
-                    }
-                    if($isDifferent) {
-                        $toSend[$id] = $serverGenerated[$id];
-                    }
-                }
-            }
-            echo "got packet !!!!" . PHP_EOL;
-            //var_dump($toSend);
-            $response = $toSend;
+            $response = json_encode($serverGenerated);
+            var_dump($response);
         }
     }
 

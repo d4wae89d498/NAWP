@@ -8,19 +8,23 @@
 namespace App\Views\Elements\Admin;
 
 use App\iPolitic\NawpCore\Components\View;
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 
 class Login extends View implements TwigInterface
 {
     public $states = [
-      "email" => "",
+        "email" => "",
+        "rand" => 0
     ];
+
     public function twig(): void {
     ?>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <section data-id="{{id}}" id="wrapper">
+        <h1>{{rand}}</h1>
         <div class="login-register" style="background-image:url(/assets/images/background/login-register.jpg);">
             <div class="login-box card">
                 <div class="card-body">

@@ -14,7 +14,7 @@ use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 class Page extends View implements TwigInterface
 {
     public $states = ["html_elements" => [], "pass" => ""];
-    public function __construct(ViewLogger $templateLogger, ?array $params = [])
+    public function __construct(ViewLogger $templateLogger, array $params = [])
     {
         echo "before build page" . PHP_EOL;
         parent::__construct($templateLogger, $params);

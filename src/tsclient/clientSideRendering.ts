@@ -1,10 +1,19 @@
 import * as $ from "jquery";
 import {twig} from "twig";
+import {NoRedirection} from "./noRedicrection";
+const diffDOM = require("diff-dom");
+
 /**
  * The client side rendering class
  */
 export class ClientSideRendering {
     public static MAX_TPL_DEEP = 99;
+    public noRedir: NoRedirection;
+    public static noRedir;
+    public constructor(noRedir: NoRedirection) {
+        this.noRedir = noRedir;
+        ClientSideRendering.noRedir = noRedir;
+    }
     /**
      * Will reshow the twig previously hidden
      * @param {string} str
@@ -19,12 +28,14 @@ export class ClientSideRendering {
     /**
      * Will render a template using its data-id, will append or replace using the given id.
      * @param {string} templateDataId
-     * @param {object} states
+     * @param states
+     * @param {boolean} returnAsString
+     * @returns {Promise<string>}
      */
-    public static render(templateDataId: string, states: any): void {
+    public static async render(templateDataId: string, states: any, returnAsString: boolean = false): Promise<string> {
         window["csr"] = this;
         // if this template id is already in memory
-        if (typeof (window["templates"][templateDataId]) !== "undefined") {
+        if (window["templates"].hasOwnProperty(templateDataId)) {
             console.log(this.TemplateNameToId(templateDataId));
             console.log(this.TemplateNameToId(templateDataId, true));
             const baseTpl: any =  window["baseTemplates"].find((e) => {
@@ -35,10 +46,15 @@ export class ClientSideRendering {
                 data: baseTpl.twig
             });
             console.log(baseTpl);
+            let rendered = await template.render(states);
+            if (returnAsString) {
+                return rendered;
+            }
             const selectedElement = $("[data-id=\"" + templateDataId + "\"]");
             console.log("length : ( 1 ) : " + selectedElement.length + " states : " + Object.keys(states).length + " data : " +
                 baseTpl.twig.length);
-            selectedElement[0].outerHTML = template.render(states);
+            selectedElement[0].outerHTML = rendered;
+
         }
         // else, we try to append this template
         else {
@@ -58,9 +74,12 @@ export class ClientSideRendering {
                         return e.generatedID === this.TemplateNameToId(templateDataId, true);
                     }).twig
                 });
-                let output: any = template.render(states);
+                let rendered = await template.render(states);
+                if (returnAsString) {
+                    return rendered;
+                }
                 const selectedElement = $("[data-id=\"" + this.getMaxType(templateDataId) + "\"]");
-                selectedElement.after(output);
+                selectedElement.after(rendered);
                 console.log("length : ( 1 ) : " + selectedElement.length);
 
             }
@@ -112,35 +131,48 @@ export class ClientSideRendering {
      * @param {object} renderedArray
      * @constructor
      */
-    public static RenderStates(states: object, deep: number = 0, renderedArray: object = []): void {
+    public static async RenderStates(states: object, deep: number = 0, renderedArray: object = []): Promise<string> {
+        let generatedString = "";
         // TODO : remove non anwsered html elements
         // TODO : set window['templates'] values accordely
         if  (deep > ClientSideRendering.MAX_TPL_DEEP) {
-            return;
+            return "";
         } else {
             for (let tplKey in states) {
-                if  (typeof (states[tplKey]["states"] !== "undefined")                  &&
-                    (states[tplKey]["states"]["references"] !== "undefined")            &&
-                    ((Object.keys(states[tplKey]["states"]["references"])).length > 0))  {
-                    for (let referenceKey in states[tplKey]["states"]["references"]) {
-                        if (typeof renderedArray[states[tplKey]["states"]["references"][referenceKey]] === "undefined") {
-                            renderedArray[states[tplKey]["states"]["references"][referenceKey]] = "BONJOUR";
-                            let statesArray: object = {};
-                            statesArray[states[tplKey]["states"]["references"][referenceKey]] = {
-                                states: states[states[tplKey]["states"]["references"][referenceKey]]
-                            };
-                            // TODO : Add if not loaded array here
-                            ClientSideRendering.RenderStates (
-                                statesArray,
-                                ++deep,
-                                renderedArray
-                            );
+                if (states.hasOwnProperty(tplKey) && (tplKey !== "App_Views_Elements_Admin_Footer0")) {
+                    if  (states[tplKey].hasOwnProperty("references")     &&
+                        (Object.keys(states[tplKey]["references"])).length > 0 )  {
+                        states[tplKey]["html_elements"] = [];
+                        for (let referenceKey in states[tplKey]["references"]) {
+                            if (typeof renderedArray[states[tplKey]["references"][referenceKey]] === "undefined") {
+                                renderedArray[states[tplKey]["references"][referenceKey]] = "BONJOUR";
+                                let statesArray: object = {};
+                                statesArray[states[tplKey]["references"][referenceKey]] = states[states[tplKey]["references"][referenceKey]];
+                                states[tplKey]["html_elements"].push(await ClientSideRendering.RenderStates (
+                                    statesArray,
+                                    ++deep,
+                                    renderedArray
+                                ));
+                            }
                         }
                     }
-                    ClientSideRendering.render(tplKey, states[tplKey]["states"]);
-                    return;
+                    let generated = "";
+                    generated = await ClientSideRendering.render(tplKey, states[tplKey], true);
+                    generatedString += generated;
+                    console.log("rendering : " + tplKey);
+                    window["templates"][tplKey] = {states: states[tplKey]};
+                    if (deep === 0) {
+                        let templateSelector = $("[data-id=\"" + tplKey + "\"]");
+                        if (templateSelector[0].outerHTML !== generated) {
+                            let dd = new diffDOM();
+                            let diff = dd.diff($("[data-id=\"" + tplKey + "\"]"), generated);
+                            dd.apply($("[data-id=\"" + tplKey + "\"]"), diff);
+                            ClientSideRendering.noRedir.init();
+                        }
+                    }
                 }
             }
+            return generatedString;
         }
     }
 }

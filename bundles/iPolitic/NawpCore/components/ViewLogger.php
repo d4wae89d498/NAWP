@@ -98,10 +98,10 @@ class ViewLogger
             $array[$id] = [];
             if (isset($template['states']) && is_array($template['states'])) {
                 foreach($template['states'] as $k => $v) {
-                    if ($k !== self::HTML_STATES_PREFIX) {
+                   if ($k !== self::HTML_STATES_PREFIX) {
                         $array[$id][$k] = $v;
                         //echo " template " . (string) $k . " added for " . $id . PHP_EOL;
-                    }
+                   }
                 }
             }
         }

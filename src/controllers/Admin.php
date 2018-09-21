@@ -48,10 +48,18 @@ class Admin extends Controller implements ControllerInterface
      * @return bool
      */
     public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
-        $httpResponse .=
-        new \App\Views\Elements\Admin\Header(
-            $viewLogger, ["page" => "Login",]
-        ) .
+        $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
+    new \App\Views\Elements\Admin\Header(
+        $viewLogger, ["page" => "Login",]
+    ) .
+    "<body class=\"fix-header fix-sidebar card-no-border\">
+        <!-- ============================================================== -->
+        <!-- Preloader - style you can find in spinners.css -->
+        <!-- ============================================================== -->
+        <div class=\"preloader\">
+            <svg class=\"circular\" viewBox=\"25 25 50 50\">
+            <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>
+        </div>" .
         new \App\Views\Pages\Admin\Page
         (
 
@@ -61,12 +69,15 @@ class Admin extends Controller implements ControllerInterface
                 "html_elements" => [
                     (
                         new \App\Views\Elements\Admin\Login($viewLogger, [
-                        "email" => isset($_POST["name"]) ? $_POST["name"] : null
+                        "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                        "rand" => rand(0,9)
                     ])),
                 ],
             ]
         ) .
-        new \App\Views\Elements\Admin\Footer($viewLogger, []);
+        new \App\Views\Elements\Admin\Footer($viewLogger, [])
+        .
+    "</body></html>";
         return true;
     }
 

@@ -7,7 +7,11 @@ import {SocketClient} from "./socketClient";
 export class NoRedirection {
     public SocketClient: SocketClient;
     public constructor() {
-        this.SocketClient = new SocketClient();
+        this.SocketClient = new SocketClient(this);
+        this.init();
+    }
+
+    public init(): void {
         this.applyForm();
     }
 
@@ -36,7 +40,6 @@ export class NoRedirection {
                         delete shortTemplate[template]["twig"];
                     }
                 }
-                this.SocketClient.socket.emit("packet", {data: {name: "john"}, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate});
                 // logging it
                 console.log($(e.target).attr("id"));
                 console.log("form redirection canceled");
@@ -44,6 +47,7 @@ export class NoRedirection {
                 console.log(formAction);
                 console.log("form data : ");
                 console.log(formData);
+                this.SocketClient.socket.emit("packet", {data: formData, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate});
             });
         // }
         console.log("form to ajax applied");
