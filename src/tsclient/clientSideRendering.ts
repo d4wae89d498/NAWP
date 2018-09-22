@@ -1,8 +1,6 @@
 import * as $ from "jquery";
 import {twig} from "twig";
 import {NoRedirection} from "./noRedicrection";
-const diffDOM = require("diff-dom");
-
 /**
  * The client side rendering class
  */
@@ -164,9 +162,18 @@ export class ClientSideRendering {
                     if (deep === 0) {
                         let templateSelector = $("[data-id=\"" + tplKey + "\"]");
                         if (templateSelector[0].outerHTML !== generated) {
-                            let dd = new diffDOM();
-                            let diff = dd.diff($("[data-id=\"" + tplKey + "\"]"), generated);
-                            dd.apply($("[data-id=\"" + tplKey + "\"]"), diff);
+
+                            const VNode = require("vtree/vnode");
+                            const diff = require("vtree/diff");
+
+                            const createElement = require("vdom/create-element");
+                            const patch = require("vdom/patch");
+
+                            const rightNode =  $(generated)[0];
+                            const rootNode = $("[data-id=\"" + tplKey + "\"]")[0];
+                            const patches = diff(rootNode, rightNode);
+                            patch(rootNode, patches);
+
                             ClientSideRendering.noRedir.init();
                         }
                     }
