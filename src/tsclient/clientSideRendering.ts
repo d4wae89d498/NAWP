@@ -160,10 +160,12 @@ export class ClientSideRendering {
                     console.log("rendering : " + tplKey);
                     window["templates"][tplKey] = {states: states[tplKey]};
                     if (deep === 0) {
+                        console.log(generated);
                         let templateSelector = $("[data-id=\"" + tplKey + "\"]");
-                        if (templateSelector[0].outerHTML !== generated) {
+                        const a = $(generated);
+                        if (templateSelector.html() !== a.html()) {
 
-                            const VNode = require("vtree/vnode");
+                          /*  const VNode = require("vtree/vnode");
                             const diff = require("vtree/diff");
 
                             const createElement = require("vdom/create-element");
@@ -172,8 +174,8 @@ export class ClientSideRendering {
                             const rightNode =  $(generated)[0];
                             const rootNode = $("[data-id=\"" + tplKey + "\"]")[0];
                             const patches = diff(rootNode, rightNode);
-                            patch(rootNode, patches);
-
+                            patch(rootNode, patches);*/
+                            templateSelector.html(a.html());
                             ClientSideRendering.noRedir.init();
                         }
                     }
