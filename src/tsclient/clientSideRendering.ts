@@ -175,6 +175,7 @@ export class ClientSideRendering {
                             const rootNode = $("[data-id=\"" + tplKey + "\"]")[0];
                             const patches = diff(rootNode, rightNode);
                             patch(rootNode, patches);*/
+                            // todo : add PWA cache system and recursive dom comparaison before update
                             templateSelector.html(a.html());
                             ClientSideRendering.noRedir.init();
                         }

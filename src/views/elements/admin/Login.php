@@ -7,19 +7,21 @@
  */
 namespace App\Views\Elements\Admin;
 
+use App\DataSources\User\UserMapper;
 use App\iPolitic\NawpCore\Components\View;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
+use App\iPolitic\NawpCore\Kernel;
 
 class Login extends View implements TwigInterface
 {
     public $states = [
         "email" => "",
-        "rand" => 0
+        "rand" => 0,
+        "message" => ""
     ];
 
-    public function twig(): void {
-    ?>
+    public function twig(): void { ?>
     <section data-id="{{id}}" id="wrapper">
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->
@@ -30,6 +32,7 @@ class Login extends View implements TwigInterface
                 <div class="card-body">
                     <form class="form-horizontal form-material" id="loginform" method="POST" action="">
                         <h3 class="box-title m-b-20">Sign In</h3>
+                        <p> {{ message }} </p>
                         <div class="form-group ">
                             <div class="col-xs-12">
                                 <input class="form-control" name="email" required="" placeholder="Email"

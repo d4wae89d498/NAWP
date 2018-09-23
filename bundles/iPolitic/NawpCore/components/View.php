@@ -116,6 +116,11 @@ abstract class View
             $str => $twig,
         )));
        // exit;
+        $m = "beforeRender";
+        if(method_exists ($this , $m)) {
+            $this->$m();
+        }
+        $this->templateLogger->setTemplate($this->generatedID, $this);
 
         $html =  $twig->render($str, $this->get("states"));
         return $html;

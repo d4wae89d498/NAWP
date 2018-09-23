@@ -7,10 +7,12 @@
  */
 namespace App\Controllers;
 
+use App\DataSources\User\UserMapper;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 use App\iPolitic\NawpCore\Components\Session;
+use App\iPolitic\NawpCore\Kernel;
 use Workerman\Protocols\Http;
 use Workerman\Protocols\HttpCache;
 
@@ -48,6 +50,23 @@ class Admin extends Controller implements ControllerInterface
      * @return bool
      */
     public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+        $loginMessage = "";
+        $atlas = (Kernel::getKernel())->atlas;
+        if(isset($_POST["email"]) && isset($_POST["password"])) {
+            $userRecord = $atlas->select(UserMapper::class)
+                ->where('email = ?', $_POST["email"])
+                ->fetchRecord();
+            if ($userRecord->hashed_password !== sha1($_POST["password"] . $_ENV["PASSWORD_SALT"])) {
+                $loginMessage = "Mot de passe ou utilisateur incorect";
+            } else {
+                Session::set( "user_id", $userRecord->row_id);
+                Http::header('Location: /admin');
+                return true;
+            }
+        }
+
+
+
         $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
     new \App\Views\Elements\Admin\Header(
         $viewLogger, ["page" => "Login",]
@@ -70,6 +89,7 @@ class Admin extends Controller implements ControllerInterface
                     (
                         new \App\Views\Elements\Admin\Login($viewLogger, [
                         "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                        "message" => $loginMessage,
                         "rand" => rand(0,9)
                     ])),
                 ],
@@ -97,6 +117,7 @@ class Admin extends Controller implements ControllerInterface
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
             if (!Session::isset( "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
+                // TODO : add possibility to redirect from packet
                 Http::header('Location: /admin/login');
                 // We release the request
                 return true;
