@@ -82,6 +82,6 @@ class Http
 }
 try {
     new Http();
-} catch (\Exception $exception) {
+} catch (\Exception $e) {
     echo 'Caught worker startup exception: ',  $e->getMessage(), PHP_EOL;
 }

@@ -87,7 +87,9 @@ class SocketIO
                     echo PHP_EOL;
                     return;
                 } catch (Exception $ex) {
-                    $socket->emit("packetout", "ERROR");
+                    echo "error" . PHP_EOL;
+                    var_dump($ex->getMessage());
+                    $socket->emit("packetout", "ERROR : " . $ex->getMessage());
                     throw new $ex;
                 }
             });

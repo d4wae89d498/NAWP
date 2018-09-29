@@ -24,10 +24,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/iPolitic/Solex"
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/iPolitic/phpseclib.git"
         }
     ],
     "require": {
@@ -38,8 +34,7 @@
         "zendframework/zend-diactoros": "^1.8@dev",
         "workerman/phpsocket.io": "dev-master",
         "atlas/orm": "2.*",
-        "symfony/dotenv": "^4.2@dev",
-        "phpseclib/phpseclib": "dev-master"
+        "symfony/dotenv": "^4.2@dev"
     },
 
     "require-dev": {

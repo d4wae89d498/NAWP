@@ -1,6 +1,7 @@
 .idea/
 public/generated_js/
-cache/
+cache/*.txt
+cache/packet_adapter/*.txt
 node_modules/
 configs/.env
 vendor

@@ -176,9 +176,9 @@ export class ClientSideRendering {
                             const patches = diff(rootNode, rightNode);
                             patch(rootNode, patches);*/
                             // todo : add PWA cache system and recursive dom comparaison before update
-                            templateSelector.html(a.html());
-                            ClientSideRendering.noRedir.init();
                         }
+                        templateSelector.html(a.html());
+                        ClientSideRendering.noRedir.init();
                     }
                 }
             }
