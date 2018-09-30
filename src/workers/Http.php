@@ -41,6 +41,41 @@ class Http
                 $v->twig();
             }));
         }
+
+        /*
+        $cli = new \App\iPolitic\NawpCore\components\Console();
+        echo "Colors are supported: " . ($cli->isSupported() ? 'Yes' : 'No') . "\n";
+        echo "256 colors are supported: " . ($cli->are256ColorsSupported() ? 'Yes' : 'No') . "\n\n";
+        if ($cli->isSupported()) {
+            foreach ($cli->getPossibleStyles() as $style) {
+                echo $cli->applyStyles($style, $style, "underline") . "\n";
+            }
+        }
+        echo "\n";
+        if ($cli->are256ColorsSupported()) {
+            echo "Foreground colors:\n";
+            for ($i = 1; $i <= 255; $i++) {
+                echo $cli->applyStyles(str_pad($i, 6, ' ', STR_PAD_BOTH), "color_$i");
+                if ($i % 15 === 0) {
+                    echo "\n";
+                }
+            }
+            echo "\nBackground colors:\n";
+            for ($i = 1; $i <= 255; $i++) {
+                echo $cli->applyStyles(str_pad($i, 6, ' ', STR_PAD_BOTH), "bg_color_$i");
+                if ($i % 15 === 0) {
+                    echo "\n";
+                }
+            }
+            echo "\n";
+        }
+
+        echo $cli->title("some title");//, function(){return true;});
+        echo $cli->desc("some desc");//, function(){return true;});
+        echo $cli->list("some desc", "0001", "0002", "0003");//, function(){return true;});
+        echo $cli->log("some info", "underline");//, function(){return true;});
+        $cli->check("anno func", function():bool {sleep(2);return false;});
+        */
         /*
         $atlas = $kernel->getAtlas();
 

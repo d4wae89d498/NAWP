@@ -20,10 +20,12 @@ class Session
      * @var array
      */
     public static $session = [];
+
     /**
      * Session duration before expiration
      */
     public const sessionSecondsDuration = 45 * 60; // 45 min
+
     /**
      * The session file name when is stored serialmized data
      */
@@ -144,14 +146,16 @@ class Session
      * Will tick the session and clean the expired ones if needed
      */
     public static function tick(): void {
+
         /**
          * If a prime number is generated, we check for token expirity
          */
-        $a = 0;
-        if(call_user_func_array(function ($n)use(&$a){for($i=~-$n**.5|0;$i&&$n%$i--;);return!$i&$n>2|$n==2; }, [$a = mt_rand()])) {
-            echo "PRIME GENERATED : " . $a;
-            self::tokenExpireCheck();
-        }
+        $generatedNumber = 0;
+        if ( call_user_func_array(
+            function ($n)use(&$generatedNumber){for($i=~-$n**.5|0;$i&&$n%$i--;);return!$i&$n>2|$n==2; },
+            [$generatedNumber = mt_rand()]
+            )
+        )   self::tokenExpireCheck();
         $token = self::id();
         if(!self::isLoggedIn($token)) {
             self::logIn($token);

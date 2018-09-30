@@ -12,45 +12,71 @@ use App\iPolitic\NawpCore\Kernel;
 
 class PacketAdapter
 {
+    /**
+     * Folder name in root/cache
+     */
     public const PACKET_ADAPTER_FOLDER = "packet_adapter";
 
+    /**
+     * Startup function, will remove all cache files before startup
+     */
     public static function init(): void {
         $files = glob(
             join(
                 DIRECTORY_SEPARATOR, [
                 Kernel::getKernel()->cachePath, self::PACKET_ADAPTER_FOLDER , "*"]
-            ));
+            )
+        );
         foreach($files as $file){ // iterate files
             if(!is_dir($file)) {
-                @unlink($file); // delete file
+                unlink($file); // delete file
             }
         }
     }
+
+    /**
+     * Will return a packet adapter cache path of the given id
+     * @param string $id
+     * @return string
+     */
+    public static function IDtoPath(string $id): string {
+        return join(
+            DIRECTORY_SEPARATOR,
+            [
+                dirname(__FILE__) ,
+                "..",
+                "..",
+                "..",
+                "..",
+                "cache",
+                self::PACKET_ADAPTER_FOLDER,
+                $id . ".txt",
+            ]
+        );
+    }
+
     /**
      * Will cache a packetAdapter file and return an ID
+     * @param string $requestMethod
      * @return string
      * @throws \Exception
      */
-    public static function storeAndGet(): string {
-        $list = glob(
-            join(
-                DIRECTORY_SEPARATOR, [
-                Kernel::getKernel()->cachePath,
-                self::PACKET_ADAPTER_FOLDER,
-               "*___" . microtime() . ".txt"
-        ]));
-        if(isset($list[0])) {
-            $split = explode("/", $list[0]);
-            $id = explode("___", $split[count($split) - 1])[0];
-            $exploded = explode("\\", $id);
-            $id = $exploded[count($exploded) - 1];
+    public static function storeAndGet(string $requestMethod = ""): string {
+        $idToUse = "";
+        if ($requestMethod === "SOCKET") {
+            // id should be available as post clientVar or something like that
+            var_dump($_POST);
+            $idToUse = "pomme";
+            // here session is not available
         } else {
-            $id = self::generateId();
+            // here Session is available
+            if (!Session::isset("packet_adapter_key")) {
+                Session::set("packet_adapter_key", $idToUse = self::generateId());
+            }
         }
-        $filePath = join(DIRECTORY_SEPARATOR, [ dirname(__FILE__) , "..", "..", "..", "..", "cache", self::PACKET_ADAPTER_FOLDER, $id . "___" . microtime() . ".txt",]);
-        $fp = fopen($filePath, "w+");
+        $fp = fopen(self::IDtoPath($idToUse), "w+");
         fwrite($fp, (serialize($_SERVER)));
-        return $id;
+        return $idToUse;
     }
 
     /**
@@ -59,19 +85,11 @@ class PacketAdapter
      * @return array
      */
     public static function get(string $id): array {
-        $list = glob(
-        join(
-        DIRECTORY_SEPARATOR, [
-            Kernel::getKernel()->cachePath,
-            "packet_adapter",
-            $id. "___*.txt"
-        ]));
-        if (isset($list[0])) {
-            $filePath = $list[0]; // Assuming there'll only be one match for each day.
-            if (file_exists($filePath)) {
-                $fp = fopen($filePath, 'r') or die('cant open file');
-                return unserialize(fread($fp, filesize($filePath)));
-            }
+        if (file_exists($filePath = self::IDtoPath($id))) {
+            $fp = fopen($filePath, 'r') or die('cant open file');
+            return unserialize(
+                fread($fp, filesize($filePath))
+            );
         } else {
             return [];
         }
@@ -91,6 +109,6 @@ class PacketAdapter
         } else {
             throw new \Exception("no cryptographically secure random function available");
         }
-        return substr(bin2hex($bytes), 0, $length);
+        return substr(bin2hex($bytes), 0, $length).microtime(true);
     }
 }

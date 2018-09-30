@@ -17,8 +17,10 @@ class ViewLogger
     public const HTML_STATES_PREFIX = "html_elements";
     public $array = [];
     public $renderedTemplates = [];
-    public function __construct($array = null)
+    public $requestType = "";
+    public function __construct($array = null, string $requestType = "GET")
     {
+        $this->requestType = $requestType;
         if ($array !== null) {
             $this->array = $array;
         }
@@ -142,7 +144,7 @@ class ViewLogger
                 };
             <?php }
             } ?>
-                window['clientVar'] = '<?=$packetAdapter->storeAndGet()?>';
+                window['clientVar'] = '<?=$packetAdapter->storeAndGet($this->requestType)?>';
             <?php
         });
         return $output;

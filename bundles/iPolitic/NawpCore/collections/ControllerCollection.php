@@ -45,7 +45,7 @@ class ControllerCollection extends Collection {
     public function handle(&$response, $requestType, $requestArgs, $packet = null, $array): void {
         $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
         $response = "";
-        $viewLogger = new ViewLogger($array);
+        $viewLogger = new ViewLogger($array, $requestType);
         // for each controller methods ordered by priority
         foreach($this->getOrderdByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
