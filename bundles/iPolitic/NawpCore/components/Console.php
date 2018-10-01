@@ -113,8 +113,23 @@ class Console
         $this->isSupported = $this->isSupported();
     }
 
-    public function _applyStyles(string $text, array $args): Console {
-        $styles = isset(self::$templates[$args[0]]) ? self::$templates[$args[0]] : $args;
+    /**
+     * Will apply the given $styles to the given $text
+     * @param string $text
+     * @param array $styles
+     * @return Console
+     * @throws \Exception
+     */
+    public function _applyStyles(string $text, array $styles): Console {
+        // we use templates if needed by merging
+        foreach ($s = array_map(function($element){
+            return isset(self::$templates[$element]) ? self::$templates[$element] : $element;
+        }, $styles) as $k => $v) {
+            if (is_array($v)) {
+                unset($s[$k]);
+                $styles = array_merge($s, $v);
+            }
+        }
         if (!$this->isStyleForced() && !$this->isSupported()) {
             $this->output = $text;
             return $this;
@@ -164,7 +179,7 @@ class Console
 
     /**
      * Will log the given string with the given styles array
-     * [H-M-S] (TYPE:) $text {file:line}
+     * output : [H-M-S] (TYPE:) $text {file:line}
      * @param string $text
      * @param string ...$args
      * @return Console
@@ -181,10 +196,10 @@ class Console
     }
 
     /**
-     * [H-M-S] Checking: $text [SUCCESS / FAILURE] {file:line}
+     * output : [H-M-S] Checking: $text [SUCCESS / FAILURE] {file:line}
      * @param string $text
-     * @param callable $callback
-     * @param boolean $echo
+     * @param callable $callback that have to return a bool
+     * @param boolean $echo should we use a php echo() ?
      * @throws \Exception
      * @return Console
      */
@@ -206,7 +221,7 @@ class Console
     }
 
     /**
-     * _______________________
+     * output : _______________________
      * (bold) Title:
      *      * ...
      *      * ...
@@ -228,7 +243,7 @@ class Console
     }
 
     /**
-     * (cyan) $text {file:line}
+     * output : (cyan) $text {file:line}
      * @param string $text
      * @throws \Exception
      * @return Console
@@ -239,7 +254,7 @@ class Console
     }
 
     /**
-     * (bold) $text
+     * output : (bold) $text
      * @param string $text
      * @throws \Exception
      * @return Console

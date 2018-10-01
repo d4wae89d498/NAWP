@@ -42,7 +42,7 @@ class Http
             }));
         }
 
-        /*
+
         $cli = new \App\iPolitic\NawpCore\components\Console();
         echo "Colors are supported: " . ($cli->isSupported() ? 'Yes' : 'No') . "\n";
         echo "256 colors are supported: " . ($cli->are256ColorsSupported() ? 'Yes' : 'No') . "\n\n";
@@ -73,9 +73,8 @@ class Http
         echo $cli->title("some title");//, function(){return true;});
         echo $cli->desc("some desc");//, function(){return true;});
         echo $cli->list("some desc", "0001", "0002", "0003");//, function(){return true;});
-        echo $cli->log("some info", "underline");//, function(){return true;});
+        echo $cli->log("some info", "underline", "title");//, function(){return true;});
         $cli->check("anno func", function():bool {sleep(2);return false;});
-        */
         /*
         $atlas = $kernel->getAtlas();
 
