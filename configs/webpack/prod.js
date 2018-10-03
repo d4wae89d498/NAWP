@@ -6,10 +6,10 @@ const commonConfig = require("./common");
 
 module.exports = merge(commonConfig, {
   mode: "production",
-  entry: [
-      "./src/index.ts", // the entry point of our app
-      "./bundles/index.ts" // the entry point of our bundles
-  ],
+    entry: [
+        "./src/index.ts"//, // the entry point of our app
+        // "./bundles/index.ts" // the entry point of our bundles
+    ],
   output: {
     filename: "generated_js/app.min.js",
     path: resolve(__dirname, "../../public"),
