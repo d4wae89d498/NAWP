@@ -62,11 +62,14 @@ class PacketAdapter
      * @throws \Exception
      */
     public static function storeAndGet(string $requestMethod = ""): string {
+        var_dump("STORE AND GET : " . $requestMethod);
         $idToUse = "";
         if ($requestMethod === "SOCKET") {
             // id should be available as post clientVar or something like that
             var_dump($_POST);
             $idToUse = "pomme";
+            var_dump($_SERVER);
+            exit;
             // here session is not available
         } else {
             // here Session is available

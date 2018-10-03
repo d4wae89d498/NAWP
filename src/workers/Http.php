@@ -13,6 +13,11 @@ use Workerman\ {Worker, WebServer};
 class Http
 {
     public $worker;
+
+    /**
+     * Http constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         // needed lines for startup
@@ -43,7 +48,7 @@ class Http
         }
 
 
-        $cli = new \App\iPolitic\NawpCore\components\Console();
+        $cli = new \App\iPolitic\NawpCore\components\Logger();
         echo "Colors are supported: " . ($cli->isSupported() ? 'Yes' : 'No') . "\n";
         echo "256 colors are supported: " . ($cli->are256ColorsSupported() ? 'Yes' : 'No') . "\n\n";
         if ($cli->isSupported()) {

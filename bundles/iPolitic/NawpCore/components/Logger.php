@@ -9,10 +9,10 @@
 namespace App\iPolitic\NawpCore\components;
 
 /**
- * Class ConsoleColor
+ * Class Logger
  * @package App\iPolitic\NawpCore\components
  */
-class Console
+class Logger
 {
     const
         FOREGROUND = 38,
@@ -106,7 +106,7 @@ class Console
     private $themes = [];
 
     /**
-     * ConsoleColor constructor.
+     * LoggerColor constructor.
      */
     public function __construct()
     {
@@ -117,10 +117,10 @@ class Console
      * Will apply the given $styles to the given $text
      * @param string $text
      * @param array $styles
-     * @return Console
+     * @return Logger
      * @throws \Exception
      */
-    public function _applyStyles(string $text, array $styles): Console {
+    public function _applyStyles(string $text, array $styles): Logger {
         // we use templates if needed by merging
         foreach ($s = array_map(function($element){
             return isset(self::$templates[$element]) ? self::$templates[$element] : $element;
@@ -158,16 +158,17 @@ class Console
     /**
      * @param string $text
      * @param string ...$args
-     * @return Console
+     * @return Logger
      * @throws \Exception
      */
-    public function applyStyles(string $text, string ... $args): Console {
+    public function applyStyles(string $text, string ... $args): Logger {
         return $this->_applyStyles($text, $args);
     }
 
     /**
      * Convert debug trace to file line
      * @param array $trace
+     * @param bool $max
      * @return string
      */
     public static function formatFirstTrace(array $trace, bool $max = true): string {
@@ -178,20 +179,38 @@ class Console
     }
 
     /**
+     * Will store in log the given value of $this->output
+     */
+    private function storeInLog(): void {
+        $cleanStr = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $this->output);
+        file_put_contents(getenv("LOG_FILE_PATH"), $cleanStr , FILE_APPEND | LOCK_EX);
+        return;
+    }
+
+    /**
      * Will log the given string with the given styles array
      * output : [H-M-S] (TYPE:) $text {file:line}
      * @param string $text
      * @param string ...$args
-     * @return Console
+     * @return Logger
      * @throws \Exception
      */
-    public function log(string $text, string ... $args): Console
+    public function log(string $text, string ... $args): Logger
     {
         $today = (string) date("F j, g:i a");
         var_dump($args);
         var_dump("[" . $today . "] " . $text);
         $string = "[" . $today . self::formatFirstTrace(debug_backtrace(), false) ."] " . $this->_applyStyles( $text, $args) . PHP_EOL ;
         $this->output = $string;
+        for($i = 0; $i < count($args) - 1; $i++) {
+            if ($args[$i] === "emergency") {
+                $this->storeInLog();
+                echo  $this->output . PHP_EOL;
+                echo "[Exiting because of an emergency issue...]" . PHP_EOL;
+                exit;
+            }
+        }
+        $this->storeInLog();
         return $this;
     }
 
@@ -201,14 +220,16 @@ class Console
      * @param callable $callback that have to return a bool
      * @param boolean $echo should we use a php echo() ?
      * @throws \Exception
-     * @return Console
+     * @return Logger
      */
-    public function check(string $text, callable $callback, bool $echo = true): Console {
+    public function check(string $text, callable $callback, bool $echo = true): Logger {
         $checkingString = function() use($text): string {
+            $this->storeInLog();
             return (string) $this->applyStyles("[Checking] -> " .  $text, "check") . " ... ";
         };
         $responseString = function() use($callback): string {
             $result =   (bool) $callback();
+            $this->storeInLog();
             return (string) $this->applyStyles($result ? "SUCCESS" : "FAILURE", $result ? "success" : "failure" ) . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
         };
         if ($echo) {
@@ -217,6 +238,7 @@ class Console
         } else {
             $this->output = $checkingString() . $responseString();
         }
+        $this->storeInLog();
         return $this;
     }
 
@@ -230,15 +252,16 @@ class Console
      * @param string $title
      * @param string ...$elements
      * @throws \Exception
-     * @return Console
+     * @return Logger
      */
-    public function list(string $title, string ...$elements): Console {
+    public function list(string $title, string ...$elements): Logger {
         $elements = is_array($elements[0]) ? $elements[0] : $elements;
         $this->output =
             $this->applyStyles($title, "list_title") . " " .   self::formatFirstTrace(debug_backtrace()) .
             PHP_EOL .
                 "*" . join(PHP_EOL . "*", $elements) .
             PHP_EOL;
+        $this->storeInLog();
         return $this;
     }
 
@@ -246,10 +269,11 @@ class Console
      * output : (cyan) $text {file:line}
      * @param string $text
      * @throws \Exception
-     * @return Console
+     * @return Logger
      */
-    public function desc(string $text): Console {
+    public function desc(string $text): Logger {
         $this->output =  $this->applyStyles($text, "desc") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
+        $this->storeInLog();
         return $this;
     }
 
@@ -257,10 +281,11 @@ class Console
      * output : (bold) $text
      * @param string $text
      * @throws \Exception
-     * @return Console
+     * @return Logger
      */
-    public function title(string $text): Console {
+    public function title(string $text): Logger {
         $this->output =  $this->applyStyles($text, "title") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
+        $this->storeInLog();
         return $this;
     }
 
