@@ -29,7 +29,7 @@
     "require": {
         "php": ">= 7.2.1",
         "twig/twig": "^2.5",
-        "workerman/workerman": "master",
+        "workerman/workerman": "dev-master",
         "ipolitic/solex": "dev-master",
         "zendframework/zend-diactoros": "^1.8@dev",
         "workerman/phpsocket.io": "dev-master",
