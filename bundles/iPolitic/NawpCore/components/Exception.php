@@ -12,6 +12,7 @@ class Exception
 {
     public static function catch(\Exception $e): string
     {
+        while (@ob_end_flush());
         $log = "<div class='error_main'>";
         $log .= "<h1><small>\\ IPOLITIC \\ NAWP</small> :: Exception ! </h1>";
         $log .= "<br /><b>Error Time :</b>" . date('Y-m-d H:i:s A');

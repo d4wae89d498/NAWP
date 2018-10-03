@@ -35,13 +35,14 @@ class SocketIO
                     $v->twig();
             }));
         }
-
+        $cli = new \App\iPolitic\NawpCore\components\Logger();
         //Worker::$eventLoopClass = '\Workerman\Events\Ev';
         $io = new \PHPSocketIO\SocketIO(8070);
 
-        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel, $array) {
+        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel, $array, $cli) {
             echo "got connection" . PHP_EOL;
-            $socket->on("packet", function (array $data) use (&$kernel, $socket, $array) {
+            $socket->on("packet", function (array $data) use (&$kernel, $socket, $array, $cli) {
+                $cli->log("Got SOCKET Request", "info");
                 echo "got packet" . PHP_EOL;
                 foreach ($data["data"] as $key => $array) {
                    if(isset($array["name"]) && isset($array["value"])) {
@@ -87,6 +88,7 @@ class SocketIO
                     echo PHP_EOL;
                     return;
                 } catch (Exception $ex) {
+                    while (@ob_end_flush());
                     echo "error" . PHP_EOL;
                     var_dump($ex->getMessage());
                     $socket->emit("packetout", "ERROR : " . $ex->getMessage());

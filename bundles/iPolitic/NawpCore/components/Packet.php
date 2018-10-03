@@ -8,6 +8,7 @@
 
 namespace App\iPolitic\NawpCore\components;
 
+use App\iPolitic\NawpCore\Kernel;
 /**
  * The packet Class
  * Class Packet
@@ -28,6 +29,8 @@ class Packet implements \ArrayAccess {
      */
     private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => []];
 
+    private $originalClientVar;
+
     /**
      * Packet constructor.
      * @param array $data
@@ -44,7 +47,9 @@ class Packet implements \ArrayAccess {
         foreach ($this->container as $k => $v) {
             if(isset($nData[$k])){
                 if ($k === "clientVar" && $decryptClientVar) {
-                    $this->container[$k] = $this->socketAdapter->get($nData[$k]);
+               //     (Kernel::cli())->log($nData[$k], "info");
+                    $this->originalClientVar = $nData[$k];
+                    $this->container[$k] = $this->socketAdapter->readFile($nData[$k]);
                 } else {
                     $this->container[$k] = $nData[$k];
                 }
@@ -103,19 +108,17 @@ class Packet implements \ArrayAccess {
      * Will use the packet adaptor to make socket packets similar to http ones
      */
     public function useAdaptor(): Packet {
-        foreach ($this->container["clientVar"] as $k => $v) {
-            if ($k === "REQUEST_URI") {
-                $v = $this->container["url"];
-            }
-            if ($k === "data") {
-                $v = $this->container['data'];
-            }
-            $_SERVER[$k] = $v;
-            $GLOBALS["_SERVER"][$k] = $v;
-        }
+        // file name that contains needed sessions data
+        $originalClientVar = $this->container["clientVar"];
+        $this->container["data"]["clientVar"] = $originalClientVar;
+        $this->container["data"]["originalClientVar"] = $this->originalClientVar;
+        // setting php globals
         $_SERVER["REQUEST_URI"] = $this->container["url"];
+        $_GET = parse_url($_SERVER["REQUEST_URI"]);
         $_POST = $this->container["data"];
-        $GLOBALS["_POST"] = $this->container["data"];
+        $_POST["templates"] = $this->container["templates"];
+        $GLOBALS["_POST"] = $_POST;
+        $GLOBALS["_GET"] = $_GET;
         return $this;
     }
 }

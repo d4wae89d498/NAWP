@@ -21,15 +21,16 @@ class PacketAdapter
      * Startup function, will remove all cache files before startup
      */
     public static function init(): void {
+        // removing cache files
         $files = glob(
             join(
                 DIRECTORY_SEPARATOR, [
                 Kernel::getKernel()->cachePath, self::PACKET_ADAPTER_FOLDER , "*"]
             )
         );
-        foreach($files as $file){ // iterate files
-            if(!is_dir($file)) {
-                unlink($file); // delete file
+        foreach($files as $file){
+            if(!is_dir($file) && file_exists($file)) {
+                @unlink($file);
             }
         }
     }
@@ -62,24 +63,22 @@ class PacketAdapter
      * @throws \Exception
      */
     public static function storeAndGet(string $requestMethod = ""): string {
-        var_dump("STORE AND GET : " . $requestMethod);
-        $idToUse = "";
         if ($requestMethod === "SOCKET") {
             // id should be available as post clientVar or something like that
-            var_dump($_POST);
-            $idToUse = "pomme";
-            var_dump($_SERVER);
-            exit;
+            $hashedId = $_POST["originalClientVar"];
             // here session is not available
         } else {
+            $hashedId = sha1(Session::id());
+            $filePath = self::IDtoPath($hashedId);
             // here Session is available
-            if (!Session::isset("packet_adapter_key")) {
-                Session::set("packet_adapter_key", $idToUse = self::generateId());
+            if (file_exists($filePath)) {
+                unlink(self::IDtoPath($hashedId));
             }
+            $fp = fopen(self::IDtoPath(sha1(Session::id())), "w+");
+            fwrite($fp, (serialize($_SERVER)));
         }
-        $fp = fopen(self::IDtoPath($idToUse), "w+");
-        fwrite($fp, (serialize($_SERVER)));
-        return $idToUse;
+
+        return $hashedId;
     }
 
     /**
@@ -87,7 +86,7 @@ class PacketAdapter
      * @param string $id
      * @return array
      */
-    public static function get(string $id): array {
+    public static function readFile(string $id): array {
         if (file_exists($filePath = self::IDtoPath($id))) {
             $fp = fopen($filePath, 'r') or die('cant open file');
             return unserialize(

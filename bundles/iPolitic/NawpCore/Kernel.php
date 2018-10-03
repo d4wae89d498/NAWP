@@ -12,6 +12,7 @@ use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
 use App\iPolitic\NawpCore\Components\Controller;
+use App\iPolitic\NawpCore\components\Logger;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use Atlas\Orm\Atlas;
@@ -40,18 +41,26 @@ class Kernel {
      * @var array
      */
     public $rsaKeys = self::DEFAULT_RSA_KEYS;
+
     /**
-     * @var string
+     * @var Logger $logger
+     */
+    public static $logger;
+
+    /**
+     * @var string $cachePath
      */
     public $cachePath = "";
     /**
-     * @var ControllerCollection
+     * @var ControllerCollection $controllerCollection
      */
     public $controllerCollection;
     /**
-     * @var ViewCollection
+     * @var ViewCollection $viewCollection
      */
     public $viewCollection;
+
+
     /**
      * @var Atlas
      */
@@ -82,7 +91,15 @@ class Kernel {
     {
         $dotEnv = new Dotenv();
         $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
+        self::$logger = new Logger();
         $this->init();
+    }
+
+    /**
+     * @return Logger
+     */
+    public static function cli(): Logger {
+        return clone self::$logger;
     }
 
     /**
