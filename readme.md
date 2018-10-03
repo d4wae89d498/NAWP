@@ -9,11 +9,12 @@ If the project is already using a database, you'll have to attach it using SQL S
 Demo project database is available here (.MDF / .LDF files)  :  http://google.com 
 
 ## Minimum requirements 
+- 2 GO RAM
+- 1.5 Ghz CPU
 - PHP >= 7.2.0 
 - NodeJS  >= 10.0.0 
 - Supported os : Windows || MacOS || Linux 
 - Database engine : Microsoft SQL Server 2017 *
-- _(optional)_ yarn
 
 _* : (you might be able to switch to a different database engine if you succeed in converting the current mssql databases to somewhat else, logic itself is already abstracted using atlas)_
 
