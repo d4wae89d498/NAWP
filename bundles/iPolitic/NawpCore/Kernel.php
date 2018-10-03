@@ -31,16 +31,10 @@ use App\DataSources\{
 
 class Kernel {
     public const CACHE_FOLDER_NAME = "cache";
-    public const RSA_FILE_NAME = "rsa.txt";
-    public const DEFAULT_RSA_KEYS = [];
     /**
      * @var array
      */
     public static $twigArray = [];
-    /**
-     * @var array
-     */
-    public $rsaKeys = self::DEFAULT_RSA_KEYS;
 
     /**
      * @var Logger $logger
@@ -219,18 +213,4 @@ class Kernel {
         return $atlasContainer->getAtlas();
     }
 
-    public function loadRSA(): void {
-        $rsaFilePath = join(DIRECTORY_SEPARATOR, [$this->cachePath, self::RSA_FILE_NAME]);
-        $keys = [];
-        if (!file_exists($rsaFilePath)) {
-            $handle = fopen($rsaFilePath, "w+");
-            $rsa = new RSA();
-            $keys = $rsa->createKey(1024);
-            fwrite($handle, serialize($keys));
-        } else {
-            $handle = fopen($rsaFilePath, "r+");
-            $keys = unserialize(fread($handle, filesize($rsaFilePath)));
-        }
-        $this->rsaKeys = $keys;
-    }
 }
