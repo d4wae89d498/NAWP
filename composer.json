@@ -9,7 +9,7 @@
     ],
     "config": {
         "platform": {
-            "php": "7.2.1"
+            "php": "7.2"
         }
     },
     "repositories": [
@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": ">= 7.2.1",
+        "php": ">= 7.2.0",
         "twig/twig": "^2.5",
         "workerman/workerman": "dev-master",
         "ipolitic/solex": "dev-master",

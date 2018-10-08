@@ -44,7 +44,10 @@ class Session
      */
     public static function id(): string {
         // var_dump($_SERVER['REQUEST_METHOD']);
-        return sha1(base64_encode(print_r([$_SERVER["REMOTE_ADDR"], $_SERVER["HTTP_USER_AGENT"], $_SERVER["HTTP_COOKIE"]], 1)));
+        return isset($_SERVER["HTTP_COOKIE"]) ?
+            sha1(base64_encode(print_r([$_SERVER["REMOTE_ADDR"], $_SERVER["HTTP_USER_AGENT"], $_SERVER["HTTP_COOKIE"]], 1)))
+            :
+            "_";
     }
 
     /**
