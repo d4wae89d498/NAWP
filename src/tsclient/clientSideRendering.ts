@@ -1,6 +1,7 @@
 import * as $ from "jquery";
 import {twig} from "twig";
 import {NoRedirection} from "./noRedicrection";
+import "jquerydomwritter";
 /**
  * The client side rendering class
  */
@@ -155,15 +156,15 @@ export class ClientSideRendering {
                         }
                     }
                     let generated = "";
-                    generated = await ClientSideRendering.render(tplKey, states[tplKey], true);
+                    generated = "<span>" + await ClientSideRendering.render(tplKey, states[tplKey], true) + "</span>";
                     generatedString += generated;
                     console.log("rendering : " + tplKey);
                     window["templates"][tplKey] = {states: states[tplKey]};
                     if (deep === 0) {
                         console.log(generated);
-                        let templateSelector = $("[data-id=\"" + tplKey + "\"]");
+                        let templateSelector: any = $("[data-id=\"" + tplKey + "\"]");
                         const a = $(generated);
-                        if (templateSelector.html() !== a.html()) {
+                        if (a.prev().is("head") || ((typeof templateSelector[0] !== "undefined") && (templateSelector[0].outerHTML !== a.html()))) {
 
                           /*  const VNode = require("vtree/vnode");
                             const diff = require("vtree/diff");
@@ -176,8 +177,8 @@ export class ClientSideRendering {
                             const patches = diff(rootNode, rightNode);
                             patch(rootNode, patches);*/
                             // todo : add PWA cache system and recursive dom comparaison before update
+                            templateSelector.deepReplace(a.html());
                         }
-                        templateSelector.deepReplace(a.html());
                         ClientSideRendering.noRedir.init();
                     }
                 }
