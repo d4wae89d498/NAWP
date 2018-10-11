@@ -69,7 +69,7 @@ class Admin extends Controller implements ControllerInterface
 
         $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
     new \App\Views\Elements\Admin\Header(
-        $viewLogger, ["page" => "Login",]
+        $viewLogger, ["page" => "Login", "title" => "TEST".rand(0,99)]
     ) .
     "<body class=\"fix-header fix-sidebar card-no-border\">
         <!-- ============================================================== -->

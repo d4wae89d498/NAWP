@@ -2,7 +2,8 @@ import * as $ from "jquery";
 import {twig} from "twig";
 import {NoRedirection} from "./noRedicrection";
 import "jquerydomwritter";
-/**
+const morphdom = require("morphdom");
+/*
  * The client side rendering class
  */
 export class ClientSideRendering {
@@ -156,28 +157,25 @@ export class ClientSideRendering {
                         }
                     }
                     let generated = "";
-                    generated = "<span>" + await ClientSideRendering.render(tplKey, states[tplKey], true) + "</span>";
+                    generated = await ClientSideRendering.render(tplKey, states[tplKey], true);
                     generatedString += generated;
                     console.log("rendering : " + tplKey);
                     window["templates"][tplKey] = {states: states[tplKey]};
                     if (deep === 0) {
                         console.log(generated);
-                        let templateSelector: any = $("[data-id=\"" + tplKey + "\"]");
-                        const a = $(generated);
-                        if (a.prev().is("head") || ((typeof templateSelector[0] !== "undefined") && (templateSelector[0].outerHTML !== a.html()))) {
-
-                          /*  const VNode = require("vtree/vnode");
-                            const diff = require("vtree/diff");
-
-                            const createElement = require("vdom/create-element");
-                            const patch = require("vdom/patch");
-
-                            const rightNode =  $(generated)[0];
-                            const rootNode = $("[data-id=\"" + tplKey + "\"]")[0];
-                            const patches = diff(rootNode, rightNode);
-                            patch(rootNode, patches);*/
-                            // todo : add PWA cache system and recursive dom comparaison before update
-                            templateSelector.deepReplace(a.html());
+                        const attrIdSelector = $("[data-id=\"" + tplKey + "\"]");
+                        let templateSelector: any = attrIdSelector.length > 0 ?
+                            attrIdSelector :
+                            $("head");
+                        const a = document.createElement(templateSelector.prop("nodeName"));
+                        a.innerHTML = generated;
+                        a.setAttribute("data-id" , tplKey);
+                        if (templateSelector.prop("nodeName") === "HEAD" || (typeof templateSelector[0] !== "undefined" && templateSelector[0].innerHTML !== a.innerHTML)) {
+                            // using morphdom diffing for updating only the minimal data
+                            console.log(templateSelector[0]);
+                            console.log(a);
+                            morphdom(templateSelector[0], a);
+                            console.log("Applied!");
                         }
                         ClientSideRendering.noRedir.init();
                     }
