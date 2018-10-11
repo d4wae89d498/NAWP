@@ -9,7 +9,6 @@ If the project is already using a database, you'll have to attach it using SQL S
 Demo project database is available here (.MDF / .LDF files)  :  http://google.com 
 
 ## Minimum requirements 
-- 2 GO RAM
 - 1.5 Ghz CPU
 - PHP >= 7.2.0 
 - NodeJS  >= 10.0.0 
@@ -32,19 +31,28 @@ use `yarn` or `npm run` following one of these following commands :
 
 ## Framework features
 
- - **Server-side rendering** :  _using only modern PHP 7 CLI with new exception catches management and workman._ 
- - **Client-side rendering** :  _using twig.js_ 
+ - **Server-side rendering** :  _using only modern PHP 7 CLI with new exception catches management, workman and twig._ 
+ 
+ - **Client-side rendering** :  _using twig.js and morphdom DOM diffing lib for smooth updates_ 
+ 
  - **Modern SASS & Typescript transpiling, modern app** :  _using webpack, and modern libs like sass, typescript ... For a pleasant source code. 
- We also use developer-friendly libs such as jquery but with our own `states` system for once again, performance gains for both visitor CPU and your productivity__ 
+ We also use developer-friendly libs such as jquery but with our own `states` system for once again, performance gains for both visitor CPU and your productivity_ 
+ 
  - **Support private browsers and legacy browsers** : _When javascript _is disable_, visitor can still switch pages, perform forms and href using the legacy web features. 
    We are also using bootstrap 3 with retro-compatible css and javascript thanks to webpack._
+ 
  - **High speed even under 2G or any poor connexion** : _When javascript _is enable_, all form and href tags add redirected to the same url and so controllers but using this time the `SOCKET` request type. This call is performed by socket.io client and so support legacy browsers, and provide nice speed.
  The data provided by the php server is then very small as only data of a component will be given in order to re render twig.js components._ 
+ 
  - **User and admin friendly ORM db models** : _using atlas and Microsoft SQL SERVER 2017 (and once again with nice performances)_
+ 
  - **Friendly controllers** :  _using our own **POLITIC/SOLEX**_ router
- - **Friendly configuration** :  _using **SYMFONTY/DOTENV** component_
+ 
+ - **Friendly configuration** :  _using a 10 line .env file ( **SYMFONTY/DOTENV** component ) and 2 webpack files_
+ 
  - **Base skeleton** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
- - **Extendable architecture** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
+ 
+ - **Extendable architecture** : _Use bundles to share controllers and assets between your projects_
 
 ## We are using the best packages out there
 - `twig` 2.5 _For server-side rendering_
