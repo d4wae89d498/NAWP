@@ -15,6 +15,7 @@ use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\components\Logger;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
 use Atlas\Orm\Mapper\Mapper;
 use Atlas\Orm\AtlasContainer;
@@ -126,8 +127,8 @@ class Kernel {
      * @param bool $useRouterResult
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, string $requestType, $requestArgs,  $packet = null, $array): void {
-        $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet, $array);
+    public function handle(&$response, string $requestType, $requestArgs,  $packet = null, $array, &$viewLogger = null): void {
+        $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet, $array, $viewLogger);
     }
 
     /**

@@ -9,9 +9,12 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
+use Workerman\Protocols\Http;
 
 class PacketAdapter
 {
+    public const DEFAULT_REQUEST_TYPE = "POST";
+
     /**
      * Folder name in root/cache
      */
@@ -54,6 +57,40 @@ class PacketAdapter
                 $id . ".txt",
             ]
         );
+    }
+
+    /**
+     *  Will redirect the http or the socket response
+     * @param string $response
+     * @param ViewLogger $viewLogger
+     * @param string $url
+     * @param array $args
+     * @param string $requestType
+     * @throws \iPolitic\Solex\RouterException
+     */
+    public static function redirectTo
+    (
+        string &$response,
+        ViewLogger &$viewLogger,
+        string $url,
+        array $args = [],
+        string $requestType = self::DEFAULT_REQUEST_TYPE
+    ): void {
+        echo "REDIRECTING TO : " . $url . PHP_EOL;
+        if (strtolower($requestType) !== "socket") {
+            Http::header("Location: " . $url);
+        } else {
+            $_SERVER["REQUEST_URI"] = $url;
+            Kernel::getKernel()->handle (
+                $response,
+                isset($_SERVER["REQUEST_METHOD"]) ?
+                    $_SERVER["REQUEST_METHOD"] : "GET",
+                $_SERVER["REQUEST_URI"],
+                null,
+                $args,
+                $viewLogger
+            );
+        }
     }
 
     /**

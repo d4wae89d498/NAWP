@@ -19,7 +19,6 @@ class Controller {
      */
     public $name = "";
     public $atlas;
-    public const DEFAULT_REQUEST_TYPE = "POST";
     /**
      * Controller constructor.
      */
@@ -40,7 +39,7 @@ class Controller {
      * @return bool
      *
      */
-    public function call(ViewLogger &$viewLogger, string &$response, string $method, $args = [], string $requestType = self::DEFAULT_REQUEST_TYPE): bool {
+    public function call(ViewLogger &$viewLogger, string &$response, string $method, $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
         //var_dump("IN CALLL" . $method);
         if (method_exists($this,$method)) {
             return $this->$method($viewLogger, $response, $args, $requestType);

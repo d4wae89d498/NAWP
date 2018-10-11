@@ -1,8 +1,7 @@
 import * as $ from "jquery";
 import {twig} from "twig";
 import {NoRedirection} from "./noRedicrection";
-import "jquerydomwritter";
-const morphdom = require("morphdom");
+import * as morphdom from "morphdom";
 /*
  * The client side rendering class
  */
@@ -125,6 +124,14 @@ export class ClientSideRendering {
     }
 
     /**
+     * Will read current value of <meta data-url="..." content="READING HERE"> tag
+     */
+    public static getCurrentUrl(): string {
+        let p: any;
+        return (p = document.head.querySelector("[name~=data-url][content]")).content;
+    }
+
+    /**
      * Will render recursivly the given templates states object without
      * @param {object} states
      * @param {number} deep
@@ -174,8 +181,16 @@ export class ClientSideRendering {
                             // using morphdom diffing for updating only the minimal data
                             console.log(templateSelector[0]);
                             console.log(a);
+                            const oldUrl = this.getCurrentUrl();
                             morphdom(templateSelector[0], a);
                             console.log("Applied!");
+                            if (templateSelector.prop("nodeName") === "HEAD") {
+                                const newUrl = this.getCurrentUrl();
+                                // if url changed we push it to update the browser URL
+                                if (oldUrl !== newUrl) {
+                                    window.history.pushState(newUrl, document.title, newUrl);
+                                }
+                            }
                         }
                         ClientSideRendering.noRedir.init();
                     }

@@ -31,7 +31,8 @@ class Header extends View implements TwigInterface
         "title" => "Ferme de cornaton",
         "page" => "Admin",
         "charset" => "UTF-8",
-        "viewport" => "width=device-width, initial-scale=1"
+        "viewport" => "width=device-width, initial-scale=1",
+        "url" => ""
     ];
 
     public function twig(): void { ?>
@@ -40,8 +41,9 @@ class Header extends View implements TwigInterface
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <!-- Tell the browser to be responsive to screen width -->
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <meta name="description" content="">
-            <meta name="author" content="">
+            <meta name="description" content="Somewho webapp">
+            <meta name="author" content="Marc FAUSSURIER">
+            <meta name="data-url" content="{{ url }}">
             <!-- Favicon icon -->
             <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">
             <title>{{ title }} - {{ page }}</title>
