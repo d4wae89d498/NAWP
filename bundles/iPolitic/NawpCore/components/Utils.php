@@ -12,14 +12,16 @@ namespace App\iPolitic\NawpCore\Components;
 class Utils
 {
     /**
-     * Will print a var to the console
+     * WIll var_dump a var and/or exit the script.
      * @param $var
+     * @param bool $exitScript
      */
     public static function p($var, bool $exitScript = false): void {
         var_dump($var);
         if($exitScript) {
             exit;
         }
+        return;
     }
     /**
      * Will return the
@@ -59,23 +61,5 @@ class Utils
             $res = ob_get_contents();
         ob_end_clean();
         return $res;
-    }
-
-    /**
-     * Will decompress a string
-     * @param string $string
-     * @return string*
-     */
-    public static function compress(string $string): string {
-        return gzdeflate($string, 9);
-    }
-
-    /**
-     * Will compress a string
-     * @param string $string
-     * @return string
-     */
-    public static function decompress(string $string): string {
-        return gzinflate($string);
     }
 }

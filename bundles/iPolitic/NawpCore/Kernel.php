@@ -5,21 +5,18 @@
  * Date: 8/5/2018
  * Time: 7:47 PM
  */
-
 namespace App\iPolitic\NawpCore;
 
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
-use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\components\Logger;
+use App\iPolitic\NawpCore\components\Packet;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
-use Atlas\Orm\Mapper\Mapper;
 use Atlas\Orm\AtlasContainer;
-use phpseclib\Crypt\RSA;
 use Symfony\Component\Dotenv\Dotenv;
 use App\DataSources\{
     Categorie\CategorieMapper,
@@ -120,14 +117,16 @@ class Kernel {
     }
 
     /**
-     * Will handle a request
-     * @param $response
+     *  Will handle a request
+     * @param string $response
      * @param string $requestType
-     * @param $requestArgs
-     * @param bool $useRouterResult
+     * @param array $requestArgs
+     * @param Packet|null $packet
+     * @param array $array
+     * @param ViewLogger|null $viewLogger
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, string $requestType, $requestArgs,  $packet = null, $array, &$viewLogger = null): void {
+    public function handle(&$response, string $requestType, $requestArgs,  $packet = null, $array = [], &$viewLogger = null): void {
         $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet, $array, $viewLogger);
     }
 
@@ -154,7 +153,7 @@ class Kernel {
      * @param array $arguments
      * @param string $componentName
      */
-    public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName): void {
+    public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName = ""): void {
         // foreach controllers
         array_map
         (

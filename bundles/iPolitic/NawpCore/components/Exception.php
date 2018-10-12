@@ -12,7 +12,9 @@ class Exception
 {
     public static function catch(\Exception $e): string
     {
-        while (@ob_end_flush());
+        while (@ob_end_flush()) {
+            sleep(0);
+        }
         $log = "<div class='error_main'>";
         $log .= "<h1><small>\\ IPOLITIC \\ NAWP</small> :: Exception ! </h1>";
         $log .= "<br /><b>Error Time :</b>" . date('Y-m-d H:i:s A');
@@ -20,11 +22,7 @@ class Exception
         $log .= "<br /><b>Error Message :</b>" . $e->getMessage();
         $log .= "<br /><b>Error File :</b>" . $e->getFile();
         $log .= "<br /><b>Error File Line :</b>" . $e->getLine();
-        $log .= "<br /><b>Error Trace :</b><br />" . preg_replace(
-                "/\n/",
-                '<br>',
-                $e->getTraceAsString()
-            );
+        $log .= "<br /><b>Error Trace :</b><br />" . preg_replace("/\n/",'<br>',$e->getTraceAsString());
         $log .= "</div>";
         return $log;
     }

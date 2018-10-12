@@ -7,20 +7,26 @@
  */
 namespace App\iPolitic\NawpCore\Components;
 
+use Atlas\Orm\Atlas;
+
 /**
  * The controller class, convert requests to states rendered as a json 
  * or as a standard html template with custom js
  */
 class Controller {
-    
     /**
      * The controller name
      * @var string
      */
     public $name = "";
+    /**
+     * @var Atlas
+     */
     public $atlas;
+
     /**
      * Controller constructor.
+     * @param Atlas $atlas
      */
     public function __construct($atlas)
     {

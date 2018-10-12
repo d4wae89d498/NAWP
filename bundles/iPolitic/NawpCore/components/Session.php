@@ -156,7 +156,12 @@ class Session
          */
         $generatedNumber = 0;
         if ( call_user_func_array(
-            function ($n)use(&$generatedNumber){for($i=~-$n**.5|0;$i&&$n%$i--;);return!$i&$n>2|$n==2; },
+            function ($n)use(&$generatedNumber){
+                for ($i=~-$n**.5|0;$i&&$n%$i--;) {
+                    sleep(0);
+                }
+                return!$i&$n>2|$n==2;
+            },
             [$generatedNumber = mt_rand()]
             )
         )   self::tokenExpireCheck();

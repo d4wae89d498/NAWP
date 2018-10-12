@@ -5,10 +5,8 @@
  * Date: 9/6/2018
  * Time: 2:00 PM
  */
-
 namespace App\iPolitic\NawpCore\components;
 
-use App\iPolitic\NawpCore\Kernel;
 /**
  * The packet Class
  * Class Packet

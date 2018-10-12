@@ -2,7 +2,7 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\ { Utils, PacketAdapter };
+
 /**
  * ViewLogger will store all the data given to the template class
  *
@@ -15,9 +15,24 @@ use App\iPolitic\NawpCore\Components\ { Utils, PacketAdapter };
 class ViewLogger
 {
     public const HTML_STATES_PREFIX = "html_elements";
+    /**
+     * @var array|null
+     */
     public $array = [];
+    /**
+     * @var array
+     */
     public $renderedTemplates = [];
+    /**
+     * @var string
+     */
     public $requestType = "";
+
+    /**
+     * ViewLogger constructor.
+     * @param null $array
+     * @param string $requestType
+     */
     public function __construct($array = null, string $requestType = "GET")
     {
         $this->requestType = $requestType;
@@ -119,37 +134,34 @@ class ViewLogger
         $kernel = Kernel::getKernel();
         $packetAdapter = new PacketAdapter();
         $output = Utils::ocb(function() use (&$packetAdapter, $kernel) { ?>
-                window['templates'] = [];
-                window['baseTemplates'] = [];
+            window['templates'] = [];
+            window['baseTemplates'] = [];
             <?php $this->renderedTemplates = [];
-            foreach($this->getStates() as $id => $states) {
+            foreach($this->getStates() as $id => $states):
                 $this->renderedTemplates[$id] = $states; ?>
                 if (typeof window['templates'][<?=json_encode($id) ?>] === 'undefined') {
                     window['templates'][<?=json_encode($id) ?>] = {
                         states: (<?=json_encode(["states" => $states]) ?>)["states"]
                     };
                 }
-            <?php } ?>
-            <?php foreach($kernel->viewCollection as $k => $v) {/*
-               // var_dump($v);
-               // break; ?>
+            <?php endforeach; ?>
+            <?php foreach($kernel->viewCollection as $k => $v):
                 /**
                  * @var $v View
                  */
-                if(isset($v->states) && isset($this->array[$k])) { ?>
-                window['baseTemplates']['<?=$k?>'] = {
-                generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
-                twig: (<?=json_encode(["twig" => $this->array[$k]]) ?>)["twig"],
-                states: (<?=json_encode(["states" => $v->states])?>)["states"]
-                };
-            <?php }
-            } ?>
-                window['clientVar'] = '<?=$packetAdapter->storeAndGet($this->requestType)?>';
+                if(isset($v->states) && isset($this->array[$k])): ?>
+                    window['baseTemplates']['<?=$k?>'] = {
+                        generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
+                        twig: (<?=json_encode(["twig" => $this->array[$k]]) ?>)["twig"],
+                        states: (<?=json_encode(["states" => $v->states])?>)["states"]
+                    };
+                <?php endif;
+            endforeach; ?>
+            window['clientVar'] = '<?=$packetAdapter->storeAndGet($this->requestType)?>';
             <?php
         });
         return $output;
     }
-
 
     /**
      * Will generate vanilla CSS should be rendered in page footer

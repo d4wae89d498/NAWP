@@ -9,6 +9,7 @@ namespace App\iPolitic\NawpCore\Components;
 
 use Twig\Loader\ArrayLoader;
 use Twig\Environment;
+
 /**
  * Template class.
  */
@@ -34,7 +35,7 @@ abstract class View
      * Template constructor.
      * Will generate a new template id and add generated html and states to $e
      * @param \App\iPolitic\NawpCore\Components\ViewLogger $templateLogger
-     * @param null $params
+     * @param array $params
      */
     public function __construct(ViewLogger &$templateLogger, array $params = []) {
         //we  reassign the template logger
@@ -115,13 +116,11 @@ abstract class View
         $twig = new Environment(new ArrayLoader(array(
             $str => $twig,
         )));
-       // exit;
         $m = "beforeRender";
         if(method_exists ($this , $m)) {
             $this->$m();
         }
         $this->templateLogger->setTemplate($this->generatedID, $this);
-
         $html =  $twig->render($str, $this->get("states"));
         return $html;
     }

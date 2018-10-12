@@ -5,15 +5,14 @@
  * Date: 8/5/2018
  * Time: 7:46 PM
  */
-
 namespace App\iPolitic\NawpCore\Collections;
 
+use App\iPolitic\NawpCore\components\Packet;
 use iPolitic\Solex\Router;
 use App\iPolitic\NawpCore\Components\{
     Collection, Controller, ViewLogger
 };
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use phpseclib\Math\BigInteger\Engines\PHP;
 
 /**
  * Class ControllerCollection
@@ -36,18 +35,20 @@ class ControllerCollection extends Collection {
     /**
      * Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRU
-     * @param $response
-     * @param $requestType
-     * @param $requestArgs
-     * @param $packet
+     * @param $response string
+     * @param $requestType string
+     * @param $requestArgs array
+     * @param $packet Packet
+     * @param $array array
+     * @param $viewLogger|null ViewLogger
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, $requestType, $requestArgs, $packet = null, $array, $viewLogger = null): void {
+    public function handle(&$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void {
         $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $requestType);
         // for each controller methods ordered by priority
-        foreach($this->getOrderdByPriority() as $controllerMethod) {
+        foreach($this->getOrderedByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
             // we force a match if wildcard used
             if($controllerMethod["router"][1] === "*") {
@@ -78,37 +79,29 @@ class ControllerCollection extends Collection {
                 }
             }
         }
-
         if ($packet !== null) {
-           // var_dump($packet);
-            $toSend = [];
             $serverGenerated = $viewLogger->renderedTemplates;
             $response = json_encode($serverGenerated);
-            var_dump($response);
         }
     }
-
 
     /**
      * Will the current controller array orded by their priority
      * @return array
-     * @throws \Exception
      */
-    public function getOrderdByPriority() {
+    public function getOrderedByPriority(): array {
         $queue = [];
         /**
          * Copy all controllers methods to queue and add controller name as methods params
          * @var $v ControllerInterface
          */
         foreach ($this->getArrayCopy() as $v) {
-            if ($v instanceof ControllerInterface && is_array($methods = $v->getMethods())) {
+            if ($v instanceof Controller && is_array($methods = $v->getMethods())) {
                 foreach ($methods as $k => $u) {
                   //  echo "method : " . $u["method"] . PHP_EOL;
                     $methods[$k]["controller"] = $v->name;
                     array_push($queue, $methods[$k]);
                 }
-            } else {
-                throw new \Exception("Empty controller");
             }
         }
         // order by priority value
@@ -120,28 +113,35 @@ class ControllerCollection extends Collection {
     }
 
     /**
-     * Will return a new controller using its namespaced name
+     * Returns all controllers that match a controllerName
      * @param string $controllerName
-     * @return ControllerInterface
+     * @return array
      */
-    public function getByName(string $controllerName): ControllerInterface {
-        $match = null;
+    public function getAllByName(string $controllerName): array {
+        $matches = null;
         $controllers =  $this->getArrayCopy();
-        $a =  array_filter
+        $matches = array_filter
         (
             $controllers,
-            function($controller)use($controllerName, &$match) {
-               $success = ($controller->name === $controllerName);
-                if($success) {
-                    $match = $controller;
-                }
-                return $success;
+            function ($controller) use ($controllerName, &$match) {
+                return ($controller->name === $controllerName);
             }
-        )
-        ;
-        if($match === null) {
-            echo " no controller foudn for : " . $controllerName . PHP_EOL;
-        }
-        return $match ;
+        );
+        return $matches ;
+    }
+
+    /**
+     * Will return a new controller using its namespace name
+     * @param string $controllerName
+     * @return Controller
+     */
+    public function getByName(string $controllerName): Controller {
+        return
+        (
+            (
+                $allByName = $this->getAllByName($controllerName)
+            )
+            [count($allByName) - 1]
+        );
     }
 }

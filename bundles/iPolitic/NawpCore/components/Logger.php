@@ -5,7 +5,6 @@
  * Date: 9/30/2018
  * Time: 12:10 PM
  */
-
 namespace App\iPolitic\NawpCore\components;
 
 /**
@@ -122,8 +121,8 @@ class Logger
      */
     public function _applyStyles(string $text, array $styles): Logger {
         // we use templates if needed by merging
-        foreach ($s = array_map(function($element){
-            return isset(self::$templates[$element]) ? self::$templates[$element] : $element;
+        foreach ($s = array_map(function($element){ return
+            isset(self::$templates[$element]) ? self::$templates[$element] : $element;
         }, $styles) as $k => $v) {
             if (is_array($v)) {
                 unset($s[$k]);
@@ -374,7 +373,7 @@ class Logger
             }
             return false;
         } else {
-            return function_exists('posix_isatty') && @posix_isatty(STDOUT);
+            return function_exists('posix_isatty');
         }
     }
 

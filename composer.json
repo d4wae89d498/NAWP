@@ -34,7 +34,8 @@
         "zendframework/zend-diactoros": "^1.8@dev",
         "workerman/phpsocket.io": "dev-master",
         "atlas/orm": "2.*",
-        "symfony/dotenv": "^4.2@dev"
+        "symfony/dotenv": "^4.2@dev",
+        "ext-json": "*"
     },
 
     "require-dev": {

@@ -46,9 +46,9 @@ use `yarn` or `npm run` following one of these following commands :
  
  - **User and admin friendly ORM db models** : _using atlas and Microsoft SQL SERVER 2017 (and once again with nice performances)_
  
- - **Friendly controllers** :  _using our own **POLITIC/SOLEX**_ router
+ - **Developer friendly controllers** :  _using our own **POLITIC/SOLEX**_ router
  
- - **Friendly configuration** :  _using a 10 line .env file ( **SYMFONTY/DOTENV** component ) and 2 webpack files_
+ - **Admin friendly configuration** :  _using a 10 line .env file ( **SYMFONTY/DOTENV** component ) and 2 webpack files_
  
  - **Base skeleton** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
  
