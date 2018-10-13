@@ -36,11 +36,11 @@ class ControllerCollection extends Collection {
     /**
      * Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRU
-     * @param $response string
-     * @param $requestType string
-     * @param $requestArgs array
-     * @param $packet Packet
-     * @param $array array
+     * @param string $response
+     * @param string $requestType
+     * @param string $requestArgs
+     * @param mixed $packet
+     * @param array $array
      * @param $viewLogger|null ViewLogger
      * @throws \iPolitic\Solex\RouterException
      */
@@ -74,7 +74,7 @@ class ControllerCollection extends Collection {
                  * @var $controller Controller
                  */
                 $controller = $this->getByName($controllerMethod["controller"]);
-                if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse, $requestType)) {
+                if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse)) {
                     // nothing special to do right now
                     break;
                 }

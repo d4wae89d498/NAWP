@@ -12,8 +12,6 @@ use Workerman\Protocols\Http;
 
 class PacketAdapter
 {
-    public const DEFAULT_REQUEST_TYPE = "POST";
-
     /**
      * Folder name in root/cache
      */
@@ -73,7 +71,7 @@ class PacketAdapter
         ViewLogger &$viewLogger,
         string $url,
         array $args = [],
-        string $requestType = self::DEFAULT_REQUEST_TYPE
+        string $requestType = ViewLogger::DEFAULT_REQUEST_TYPE
     ): void {
         echo "REDIRECTING TO : " . $url . PHP_EOL;
         if (strtolower($requestType) !== "socket") {
@@ -82,8 +80,7 @@ class PacketAdapter
             $_SERVER["REQUEST_URI"] = $url;
             Kernel::getKernel()->handle (
                 $response,
-                isset($_SERVER["REQUEST_METHOD"]) ?
-                    $_SERVER["REQUEST_METHOD"] : "GET",
+                isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : ViewLogger::DEFAULT_REQUEST_TYPE,
                 $_SERVER["REQUEST_URI"],
                 null,
                 $args,
@@ -122,7 +119,8 @@ class PacketAdapter
      * @param string $id
      * @return array
      */
-    public static function readFile(string $id): array {
+    public static function readFile(string $id): array
+    {
         if (file_exists($filePath = self::IDtoPath($id))) {
             $fp = fopen($filePath, 'r') or die('cant open file');
             return unserialize(
@@ -131,22 +129,5 @@ class PacketAdapter
         } else {
             return [];
         }
-    }
-
-    /**
-     * Will generate a new ID
-     * @param int $length
-     * @return string
-     * @throws \Exception
-     */
-    public static function  generateId(int $length = 20): string {
-        if (function_exists("random_bytes")) {
-            $bytes = random_bytes(ceil($length / 2));
-        } elseif (function_exists("openssl_random_pseudo_bytes")) {
-            $bytes = openssl_random_pseudo_bytes(ceil($length / 2));
-        } else {
-            throw new \Exception("no cryptographically secure random function available");
-        }
-        return substr(bin2hex($bytes), 0, $length).microtime(true);
     }
 }

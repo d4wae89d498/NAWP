@@ -1,6 +1,6 @@
 .idea/
 public/generated_js/
-cache/.txt
+cache/sessions.txt
 cache/packet_adapter/*.txt
 node_modules/
 configs/.env

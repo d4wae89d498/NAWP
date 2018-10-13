@@ -6,6 +6,8 @@
  * Time: 5:24 PM
  */
 namespace App\iPolitic\NawpCore\Components;
+
+use App\iPolitic\NawpCore\interfaces\CArray;
 use App\iPolitic\NawpCore\Kernel;
 
 /**
@@ -13,7 +15,7 @@ use App\iPolitic\NawpCore\Kernel;
  * Provide php native session replacement
  * @package App\iPolitic\NawpCore\Components
  */
-class Session
+class Session implements CArray
 {
     /**
      * The session array
@@ -43,7 +45,6 @@ class Session
      * Will generate a unic token per visitor. Will not generate a single cookie
      */
     public static function id(): string {
-        // var_dump($_SERVER['REQUEST_METHOD']);
         return isset($_SERVER["HTTP_COOKIE"]) ?
             sha1(base64_encode(print_r([$_SERVER["REMOTE_ADDR"], $_SERVER["HTTP_USER_AGENT"], $_SERVER["HTTP_COOKIE"]], 1)))
             :
@@ -56,7 +57,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public static function get(string $key, string $id = "") {
+    public static function get(string $key, $id = ""): string {
         $id = $id !== "" ? $id : Session::id();
         return self::$session[$id][$key];
     }
@@ -68,7 +69,7 @@ class Session
      * @param mixed $value
      * @return void
      */
-    public static function set(string $key, $value, string $id = ""): void {
+    public static function set(string $key, string $value, $id = ""): void {
         $id = $id !== "" ? $id : Session::id();
         self::$session[$id][$key] = $value;
         return;
@@ -80,9 +81,30 @@ class Session
      * @param string $key
      * @return bool
      */
-    public static function isset(string $key, string $id = "") : bool {
+    public static function isset(string $key, $id = "") : bool {
         $id = $id !== "" ? $id : Session::id();
         return isset(self::$session[$id][$key]);
+    }
+
+    /**
+     * Will remove an item if exists using its key
+     * @param string $key
+     * @param string $id
+     */
+    public static function remove(string $key, $id = "") : void {
+        $id = $id !== "" ? $id : Session::id();
+        if (self::isset($key)) {
+            unset(self::$session[$id][$key]);
+        }
+    }
+
+    /**
+     * Will destroy a session
+     * @param string $id
+     */
+    public static function destroy($id = "") : void {
+        $id = $id !== "" ? $id : Session::id();
+        unset(self::$session[$id]);
     }
 
     /**
@@ -93,15 +115,6 @@ class Session
     public static function isLoggedIn(string $id = "") : bool {
         $id = $id !== "" ? $id : Session::id();
         return isset(self::$session[$id]);
-    }
-
-    /**
-     * Will destroy a session
-     * @param string $id
-     */
-    public static function destroy(string $id = "") : void {
-        $id = $id !== "" ? $id : Session::id();
-        unset(self::$session[$id]);
     }
 
     /**

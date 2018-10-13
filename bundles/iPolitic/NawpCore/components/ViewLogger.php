@@ -15,6 +15,7 @@ use App\iPolitic\NawpCore\Kernel;
 class ViewLogger
 {
     public const HTML_STATES_PREFIX = "html_elements";
+    public const DEFAULT_REQUEST_TYPE = "GET";
     /**
      * @var array|null
      */
@@ -33,7 +34,7 @@ class ViewLogger
      * @param null $array
      * @param string $requestType
      */
-    public function __construct($array = null, string $requestType = "GET")
+    public function __construct($array = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
     {
         $this->requestType = $requestType;
         if ($array !== null) {

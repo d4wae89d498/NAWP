@@ -54,10 +54,9 @@ class Session extends Controller implements ControllerInterface
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
-     * @param string $requestType
      * @return bool
      */
-    public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
 
         //die("session tick");
         CSession::tick();
@@ -73,7 +72,7 @@ class Session extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      */
-    public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         $httpResponse =
         new \App\Views\Elements\Header($viewLogger, []) .
         new \App\Views\Pages\Home($viewLogger, ["name" => "test", "html_elements" => [
@@ -96,10 +95,9 @@ class Session extends Controller implements ControllerInterface
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
-     * @param string $requestType
      * @return bool
      */
-    public function notFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function notFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         $httpResponse .= " ERROR 404";
         return true;
     }
@@ -109,10 +107,9 @@ class Session extends Controller implements ControllerInterface
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
-     * @param string $requestType
      * @return bool
      */
-    public function socketNotFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function socketNotFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         $httpResponse .= " ERROR 404";
         return true;
     }

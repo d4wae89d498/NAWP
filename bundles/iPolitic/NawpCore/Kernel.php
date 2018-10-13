@@ -120,7 +120,7 @@ class Kernel {
      *  Will handle a request
      * @param string $response
      * @param string $requestType
-     * @param array $requestArgs
+     * @param string $requestArgs
      * @param Packet|null $packet
      * @param array $array
      * @param ViewLogger|null $viewLogger

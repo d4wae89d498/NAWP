@@ -37,12 +37,12 @@ class Admin extends Controller implements ControllerInterface
             [
                 "method"    => "login",
                 "router"    => ["*", "/admin/login"],
-                "priority"  => 98,
+                "priority"  => 0,
             ],
             [
                 "method"    => "adminHome",
                 "router"    => ["*", "/admin"],
-                "priority"  => 98,
+                "priority"  => 0,
             ]
         ];
     }
@@ -52,11 +52,10 @@ class Admin extends Controller implements ControllerInterface
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
-     * @param string $requestType
      * @return bool
      * @throws \iPolitic\Solex\RouterException
      */
-    public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         $loginMessage = "";
         $atlas = (Kernel::getKernel())->atlas;
         if(isset($_POST["email"]) && isset($_POST["password"])) {
@@ -67,7 +66,7 @@ class Admin extends Controller implements ControllerInterface
                 $loginMessage = "Mot de passe ou utilisateur incorect (".sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
             } else {
                 Session::set( "user_id", $userRecord->row_id);
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin", $args, $requestType);
+                PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin", $args, $viewLogger->requestType);
                 return true;
             }
         }
@@ -112,11 +111,9 @@ class Admin extends Controller implements ControllerInterface
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
-     * @param string $requestType
      * @return bool
-     * @throws \iPolitic\Solex\RouterException
      */
-    public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         $loginMessage = "SUCCESS";
         $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
             new \App\Views\Elements\Admin\Header(
@@ -157,11 +154,10 @@ class Admin extends Controller implements ControllerInterface
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
-     * @param string $requestType
      * @return bool
      * @throws \iPolitic\Solex\RouterException
      */
-    public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = [], string $requestType = PacketAdapter::DEFAULT_REQUEST_TYPE): bool {
+    public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         echo "IN ADMINMIDDLEWARE OF REQUEST : ";
         var_dump($args);
         echo PHP_EOL;
@@ -170,7 +166,7 @@ class Admin extends Controller implements ControllerInterface
             if (!Session::isset( "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
                 // TODO : add possibility to redirect from packet
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin/login", $args, $requestType);
+                PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin/login", $args, $viewLogger->requestType);
                 // We release the request
                 return true;
             }
