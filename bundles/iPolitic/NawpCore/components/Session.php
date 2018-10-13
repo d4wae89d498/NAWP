@@ -15,7 +15,7 @@ use App\iPolitic\NawpCore\Kernel;
  * Provide php native session replacement
  * @package App\iPolitic\NawpCore\Components
  */
-class Session implements CArray
+class Session
 {
     /**
      * The session array

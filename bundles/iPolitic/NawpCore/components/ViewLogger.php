@@ -29,6 +29,8 @@ class ViewLogger
      */
     public $requestType = "";
 
+    public $cookies = [];
+
     /**
      * ViewLogger constructor.
      * @param null $array

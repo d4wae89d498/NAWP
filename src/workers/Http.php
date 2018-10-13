@@ -91,7 +91,7 @@ class Http
         $this->worker = new WebServer(
             "http://0.0.0.0:5616",
             [],
-            function(Workerman\Connection\ConnectionInterface &$connection)use(&$kernel, &$array, $cli) {
+            function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli) {
                 $cli->log("Got HTTP Request", "info");
                 $response = [];
                 try {
