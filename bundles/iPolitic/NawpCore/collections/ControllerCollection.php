@@ -8,6 +8,7 @@
 namespace App\iPolitic\NawpCore\Collections;
 
 use App\iPolitic\NawpCore\components\Packet;
+use App\iPolitic\NawpCore\Kernel;
 use iPolitic\Solex\Router;
 use App\iPolitic\NawpCore\Components\{
     Collection, Controller, ViewLogger
@@ -138,10 +139,16 @@ class ControllerCollection extends Collection {
     public function getByName(string $controllerName): Controller {
         return
         (
+            isset
             (
-                $allByName = $this->getAllByName($controllerName)
-            )
-            [count($allByName) - 1]
+                (
+                    $allByName = $this->getAllByName($controllerName)
+                )
+                [count($allByName) - 1]
+            ) ?
+                $allByName[count($allByName) - 1]
+            :
+                new Controller(Kernel::getKernel()->atlas)
         );
     }
 }
