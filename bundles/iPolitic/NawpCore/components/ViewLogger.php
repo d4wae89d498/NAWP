@@ -34,13 +34,22 @@ class ViewLogger
     /**
      * ViewLogger constructor.
      * @param null $array
+     * @param Packet|null $packet
      * @param string $requestType
      */
-    public function __construct($array = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
+    public function __construct($array = null, $packet = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
     {
         $this->requestType = $requestType;
         if ($array !== null) {
             $this->array = $array;
+        }
+        // if we are in a socket context
+        if ($requestType === "SOCKET" && $packet !== null) {
+            echo "A301";
+            // and if cookies were passed
+
+            // we set it in the pgp globals values
+            var_dump($packet);
         }
         Cookie::setTestCookie($this);
     }

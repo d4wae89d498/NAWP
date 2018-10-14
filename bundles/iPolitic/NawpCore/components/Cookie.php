@@ -67,7 +67,18 @@ class Cookie
         return;
     }
 
+
     /**
+     * Will remove a cookie from an hhtp request
+     * @param string $cookieName
+     */
+    public static function removeHttpCookie(string $cookieName): void {
+        $val = "";
+        $expireDate = date("D, d M Y H:i:s", time() - 3600) . 'GMT';
+        Http::header("Set-Cookie: {$cookieName}={$val}; EXPIRES{$expireDate};");
+    }
+
+    /**setTestCookie
      * Will set a first cookie so that we can test it later
      * @param ViewLogger $viewLogger
      */
@@ -76,7 +87,12 @@ class Cookie
             self::set
             (
                 $viewLogger,
-                new Cookie (self::DEFAULT_TEST_COOKIE_STR, "", 60 * 30) // available 1 min
+                new Cookie
+                (
+                    self::DEFAULT_TEST_COOKIE_STR,
+                    self::DEFAULT_TEST_COOKIE_STR,
+                    self::DEFAULT_COOKIE_DURATION
+                )
             );
         }
         return;
@@ -113,6 +129,9 @@ class Cookie
      * @param string $key
      */
     public static function  remove(ViewLogger &$viewLogger, string $key): void {
+        if ($viewLogger->requestType !== "SOCKET") {
+            self::removeHttpCookie($key);
+        }
         unset($viewLogger->cookies[$key]);
         return;
     }

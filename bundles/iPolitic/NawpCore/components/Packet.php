@@ -25,7 +25,7 @@ class Packet implements \ArrayAccess {
      * The packets components
      * @var array
      */
-    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => []];
+    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => []];
 
     private $originalClientVar;
 
@@ -44,13 +44,22 @@ class Packet implements \ArrayAccess {
         }
         foreach ($this->container as $k => $v) {
             if(isset($nData[$k])){
+                $valueAddedInContainer = $nData[$k];
+                // decrypt packet adapter file
                 if ($k === "clientVar" && $decryptClientVar) {
-               //     (Kernel::cli())->log($nData[$k], "info");
-                    $this->originalClientVar = $nData[$k];
-                    $this->container[$k] = $this->socketAdapter->readFile($nData[$k]);
-                } else {
-                    $this->container[$k] = $nData[$k];
+                    $this->originalClientVar = $valueAddedInContainer;
+                    $valueAddedInContainer = $this->socketAdapter->readFile($valueAddedInContainer);
                 }
+                // decrypt json cookies
+                elseif ($k === "cookies") {
+                    $valueAddedInContainer = [];
+                    $cookieSplit = explode("; ", $nData[$k]);
+                    for($i = 0; $i < count($cookieSplit); $i++) {
+                        $cur = explode("=",$cookieSplit[$i]);
+                        $valueAddedInContainer[$cur[0]] = $cur[1];
+                    }
+                }
+                $this->container[$k] = $valueAddedInContainer;
             }
         }
     }

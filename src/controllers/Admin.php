@@ -88,7 +88,7 @@ class Admin extends Controller implements ControllerInterface
                     "page" => "Login",
                     "title" => "TEST".rand(0,99),
                     "url" => $_SERVER["REQUEST_URI"],
-                    "cookies" => json_encode($viewLogger->cookies),
+                    "cookies" => base64_encode(json_encode($viewLogger->cookies)),
                 ]) .
             "<body class=\"fix-header fix-sidebar card-no-border\">
                 <!-- ============================================================== -->
