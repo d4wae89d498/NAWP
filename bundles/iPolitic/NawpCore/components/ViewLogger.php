@@ -32,6 +32,11 @@ class ViewLogger
     public $cookies = [];
 
     /**
+     * @var bool
+     */
+    public $areCookieEnabled = false;
+
+    /**
      * ViewLogger constructor.
      * @param null $array
      * @param Packet|null $packet
@@ -45,12 +50,14 @@ class ViewLogger
         }
         // if we are in a socket context
         if ($requestType === "SOCKET" && $packet !== null) {
-            echo "A301";
             // and if cookies were passed
-
-            // we set it in the pgp globals values
-            var_dump($packet);
+            if (isset($packet["cookies"]) && is_array($packet["cookies"])) {
+                foreach ($packet["cookies"] as $k => $v) {
+                    Cookie::set($this, new Cookie($k, $v));
+                }
+            }
         }
+        $this->areCookieEnabled = Cookie::areCookieEnabled($this);
         Cookie::setTestCookie($this);
     }
 

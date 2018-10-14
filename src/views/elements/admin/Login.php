@@ -18,7 +18,8 @@ class Login extends View implements TwigInterface
     public $states = [
         "email" => "",
         "rand" => 0,
-        "message" => ""
+        "message" => "",
+        "cookie_on" => "false"
     ];
 
     public function twig(): void { ?>
@@ -32,6 +33,7 @@ class Login extends View implements TwigInterface
                 <div class="card-body">
                     <form class="form-horizontal form-material" id="loginform" method="POST" action="">
                         <h3 class="box-title m-b-20">Sign In</h3>
+                        <p> Are cookies enabled : {{ cookie_on }} </p>
                         <p> {{ message }} </p>
                         <div class="form-group ">
                             <div class="col-xs-12">

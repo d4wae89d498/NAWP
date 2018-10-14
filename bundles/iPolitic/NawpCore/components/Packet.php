@@ -56,7 +56,7 @@ class Packet implements \ArrayAccess {
                     $cookieSplit = explode("; ", $nData[$k]);
                     for($i = 0; $i < count($cookieSplit); $i++) {
                         $cur = explode("=",$cookieSplit[$i]);
-                        $valueAddedInContainer[$cur[0]] = $cur[1];
+                        $valueAddedInContainer[$cur[0]] = isset($cur[1]) ? $cur[1] : "";
                     }
                 }
                 $this->container[$k] = $valueAddedInContainer;

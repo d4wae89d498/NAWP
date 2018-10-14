@@ -15,7 +15,7 @@ use Workerman\Protocols\Http;
  */
 class Cookie
 {
-    public const DEFAULT_COOKIE_DURATION = 30; // in seconds
+    public const DEFAULT_COOKIE_DURATION = 30 * 60; // in seconds
     public const DEFAULT_TEST_COOKIE_STR = "TEST_COOKIE"; // test cookie name for checking if cookies are enabled or not
     /**
      * @var string
@@ -48,25 +48,12 @@ class Cookie
      * @param Cookie $cookie
      */
     public static function setHttpCookie(Cookie $cookie): void {
-        $expireDate = date("D, d M Y H:i:s", time() + $cookie->duration) . 'GMT';
-        Http::header("Set-Cookie: {$cookie->name}={$cookie->value}; EXPIRES{$expireDate};");
-        return;
-    }
-
-    /**
-     * Should set cookie in http header, 20
-     * @param ViewLogger $viewLogger
-     * @param Cookie $cookie
-     */
-    public static function set(ViewLogger &$viewLogger, Cookie $cookie): void {
-        if ($viewLogger->requestType !== "SOCEKT") {
-            self::setHttpCookie($cookie);
+        if (self::isAllowedCookie($cookie->name)) {
+            $expireDate = date("D, d-m-Y H:i:s", time() + $cookie->duration) . ' GMT';
+            Http::header("Set-Cookie: {$cookie->name}={$cookie->value}; Expires={$expireDate};");
         }
-        $GLOBALS["_COOKIE"][$cookie->name] = $_COOKIE[$cookie->name] = $cookie->value;
-        $viewLogger->cookies[$cookie->name] = $cookie;
         return;
     }
-
 
     /**
      * Will remove a cookie from an hhtp request
@@ -74,8 +61,53 @@ class Cookie
      */
     public static function removeHttpCookie(string $cookieName): void {
         $val = "";
-        $expireDate = date("D, d M Y H:i:s", time() - 3600) . 'GMT';
-        Http::header("Set-Cookie: {$cookieName}={$val}; EXPIRES{$expireDate};");
+        $expireDate = date("D, d-m-Y H:i:s", time() - 3600) . ' GMT';
+        Http::header("Set-Cookie: {$cookieName}={$val}; Expires={$expireDate};");
+    }
+
+    /**
+     * Will return all defined Http cookies
+     * @return array
+     */
+    public static function getHttpCookies(): array {
+        return $_COOKIE;
+    }
+
+    /**
+     * Will return true if this cookie name is allowed, false else.
+     * @param string $cookieName
+     * @return bool
+     */
+    public static function isAllowedCookie(string $cookieName): bool {
+        $a = in_array
+        (
+            $cookieName,
+            array_merge(
+                [Cookie::DEFAULT_TEST_COOKIE_STR],
+                explode(",", $_ENV["COOKIE_WHITELIST"])
+            )
+        );
+        echo "IS ALLOWED : " . $cookieName . " : " . ($a ? "true" : "false");
+        return $a;
+    }
+
+    /**
+     * Should set cookie in http header, 20
+     * @param ViewLogger $viewLogger
+     * @param Cookie $cookie
+     * @param bool $noHttp
+     */
+    public static function set(ViewLogger &$viewLogger, Cookie $cookie, $noHttp = false): void {
+        if (self::isAllowedCookie($cookie->name)) {
+            if ($viewLogger->requestType !== "SOCEKT") {
+                if (!$noHttp) {
+                    self::setHttpCookie($cookie);
+                }
+            }
+            $GLOBALS["_COOKIE"][$cookie->name] = $_COOKIE[$cookie->name] = $cookie->value;
+            $viewLogger->cookies[$cookie->name] = $cookie;
+            return;
+        }
     }
 
     /**setTestCookie

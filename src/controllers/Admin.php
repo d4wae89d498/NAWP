@@ -56,14 +56,6 @@ class Admin extends Controller implements ControllerInterface
      * @throws \iPolitic\Solex\RouterException
      */
     public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
-        $name = "TestT";
-        $value = "12";
-        $date = date("D, d M Y H:i:s",strtotime('1 January 2015')) . 'GMT';
-        Http::header("Set-Cookie: {$name}={$value}; EXPIRES{$date};");
-        $name = "TestTA";
-        $value = "14";
-        $date = date("D, d M Y H:i:s",strtotime('1 January 2015')) . 'GMT';
-        Http::header("Set-Cookie: {$name}={$value}; EXPIRES{$date};");
         $loginMessage = "";
         $atlas = (Kernel::getKernel())->atlas;
         if(isset($_POST["email"]) && isset($_POST["password"])) {
@@ -109,7 +101,8 @@ class Admin extends Controller implements ControllerInterface
                                 new \App\Views\Elements\Admin\Login($viewLogger, [
                                 "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                                 "message" => $loginMessage,
-                                "rand" => rand(0,9)
+                                "rand" => rand(0,9),
+                                "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false"
                             ])),
                         ],
                     ]

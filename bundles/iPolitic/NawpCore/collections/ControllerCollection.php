@@ -7,6 +7,7 @@
  */
 namespace App\iPolitic\NawpCore\Collections;
 
+use App\iPolitic\NawpCore\components\Cookie;
 use App\iPolitic\NawpCore\components\Packet;
 use App\iPolitic\NawpCore\Kernel;
 use iPolitic\Solex\Router;
@@ -48,6 +49,18 @@ class ControllerCollection extends Collection {
         $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $packet, $requestType);
+        if ($requestType !== "SOCKET") {
+            echo "FILTERING ...." . PHP_EOL;
+            // removing for disallowed cookie
+            foreach (Cookie::getHttpCookies() as $k => $v) {
+                if (!Cookie::isAllowedCookie($k)) {
+                    echo "COOKIE REMOVED : " . $k . PHP_EOL;
+                    Cookie::remove($viewLogger, $k);
+                } else {
+                    Cookie::set($viewLogger, new Cookie($k, $v), true);
+                }
+            }
+        }
         // for each controller methods ordered by priority
         foreach($this->getOrderedByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
