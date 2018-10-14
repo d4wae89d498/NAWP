@@ -44,6 +44,7 @@ class Header extends View implements TwigInterface
             <meta name="description" content="Somewho webapp">
             <meta name="author" content="Marc FAUSSURIER">
             <meta name="data-url" content="{{ url }}">
+            <meta name="data-cookies" content="{{ cookies }}">
             <!-- Favicon icon -->
             <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">
             <title>{{ title }} - {{ page }}</title>

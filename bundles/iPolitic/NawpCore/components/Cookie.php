@@ -93,12 +93,10 @@ class Cookie
     /**
      * @param ViewLogger $viewLogger
      * @param string $name
-     * @param string $value
-     * @param int $duration
      * @return string
      */
-    public static function get(ViewLogger &$viewLogger, string $name, string $value, int $duration = self::DEFAULT_COOKIE_DURATION): string {
-        return;
+    public static function get(ViewLogger &$viewLogger, string $name): string {
+        return $viewLogger->cookies[$name];
     }
 
     /**
@@ -107,7 +105,7 @@ class Cookie
      * @return bool
      */
     public static function  isset(ViewLogger $viewLogger, string $key): bool {
-
+        return isset($viewLogger->cookies[$key]);
     }
 
     /**
@@ -115,6 +113,7 @@ class Cookie
      * @param string $key
      */
     public static function  remove(ViewLogger &$viewLogger, string $key): void {
+        unset($viewLogger->cookies[$key]);
         return;
     }
 
@@ -122,6 +121,7 @@ class Cookie
      * @param ViewLogger $viewLogger
      */
     public static function  destroy(ViewLogger &$viewLogger): void {
+        $viewLogger->cookies = [];
         return;
     }
 }

@@ -81,37 +81,42 @@ class Admin extends Controller implements ControllerInterface
 
 
 
-        $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
-    new \App\Views\Elements\Admin\Header(
-        $viewLogger, ["page" => "Login", "title" => "TEST".rand(0,99), "url" => $_SERVER["REQUEST_URI"]]
-    ) .
-    "<body class=\"fix-header fix-sidebar card-no-border\">
-        <!-- ============================================================== -->
-        <!-- Preloader - style you can find in spinners.css -->
-        <!-- ============================================================== -->
-        <div class=\"preloader\">
-            <svg class=\"circular\" viewBox=\"25 25 50 50\">
-            <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>
-        </div>" .
-        new \App\Views\Pages\Admin\Page
-        (
+        $httpResponse .= " <!DOCTYPE html>
+        <html lang=\"en\">" .
+            new \App\Views\Elements\Admin\Header
+                ($viewLogger, [
+                    "page" => "Login",
+                    "title" => "TEST".rand(0,99),
+                    "url" => $_SERVER["REQUEST_URI"],
+                    "cookies" => json_encode($viewLogger->cookies),
+                ]) .
+            "<body class=\"fix-header fix-sidebar card-no-border\">
+                <!-- ============================================================== -->
+                <!-- Preloader - style you can find in spinners.css -->
+                <!-- ============================================================== -->
+                <div class=\"preloader\">
+                    <svg class=\"circular\" viewBox=\"25 25 50 50\">
+                    <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>
+                </div>" .
+                new \App\Views\Pages\Admin\Page
+                (
 
-            $viewLogger,
-            [
-                "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
-                "html_elements" => [
-                    (
-                        new \App\Views\Elements\Admin\Login($viewLogger, [
-                        "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message" => $loginMessage,
-                        "rand" => rand(0,9)
-                    ])),
-                ],
-            ]
-        ) .
-        new \App\Views\Elements\Admin\Footer($viewLogger, [])
-        .
-    "</body></html>";
+                    $viewLogger,
+                    [
+                        "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                        "html_elements" => [
+                            (
+                                new \App\Views\Elements\Admin\Login($viewLogger, [
+                                "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                                "message" => $loginMessage,
+                                "rand" => rand(0,9)
+                            ])),
+                        ],
+                    ]
+                ) .
+                new \App\Views\Elements\Admin\Footer($viewLogger, []) . "
+            </body>
+        </html>";
         return true;
     }
 

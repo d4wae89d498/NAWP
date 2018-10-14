@@ -42,6 +42,7 @@ class ViewLogger
         if ($array !== null) {
             $this->array = $array;
         }
+        Cookie::setTestCookie($this);
     }
 
     /**
