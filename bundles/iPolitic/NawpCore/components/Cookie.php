@@ -15,6 +15,7 @@ use Workerman\Protocols\Http;
  */
 class Cookie
 {
+    public const COOKIE8_SID_KEY = "SID";
     public const DEFAULT_COOKIE_DURATION = 30 * 60; // in seconds
     public const DEFAULT_TEST_COOKIE_STR = "TEST_COOKIE"; // test cookie name for checking if cookies are enabled or not
     /**
@@ -144,7 +145,15 @@ class Cookie
      * @return string
      */
     public static function get(ViewLogger &$viewLogger, string $name): string {
-        return $viewLogger->cookies[$name];
+        return
+            $viewLogger->cookies[$name] =
+            $_COOKIE[$name] =
+            (isset($viewLogger->cookies[$name])
+            ?
+                $viewLogger->cookies[$name]
+            :
+                $_COOKIE[$name]
+            );
     }
 
     /**
@@ -153,7 +162,12 @@ class Cookie
      * @return bool
      */
     public static function  isset(ViewLogger $viewLogger, string $key): bool {
-        return isset($viewLogger->cookies[$key]);
+        return
+            isset($viewLogger->cookies[$key])
+            ?
+                true
+            :
+                (isset($_COOKIE[$key]));
     }
 
     /**

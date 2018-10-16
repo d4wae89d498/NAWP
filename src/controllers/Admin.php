@@ -102,7 +102,8 @@ class Admin extends Controller implements ControllerInterface
                                 "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                                 "message" => $loginMessage,
                                 "rand" => rand(0,9),
-                                "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false"
+                                "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
+                                "cookiestr" => print_r($_COOKIE,1)
                             ])),
                         ],
                     ]

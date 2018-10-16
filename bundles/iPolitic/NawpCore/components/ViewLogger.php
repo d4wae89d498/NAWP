@@ -62,6 +62,25 @@ class ViewLogger
     }
 
     /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        // if we are retrieving the cookie array
+        if ($name === "cookies") {
+            // we check iuf $_COOKIES are array
+            if (isset($_COOKIE) && is_array($_COOKIE) && is_array($this->cookies)) {
+                // if yes we set it in $this->cookies array
+                foreach ($_COOKIE as $k => $v) {
+                    $this->cookies[$k] = $v;
+                }
+            }
+        }
+        return $this->$name;
+    }
+
+    /**
      * Array that contains all the templates
      * @var mixed
      */

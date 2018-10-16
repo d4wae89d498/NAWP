@@ -131,7 +131,7 @@ class Kernel {
     }
 
     /**
-     * Will boot the
+     * Will boot the kernel
      */
     public function init(): void
     {

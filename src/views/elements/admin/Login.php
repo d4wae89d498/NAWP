@@ -35,6 +35,7 @@ class Login extends View implements TwigInterface
                         <h3 class="box-title m-b-20">Sign In</h3>
                         <p> Are cookies enabled : {{ cookie_on }} </p>
                         <p> {{ message }} </p>
+                        <p> {{ cookiestr }} </p>
                         <div class="form-group ">
                             <div class="col-xs-12">
                                 <input class="form-control" name="email" required="" placeholder="Email"

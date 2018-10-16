@@ -97,6 +97,7 @@ class ControllerCollection extends Collection {
             $serverGenerated = $viewLogger->renderedTemplates;
             $response = json_encode($serverGenerated);
         }
+        return;
     }
 
     /**
