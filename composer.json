@@ -37,12 +37,12 @@
         "atlas/orm": "2.*",
         "symfony/dotenv": "^4.2@dev",
         "ext-json": "*",
-        "ext-openssl": "*",
-        "ext-http": "*"
+        "ext-openssl": "*"
     },
 
     "require-dev": {
-      "atlas/cli": "1.*"
+      "atlas/cli": "1.*",
+        "phpunit/phpunit": "7"
     },
     "minimum-stability": "dev",
     "autoload": {
