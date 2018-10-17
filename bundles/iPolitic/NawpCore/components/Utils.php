@@ -64,6 +64,27 @@ class Utils
     }
 
     /**
+     * Will parse array-like string to array
+     * @param string $url
+     * @return array
+     */
+    public static function parseUrlParams(string $url): array {
+        $output = [];
+        parse_str(join("", explode("?", $url)[1]), $output);
+        return $output;
+    }
+
+    /**
+     * Will bind given params to the given url to build a string
+     * @param string $url
+     * @param array $params
+     * @return string
+     */
+    public static function buildUrlParams(string $url, array $params): string {
+        return $url . "?" . http_build_query($params);
+    }
+
+    /**
      * Will generate a new ID
      * @param int $length
      * @return string
@@ -77,6 +98,6 @@ class Utils
         } else {
             throw new \Exception("no cryptographically secure random function available");
         }
-        return substr(bin2hex($bytes), 0, $length).microtime(true);
+        return explode(".", substr(bin2hex($bytes), 0, $length).microtime(true))[0];
     }
 }

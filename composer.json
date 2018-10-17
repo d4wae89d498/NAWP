@@ -37,7 +37,8 @@
         "atlas/orm": "2.*",
         "symfony/dotenv": "^4.2@dev",
         "ext-json": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-http": "*"
     },
 
     "require-dev": {

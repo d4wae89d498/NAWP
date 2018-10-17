@@ -35,7 +35,7 @@ class ViewLogger
      * @var bool
      */
     public $areCookieEnabled = false;
-
+    public $cookieEnabledLocked = false;
     /**
      * ViewLogger constructor.
      * @param null $array
@@ -58,6 +58,7 @@ class ViewLogger
             }
         }
         $this->areCookieEnabled = Cookie::areCookieEnabled($this);
+        $this->cookieEnabledLocked = true;
         Cookie::setTestCookie($this);
     }
 
@@ -196,7 +197,7 @@ class ViewLogger
                     };
                 <?php endif;
             endforeach; ?>
-            window['clientVar'] = '<?=$packetAdapter->storeAndGet($this->requestType)?>';
+            window['clientVar'] = '<?=$packetAdapter->storeAndGet($this)?>';
             <?php
         });
         return $output;

@@ -11,9 +11,7 @@ use App\iPolitic\NawpCore\components\Cookie;
 use App\iPolitic\NawpCore\components\Packet;
 use App\iPolitic\NawpCore\Kernel;
 use iPolitic\Solex\Router;
-use App\iPolitic\NawpCore\Components\{
-    Collection, Controller, ViewLogger
-};
+use App\iPolitic\NawpCore\Components\{Collection, Controller, PacketAdapter, ViewLogger};
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 
 /**
@@ -44,11 +42,26 @@ class ControllerCollection extends Collection {
      * @param array $array
      * @param $viewLogger|null ViewLogger
      * @throws \iPolitic\Solex\RouterException
+     * @throws \Exception
      */
     public function handle(&$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void {
         $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $packet, $requestType);
+        if (!Cookie::areCookieEnabled($viewLogger)) {
+            if(isset($_SERVER["HTTP_REFERER"]) && isset(($prevID = parse_url($_SERVER["HTTP_REFERER"]))["UID"]) && !isset( ($url = parse_url($_SERVER["REQUEST_URI"]))["UID"])) {
+                $url["UID"] = $prevID;
+                if ((($urlWithoutArgs = $_SERVER["REQUEST_URI"])[0]) !== "logout") {
+                    PacketAdapter::redirectTo(
+                        $response,
+                        $viewLogger,
+                        explode("?",$_SERVER["REQUEST_URI"])[0] . "?" . http_build_query($url),
+                        $array
+                    );
+                    return;
+                }
+            }
+        }
         if ($requestType !== "SOCKET") {
             echo "FILTERING ...." . PHP_EOL;
             // removing for disallowed cookie

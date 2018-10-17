@@ -105,8 +105,10 @@ class Cookie
                     self::setHttpCookie($cookie);
                 }
             }
-            $GLOBALS["_COOKIE"][$cookie->name] = $_COOKIE[$cookie->name] = $cookie->value;
-            $viewLogger->cookies[$cookie->name] = $cookie;
+            $viewLogger->cookies[$cookie->name] =
+            $GLOBALS["_COOKIE"][$cookie->name] =
+            $_COOKIE[$cookie->name] =
+                $cookie->value;
             return;
         }
     }
@@ -136,7 +138,7 @@ class Cookie
      * @return bool
      */
     public static function areCookieEnabled(ViewLogger &$viewLogger): bool {
-        return self::isset($viewLogger, self::DEFAULT_TEST_COOKIE_STR);
+        return $viewLogger->cookieEnabledLocked ? $viewLogger->areCookieEnabled : self::isset($viewLogger, self::DEFAULT_TEST_COOKIE_STR);
     }
 
     /**

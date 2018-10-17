@@ -8,14 +8,14 @@
 namespace App\Controllers;
 
 use App\DataSources\User\UserMapper;
+use App\iPolitic\NawpCore\components\Cookie;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
+use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 use App\iPolitic\NawpCore\Components\Session;
 use App\iPolitic\NawpCore\Kernel;
-use Workerman\Protocols\Http;
-use Workerman\Protocols\HttpCache;
 
 /**
  * Class Admin
@@ -54,20 +54,50 @@ class Admin extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      * @throws \iPolitic\Solex\RouterException
+     * @throws \Exception
      */
     public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
-        $loginMessage = "";
+        $loginMessage = "default";
         $atlas = (Kernel::getKernel())->atlas;
         if(isset($_POST["email"]) && isset($_POST["password"])) {
             $userRecord = $atlas->select(UserMapper::class)
                 ->where('email = ?', $_POST["email"])
                 ->fetchRecord();
             if ($userRecord->hashed_password !== sha1($_POST["password"] . $_ENV["PASSWORD_SALT"])) {
-                $loginMessage = "Mot de passe ou utilisateur incorect (".sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
+                // wrong email and/or password
+                $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
             } else {
-                Session::set( "user_id", $userRecord->row_id);
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin", $args, $viewLogger->requestType);
-                return true;
+                $uid = Utils::generateUID(9);
+                $url = "/admin";
+                if (Cookie::areCookieEnabled($viewLogger)) {
+                    Cookie::set($viewLogger, new Cookie("UID", $url));
+                } else {
+                    $url = Utils::buildUrlParams($url, ["UID" => $uid]);
+                }
+                $_GET["UID"] = $uid;
+                Session::set($viewLogger, "user_id", 5);
+                $loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
+                //PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
+                //return true;
+               /* // login success
+                // we generate a new uid
+                $uid = Utils::generateUID();
+                $url = "/admin";
+                var_dump("avion");
+                // if cookies are enable
+                if (Cookie::areCookieEnabled($viewLogger)) {
+                    // we set the cookie
+                    Cookie::set($viewLogger, new Cookie("UID", $uid));
+                    var_dump("b");
+                } else {
+                    // else we add it in url
+                    $url = $url . "?" . http_build_url(["UID" => $uid]);
+                    var_dump("c");
+                }
+                Session::set( $viewLogger, "user_id", $userRecord->row_id);
+                $loginMessage = "success tmp";
+                // PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
+                // return true;*/
             }
         }
 
@@ -103,7 +133,7 @@ class Admin extends Controller implements ControllerInterface
                                 "message" => $loginMessage,
                                 "rand" => rand(0,9),
                                 "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
-                                "cookiestr" => print_r($_COOKIE,1)
+                                "cookiestr" => print_r($viewLogger->cookies,1)
                             ])),
                         ],
                     ]
@@ -157,22 +187,24 @@ class Admin extends Controller implements ControllerInterface
     }
 
     /**
-     * The admin middleware function, manage common features of all /admin* matches
+     *  The admin middleware function, manage common features of all /admin* matches
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
      * @return bool
      * @throws \iPolitic\Solex\RouterException
+     * @throws \Exception
      */
     public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
         echo "IN ADMINMIDDLEWARE OF REQUEST : ";
         var_dump($args);
+        var_dump($_GET);
         echo PHP_EOL;
+       // exit;
         if(stristr($_SERVER["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
-            if (!Session::isset( "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
+            if (!Session::isset( $viewLogger, "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
-                // TODO : add possibility to redirect from packet
                 PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin/login", $args, $viewLogger->requestType);
                 // We release the request
                 return true;

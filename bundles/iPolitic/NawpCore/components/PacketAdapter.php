@@ -91,23 +91,23 @@ class PacketAdapter
 
     /**
      * Will cache a packetAdapter file and return an ID
-     * @param string $requestMethod
+     * @param ViewLogger $viewLogger
      * @return string
      * @throws \Exception
      */
-    public static function storeAndGet(string $requestMethod = ""): string {
-        if ($requestMethod === "SOCKET") {
+    public static function storeAndGet(ViewLogger $viewLogger): string {
+        if ($viewLogger->requestType === "SOCKET") {
             // id should be available as post clientVar or something like that
             $hashedId = $_POST["originalClientVar"];
             // here session is not available
         } else {
-            $hashedId = sha1(Session::id());
+            $hashedId = Session::id($viewLogger);
             $filePath = self::IDtoPath($hashedId);
             // here Session is available
             if (file_exists($filePath)) {
                 unlink(self::IDtoPath($hashedId));
             }
-            $fp = fopen(self::IDtoPath(sha1(Session::id())), "w+");
+            $fp = fopen(self::IDtoPath(Session::id($viewLogger)), "w+");
             fwrite($fp, (serialize($_SERVER)));
         }
 

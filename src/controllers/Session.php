@@ -55,13 +55,14 @@ class Session extends Controller implements ControllerInterface
      * @param string $httpResponse
      * @param array $args
      * @return bool
+     * @throws \Exception
      */
     public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
 
         //die("session tick");
-        CSession::tick();
-        $httpResponse .= (CSession::isset("TEST") ? CSession::get("TEST") : "") . " " . CSession::id();
-        CSession::set("TEST", "Pomme");
+        CSession::tick($viewLogger);
+        $httpResponse .= (CSession::isset($viewLogger, "TEST") ? CSession::get($viewLogger, "TEST") : "") . " " . CSession::id($viewLogger);
+        CSession::set($viewLogger, "TEST", "Pomme");
         return false;
     }
 

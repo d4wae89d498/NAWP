@@ -47,7 +47,7 @@ export class NoRedirection {
                 console.log(formAction);
                 console.log("form data : ");
                 console.log(formData);
-                this.SocketClient.socket.emit("packet", {data: formData, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate, cookies: document.cookie});
+                this.SocketClient.socket.emit("packet", {data: formData, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate, cookies: document.cookie, http_referer: window.location.href});
             });
         // }
         console.log("form to ajax applied");
