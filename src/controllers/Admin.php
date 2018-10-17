@@ -174,7 +174,7 @@ class Admin extends Controller implements ControllerInterface
                         (
                         new \App\Views\Elements\Admin\Login($viewLogger, [
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                            "message" => $loginMessage,
+                            "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), 1),
                             "rand" => rand(0,9)
                         ])),
                     ],

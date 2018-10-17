@@ -70,7 +70,7 @@ class Utils
      */
     public static function parseUrlParams(string $url): array {
         $output = [];
-        parse_str(join("", explode("?", $url)[1]), $output);
+        parse_str(explode("?", $url)[1], $output);
         return $output;
     }
 

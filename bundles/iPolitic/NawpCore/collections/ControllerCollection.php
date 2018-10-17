@@ -11,7 +11,7 @@ use App\iPolitic\NawpCore\components\Cookie;
 use App\iPolitic\NawpCore\components\Packet;
 use App\iPolitic\NawpCore\Kernel;
 use iPolitic\Solex\Router;
-use App\iPolitic\NawpCore\Components\{Collection, Controller, PacketAdapter, ViewLogger};
+use App\iPolitic\NawpCore\Components\{Collection, Controller, PacketAdapter, Utils, ViewLogger};
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 
 /**
@@ -45,7 +45,7 @@ class ControllerCollection extends Collection {
      * @throws \Exception
      */
     public function handle(&$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void {
-        $_GET = $GLOBALS["_GET"] = parse_url($_SERVER["REQUEST_URI"]);
+        $_GET = $GLOBALS["_GET"] = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $packet, $requestType);
         if (!Cookie::areCookieEnabled($viewLogger)) {

@@ -75,6 +75,18 @@ class Session
     }
 
     /**
+     * Will return a session value using a visitor token
+     * @param ViewLogger $viewLogger
+     * @param string $id
+     * @return array
+     * @throws \Exception
+     */
+    public static function getAll(ViewLogger $viewLogger, $id = ""): array {
+        $id = $id !== "" ? $id : Session::id($viewLogger);
+        return isset(self::$session[$id]) ? self::$session[$id] : [];
+    }
+
+    /**
      * Will set a session value using a key
      * @param ViewLogger $viewLogger
      * @param string $key
