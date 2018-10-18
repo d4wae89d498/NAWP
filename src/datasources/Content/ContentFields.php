@@ -8,13 +8,15 @@ namespace App\Datasources\Content;
 
 /**
  * @property mixed $row_id int(10,0) NOT NULL
- * @property mixed $insrted_at datetime NOT NULL
+ * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
  * @property mixed $title varchar(255) NOT NULL
  * @property mixed $content varchar(-1) NOT NULL
  * @property mixed $author int(10,0) NOT NULL
  * @property mixed $draft bit NOT NULL
  * @property mixed $parent int(10,0)
+ * @property null|false|\App\Datasources\User\UserRecord $[author]
+ * @property null|false|\App\Datasources\Categorie\CategorieRecord $[parent]
  */
 trait ContentFields
 {

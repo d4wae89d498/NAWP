@@ -33,8 +33,8 @@ class UserTable extends Table
   'primary' => true,
   'options' => NULL,
 ),
-        'insrted_at' => array (
-  'name' => 'insrted_at',
+        'inserted_at' => array (
+  'name' => 'inserted_at',
   'type' => 'datetime',
   'size' => NULL,
   'scale' => NULL,
@@ -136,7 +136,7 @@ class UserTable extends Table
 
     const COLUMN_NAMES = [
         'row_id',
-        'insrted_at',
+        'inserted_at',
         'updated_at',
         'email',
         'first_name',
@@ -149,7 +149,7 @@ class UserTable extends Table
 
     const COLUMN_DEFAULTS = [
         'row_id' => null,
-        'insrted_at' => null,
+        'inserted_at' => null,
         'updated_at' => null,
         'email' => null,
         'first_name' => null,
