@@ -7,7 +7,7 @@
  */
 namespace App\Views\Elements\Admin;
 
-use App\DataSources\User\UserMapper;
+use App\DataSources\User\User;
 use App\iPolitic\NawpCore\Components\View;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;

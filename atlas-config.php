@@ -18,7 +18,11 @@ if (!isset($_ENV["SYMFONY_DOTENV_VARS"])) {
 
 // return an array using env vars
 return [
+    'pdo' => [
         $_ENV["SQL_DSN"],
         $_ENV["SQL_USER"],
         $_ENV["SQL_PWD"],
+    ],
+    'namespace' => 'App\\Datasources',
+    'directory' => './src/datasources'
 ];

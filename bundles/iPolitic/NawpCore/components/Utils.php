@@ -100,4 +100,14 @@ class Utils
         }
         return explode(".", substr(bin2hex($bytes), 0, $length).microtime(true))[0];
     }
+
+    /**
+     * @param string $password
+     * @return string
+     * @throws \Exception
+     */
+    public static function hashPassword(string $password): string {
+        Exception::checkRequireEnv("PASSWORD_SALT");
+        return sha1($password . $_ENV["PASSWORD_SALT"]);
+    }
 }

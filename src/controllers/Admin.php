@@ -7,7 +7,7 @@
  */
 namespace App\Controllers;
 
-use App\DataSources\User\UserMapper;
+use App\DataSources\User\User;
 use App\iPolitic\NawpCore\components\Cookie;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Utils;
@@ -60,10 +60,11 @@ class Admin extends Controller implements ControllerInterface
         $loginMessage = "default";
         $atlas = (Kernel::getKernel())->atlas;
         if(isset($_POST["email"]) && isset($_POST["password"])) {
-            $userRecord = $atlas->select(UserMapper::class)
-                ->where('email = ?', $_POST["email"])
+            $userRecord = $atlas
+                ->select(User::class)
+                ->where('email = ', $_POST["email"])
                 ->fetchRecord();
-            if ($userRecord->hashed_password !== sha1($_POST["password"] . $_ENV["PASSWORD_SALT"])) {
+            if ($userRecord->hashed_password !== Utils::hashPassword($_POST["password"])) {
                 // wrong email and/or password
                 $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
             } else {

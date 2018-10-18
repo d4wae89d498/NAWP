@@ -7,6 +7,8 @@
  */
 namespace App\iPolitic\NawpCore;
 
+use App\Datasources\Content\Content;
+use App\Datasources\ContentsCategory\ContentsCategory;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
@@ -16,14 +18,13 @@ use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
-use Atlas\Orm\AtlasContainer;
 use Symfony\Component\Dotenv\Dotenv;
 use App\DataSources\{
-    Categorie\CategorieMapper,
-    Log\LogMapper,
-    ContentsCategories\ContentsCategoriesMapper,
-    Translation\TranslationMapper,
-    User\UserMapper,
+    Categorie\Categorie,
+    Log\Log,
+    ContentsCategory\Contents,
+    Translation\Translation,
+    User\User,
     Content\ContentMapper
 };
 
@@ -201,16 +202,12 @@ class Kernel {
      */
     public function getAtlas() : Atlas {
         $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "atlas-config.php"]);
-        $atlasContainer = new AtlasContainer($arr[0], $arr[1], $arr[2]);
-        $atlasContainer->setMappers([
-            UserMapper::CLASS,
-            TranslationMapper::CLASS,
-            CategorieMapper::class,
-            ContentMapper::class,
-            LogMapper::class,
-            ContentsCategoriesMapper::class,
-        ]);
-        return $atlasContainer->getAtlas();
+        return Atlas::new
+        (
+            $arr['pdo'][0],
+            $arr['pdo'][1],
+            $arr['pdo'][2]
+        );
     }
 
 }

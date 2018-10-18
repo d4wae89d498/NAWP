@@ -83,7 +83,7 @@ class Http
         /*
         $atlas = $kernel->getAtlas();
 
-        $categoryRecord = $atlas->fetchRecord(\App\DataSources\User\UserMapper::CLASS, '2');
+        $categoryRecord = $atlas->fetchRecord(\App\DataSources\User\User::CLASS, '2');
         var_dump($categoryRecord);
         */
         // workerman setup

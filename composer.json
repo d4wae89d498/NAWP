@@ -34,15 +34,14 @@
         "ipolitic/solex": "dev-master",
         "zendframework/zend-diactoros": "^1.8@dev",
         "workerman/phpsocket.io": "dev-master",
-        "atlas/orm": "2.*",
         "symfony/dotenv": "^4.2@dev",
         "ext-json": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "atlas/orm": "3.x-dev",
+        "atlas/cli": "2.x-dev"
     },
-
     "require-dev": {
-      "atlas/cli": "1.*",
-        "phpunit/phpunit": "7"
+      "phpunit/phpunit": "7"
     },
     "minimum-stability": "dev",
     "autoload": {

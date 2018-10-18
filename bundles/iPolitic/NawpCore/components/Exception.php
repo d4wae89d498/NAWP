@@ -26,4 +26,15 @@ class Exception
         $log .= "</div>";
         return $log;
     }
+
+    /**
+     * @param string $env
+     * @throws \Exception
+     */
+    public static function checkRequireEnv(string $env): void {
+        if (!isset($_ENV[$env])) {
+            throw new \Exception("configs/.env file does not contain definition for the name : " . $env);
+        }
+        return;
+    }
 }
