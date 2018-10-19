@@ -201,7 +201,7 @@ class Kernel {
      * @return Atlas
      */
     public function getAtlas() : Atlas {
-        $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "atlas-config.php"]);
+        $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", ".atlas-config.php"]);
         return Atlas::new
         (
             $arr['pdo'][0],
