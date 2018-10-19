@@ -109,8 +109,8 @@ class Cookie
             $GLOBALS["_COOKIE"][$cookie->name] =
             $_COOKIE[$cookie->name] =
                 $cookie->value;
-            return;
         }
+        return;
     }
 
     /**setTestCookie

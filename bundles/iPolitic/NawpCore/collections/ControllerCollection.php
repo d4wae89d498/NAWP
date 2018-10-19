@@ -48,26 +48,31 @@ class ControllerCollection extends Collection {
         $_GET = $GLOBALS["_GET"] = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $packet, $requestType);
+        // redirecting to the same page with needed UID param if none where passed to $_SERVER REQUEST URI
         if (!Cookie::areCookieEnabled($viewLogger)) {
-            if(isset($_SERVER["HTTP_REFERER"]) && isset(($prevID = parse_url($_SERVER["HTTP_REFERER"]))["UID"]) && !isset( ($url = parse_url($_SERVER["REQUEST_URI"]))["UID"])) {
-                $url["UID"] = $prevID;
-                if ((($urlWithoutArgs = $_SERVER["REQUEST_URI"])[0]) !== "logout") {
-                    PacketAdapter::redirectTo(
-                        $response,
-                        $viewLogger,
-                        explode("?",$_SERVER["REQUEST_URI"])[0] . "?" . http_build_query($url),
-                        $array
-                    );
-                    return;
+            if (isset($_SERVER["HTTP_REFERER"])) {
+                $parsedHttpReferer = Utils::parseUrlParams($_SERVER["HTTP_REFERER"]);
+                $parsedHttpUri = $params = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
+                if ( isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"]) ){
+                    $params["UID"] = $parsedHttpReferer["UID"];
+                    if (!stristr($_SERVER["REQUEST_URI"], "logout")) {
+                        PacketAdapter::redirectTo
+                        (
+                            $response,
+                            $viewLogger,
+                            Utils::buildUrlParams($_SERVER["REQUEST_URI"], $params),
+                            $array
+                        );
+                        return;
+                    }
                 }
             }
         }
+        // removing not allowed cookies
         if ($requestType !== "SOCKET") {
-            echo "FILTERING ...." . PHP_EOL;
             // removing for disallowed cookie
             foreach (Cookie::getHttpCookies() as $k => $v) {
                 if (!Cookie::isAllowedCookie($k)) {
-                    echo "COOKIE REMOVED : " . $k . PHP_EOL;
                     Cookie::remove($viewLogger, $k);
                 } else {
                     Cookie::set($viewLogger, new Cookie($k, $v), true);

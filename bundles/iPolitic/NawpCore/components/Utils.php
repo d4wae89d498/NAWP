@@ -70,8 +70,20 @@ class Utils
      */
     public static function parseUrlParams(string $url): array {
         $output = [];
-        parse_str(explode("?", $url)[1], $output);
+        $exploded = explode("?", $url);
+        if (isset($exploded[1])) {
+            parse_str($exploded[1], $output);
+        }
         return $output;
+    }
+
+    /**
+     * Will return the url part before the char ?
+     * @param string $url
+     * @return string
+     */
+    public static function getUrlWithoutArgs(string $url): string {
+        return(explode("?", $url)[0]);
     }
 
     /**
@@ -81,7 +93,7 @@ class Utils
      * @return string
      */
     public static function buildUrlParams(string $url, array $params): string {
-        return $url . "?" . http_build_query($params);
+        return self::getUrlWithoutArgs($url) . "?" . http_build_query($params);
     }
 
     /**

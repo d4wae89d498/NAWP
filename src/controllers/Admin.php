@@ -68,37 +68,19 @@ class Admin extends Controller implements ControllerInterface
                 // wrong email and/or password
                 $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
             } else {
+                // success email / password combinaison
                 $uid = Utils::generateUID(9);
                 $url = "/admin";
                 if (Cookie::areCookieEnabled($viewLogger)) {
-                    Cookie::set($viewLogger, new Cookie("UID", $url));
+                    Cookie::set($viewLogger, new Cookie("UID", $uid));
                 } else {
                     $url = Utils::buildUrlParams($url, ["UID" => $uid]);
                 }
                 $_GET["UID"] = $uid;
                 Session::set($viewLogger, "user_id", 5);
-                $loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
-                //PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
-                //return true;
-               /* // login success
-                // we generate a new uid
-                $uid = Utils::generateUID();
-                $url = "/admin";
-                var_dump("avion");
-                // if cookies are enable
-                if (Cookie::areCookieEnabled($viewLogger)) {
-                    // we set the cookie
-                    Cookie::set($viewLogger, new Cookie("UID", $uid));
-                    var_dump("b");
-                } else {
-                    // else we add it in url
-                    $url = $url . "?" . http_build_url(["UID" => $uid]);
-                    var_dump("c");
-                }
-                Session::set( $viewLogger, "user_id", $userRecord->row_id);
-                $loginMessage = "success tmp";
-                // PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
-                // return true;*/
+                // $loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
+                PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
+                return true;
             }
         }
 
@@ -176,6 +158,7 @@ class Admin extends Controller implements ControllerInterface
                         new \App\Views\Elements\Admin\Login($viewLogger, [
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                             "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), 1),
+                            "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
                             "rand" => rand(0,9)
                         ])),
                     ],
