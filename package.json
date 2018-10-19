@@ -18,16 +18,17 @@
   "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "start": "php src/workers/Http.php src/workers/SocketIO.php",
-    "build-dev": "webpack -d --config=configs/webpack/dev.js",
-    "build-prod": "webpack -p --config=configs/webpack/prod.js",
-    "watch": "concurrently \"npm run watch-client\" \"npm run watch-server\" --kill-others",
+    "pre-build": "ts-node ./configs/prebuild.ts",
+    "build-dev": "npm run pre-build && webpack -d --config=configs/webpack/dev.ts",
+    "build-prod": "npm run pre-build && webpack -p --config=configs/webpack/prod.ts",
+    "watch": "npm run pre-build && concurrently \"npm run watch-client\" \"npm run watch-server\" --kill-others",
     "watch-client": "webpack -d --config=configs/webpack/dev.js --watch",
     "watch-server": "nodemon --exec \"npm run start\"",
     "lint": "tslint './src/**/*.ts*' --format stylish --force",
     "generate-models": "php ./vendor/atlas/cli/bin/atlas-skeleton.php ./.atlas-config.php"
   },
   "devDependencies": {
-    "@types/node": "^10.7.1",
+    "@types/node": "^10.12.0",
     "awesome-typescript-loader": "^5.2.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
@@ -49,12 +50,18 @@
   },
   "dependencies": {
     "@types/twig": "^1.12.1",
+    "@types/webpack": "^4.4.17",
+    "bootstrap": "3.*",
     "concurrently": "^4.0.1",
+    "copy-dir": "^0.4.0",
+    "dotenv": "^6.1.0",
     "jquery": "^3.3.1",
     "morphdom": "^2.3.3",
     "nodemon": "^1.18.4",
     "socket.io-client": "^1.4",
     "source-map-loader": "^0.2.4",
+    "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.6.0",
     "twig": "^1.12.0"
   }
 }

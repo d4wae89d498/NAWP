@@ -7,7 +7,7 @@ const {resolve} = require("path");
 module.exports = merge(commonConfig, {
   mode: "development",
   entry: [
-      "./src/index.ts"//, // the entry point of our app
+      "./src/index.ts" // the entry point of our app
      // "./bundles/index.ts" // the entry point of our bundles
   ],
   devServer: {

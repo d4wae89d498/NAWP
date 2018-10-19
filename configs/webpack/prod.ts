@@ -7,7 +7,7 @@ const commonConfig = require("./common");
 module.exports = merge(commonConfig, {
   mode: "production",
     entry: [
-        "./src/index.ts"//, // the entry point of our app
+        "./src/index.ts" // the entry point of our app
         // "./bundles/index.ts" // the entry point of our bundles
     ],
   output: {
