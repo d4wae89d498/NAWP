@@ -1,5 +1,5 @@
 .idea/
-public/generated_js/
+public/generated_js/*.js
 cache/sessions.txt
 cache/packet_adapter/*.txt
 node_modules/
