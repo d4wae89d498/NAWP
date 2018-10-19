@@ -5,6 +5,7 @@ cache/packet_adapter/*.txt
 node_modules/
 configs/.env
 vendor
+logs/main.txt
 .vs
 .vscode
 composer.lock

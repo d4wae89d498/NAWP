@@ -27,7 +27,7 @@ use `yarn` or `npm run` following one of these following commands :
 - `watch-client`: Will watch for changes in client-side files and rebuild needed app parts when needed.
 - `watch-server` : Will watch for changes in php files and restart the server when needed.
 - `watch `: Will watch for both client and server changes, and will asynchronously rebuild the needed app parts or restart the server.
-- `lint` : Will analyse your client source code using tslint. Snipets
+- `lint` : Will analyse your client source code using tslint.
 
 ## Framework features
 
