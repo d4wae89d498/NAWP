@@ -34,5 +34,5 @@ if (fs.existsSync(path.join(__dirname, ".env"))) {
         }
     }
 } else {
-    console.log("It looks like you moved the .env file. Please write its new path in copy_vendors.ts file");
+    console.log("It looks like you moved the .env file. Please write its new path in configs/prebuild.ts file");
 }
