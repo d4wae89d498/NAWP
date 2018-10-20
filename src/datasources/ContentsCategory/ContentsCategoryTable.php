@@ -22,60 +22,60 @@ class ContentsCategoryTable extends Table
     const NAME = 'contents_categories';
 
     const COLUMNS = [
-        'row_id' => array(
+        'row_id' => array (
   'name' => 'row_id',
   'type' => 'int',
   'size' => 10,
   'scale' => 0,
   'notnull' => true,
-  'default' => null,
+  'default' => NULL,
   'autoinc' => true,
   'primary' => true,
-  'options' => null,
+  'options' => NULL,
 ),
-        'inserted_at' => array(
+        'inserted_at' => array (
   'name' => 'inserted_at',
   'type' => 'datetime',
-  'size' => null,
-  'scale' => null,
+  'size' => NULL,
+  'scale' => NULL,
   'notnull' => true,
-  'default' => null,
+  'default' => NULL,
   'autoinc' => false,
   'primary' => false,
-  'options' => null,
+  'options' => NULL,
 ),
-        'updated_at' => array(
+        'updated_at' => array (
   'name' => 'updated_at',
   'type' => 'datetime',
-  'size' => null,
-  'scale' => null,
+  'size' => NULL,
+  'scale' => NULL,
   'notnull' => true,
-  'default' => null,
+  'default' => NULL,
   'autoinc' => false,
   'primary' => false,
-  'options' => null,
+  'options' => NULL,
 ),
-        'content' => array(
+        'content' => array (
   'name' => 'content',
   'type' => 'int',
   'size' => 10,
   'scale' => 0,
   'notnull' => true,
-  'default' => null,
+  'default' => NULL,
   'autoinc' => false,
   'primary' => false,
-  'options' => null,
+  'options' => NULL,
 ),
-        'categorie' => array(
+        'categorie' => array (
   'name' => 'categorie',
   'type' => 'int',
   'size' => 10,
   'scale' => 0,
   'notnull' => true,
-  'default' => null,
+  'default' => NULL,
   'autoinc' => false,
   'primary' => false,
-  'options' => null,
+  'options' => NULL,
 ),
     ];
 
