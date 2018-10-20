@@ -1,13 +1,22 @@
-.idea/
-public/generated_js/*.js
-cache/sessions.txt
-cache/packet_adapter/*.txt
-node_modules/
-configs/.env
-vendor
-logs/main.txt
-.vs
-.vscode
-composer.lock
-yarn.lock
-yarn-error.log
+#1 | Editors division |__________________________________________
+
+.idea                       # jetbrains
+.vs                         # visual studio
+.vscode                     # visual studio code
+
+#2 | NAWP division |_____________________________________________
+
+configs/.env                # keep your dotenv file secret
+public/generated_js/*.js    # not webpack-generated javascript
+cache/*.txt                 # no sessions cache file
+cache/packet_adapter/*.txt  # no packet adapter cache files
+logs/*.txt                  # no logs
+
+#3 | Packages managements division |_____________________________
+
+composer.lock               # no composer lock file
+vendor                      # no composer packages
+package-lock.json           # no npm lock file
+node_modules                # no npm packages
+yarn.lock                   # no yarn lock file
+yarn-error.log              # no yarn logs
