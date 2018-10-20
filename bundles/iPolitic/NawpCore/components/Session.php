@@ -1,4 +1,4 @@
-<?php declare(strict_type=1);
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -98,8 +98,9 @@ class Session
      * @param string $id
      * @throws \Exception
      */
-    public static function set(ViewLogger $viewLogger, string $key, string $value, $id = ""): void
+    public static function set(ViewLogger $viewLogger, string $key, $value, $id = ""): void
     {
+        $value = strval($value);
         $id = $id !== "" ? $id : Session::id($viewLogger);
         self::$session[$id][$key] = $value;
         self::saveChanges();

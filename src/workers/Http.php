@@ -1,4 +1,4 @@
-<?php declare(strict_type=1);
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -62,14 +62,14 @@ class Http
         if ($cli->are256ColorsSupported()) {
             echo "Foreground colors:\n";
             for ($i = 1; $i <= 255; $i++) {
-                echo $cli->applyStyles(str_pad($i, 6, ' ', STR_PAD_BOTH), "color_$i");
+                echo $cli->applyStyles(str_pad(strval($i), 6, ' ', STR_PAD_BOTH), "color_$i");
                 if ($i % 15 === 0) {
                     echo "\n";
                 }
             }
             echo "\nBackground colors:\n";
             for ($i = 1; $i <= 255; $i++) {
-                echo $cli->applyStyles(str_pad($i, 6, ' ', STR_PAD_BOTH), "bg_color_$i");
+                echo $cli->applyStyles(str_pad(strval($i), 6, ' ', STR_PAD_BOTH), "bg_color_$i");
                 if ($i % 15 === 0) {
                     echo "\n";
                 }

@@ -1,4 +1,4 @@
-<?php declare(strict_type=1);
+<?php declare(strict_types=1);
 namespace App\iPolitic\NawpCore\Components;
 
 /**
@@ -114,9 +114,9 @@ class Utils
     public static function generateUID(int $length = 20): string
     {
         if (function_exists("random_bytes")) {
-            $bytes = random_bytes(ceil($length / 2));
+            $bytes = random_bytes(intval(ceil($length / 2)));
         } elseif (function_exists("openssl_random_pseudo_bytes")) {
-            $bytes = openssl_random_pseudo_bytes(ceil($length / 2));
+            $bytes = openssl_random_pseudo_bytes(intval(ceil($length / 2)));
         } else {
             throw new \Exception("no cryptographically secure random function available");
         }

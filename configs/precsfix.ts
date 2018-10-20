@@ -12,8 +12,8 @@ async function proceedDir(dirPath: string, deep: number = 0) {
                     let parts: string[];
                     // if it is a php file
                     if ((parts = files[file].split("."))[parts.length - 1] === "php") {
-                        if (!await isStrInFile(filePath, "strict_type")) {
-                            replaceInFile(filePath, "<?php", "<?php declare(strict_type=1);");
+                        if (!await isStrInFile(filePath, "strict_types")) {
+                            replaceInFile(filePath, "<?php", "<?php declare(strict_types=1);");
                             console.log("strict_type added in file : " + filePath);
                         }
                     }

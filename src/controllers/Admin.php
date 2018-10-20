@@ -1,4 +1,4 @@
-<?php declare(strict_type=1);
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -135,7 +135,7 @@ class Admin extends Controller implements ControllerInterface
                                 "message" => $loginMessage,
                                 "rand" => rand(0, 9),
                                 "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
-                                "cookiestr" => print_r($viewLogger->cookies, 1)
+                                "cookiestr" => print_r($viewLogger->cookies, true)
                             ])),
                         ],
                     ]
@@ -177,7 +177,7 @@ class Admin extends Controller implements ControllerInterface
                         (
                         new \App\Views\Elements\Admin\Login($viewLogger, [
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                            "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), 1),
+                            "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), true),
                             "rand" => rand(0, 9)
                         ])),
                     ],
