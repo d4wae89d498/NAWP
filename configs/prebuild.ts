@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as dotenv from "dotenv";
 import * as path from "path";
 import * as copydir from "copy-dir";
+import {bindArr, isDir} from "./util";
 
 /***
  * Pre - build script
@@ -12,12 +13,7 @@ import * as copydir from "copy-dir";
 const envFilePath: string = path.join(__dirname, ".env");
 const pathToRoot: string = path.join( ... [__dirname, ".."]);
 const pathToWebVendor: string = path.join(pathToRoot, "public", "vendors");
-const isDir = (path: string): boolean => { return fs.lstatSync(path).isDirectory(); };
-const bindArr = (str: string, obj: object): string => {
-    const objKey: string[] = Object.keys(obj);
-    for (let i = 0; i < objKey.length; i++) {
-        str = str.replace(objKey[i], obj[objKey[i]]);
-    } return str; };
+
 if (fs.existsSync(path.join(__dirname, ".env"))) {
     dotenv.config({ path: envFilePath });
     const packagesList: string[] = (process.env.VENDORS_PACKAGES.split(","));

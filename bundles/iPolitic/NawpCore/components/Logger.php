@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_type=1);
 /**
  * Created by PhpStorm.
  * User: fauss

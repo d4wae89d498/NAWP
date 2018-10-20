@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_type=1);
 namespace App\iPolitic\NawpCore\Components;
 
 /**

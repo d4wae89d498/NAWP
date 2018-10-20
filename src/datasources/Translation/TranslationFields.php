@@ -14,7 +14,6 @@ namespace App\Datasources\Translation;
  * @property mixed $key varchar(500) NOT NULL
  * @property mixed $value nchar(10) NOT NULL
  * @property mixed $author int(10,0) NOT NULL
- * @property null|false|\App\Datasources\User\UserRecord $[author]
  */
 trait TranslationFields
 {
