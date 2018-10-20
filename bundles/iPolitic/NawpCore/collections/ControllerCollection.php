@@ -17,21 +17,26 @@ use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
  * @package App\iPolitic\NawpCore
  */
-class ControllerCollection extends Collection
+class ControllerCollection extends Collection implements LoggerAwareInterface
 {
-    
-     /**
-     * ControllerCollection constructor.
-     * @param array $input
-     * @param int $flags
-     * @param string $iterator_class
+    /**
+     * @var LoggerInterface
      */
+    public $logger;
+    /**
+    * ControllerCollection constructor.
+    * @param array $input
+    * @param int $flags
+    * @param string $iterator_class
+    */
     public function __construct(array $input = [], int $flags = 0, string $iterator_class = "ArrayIterator")
     {
         parent::__construct($input, $flags, $iterator_class);
@@ -186,7 +191,16 @@ class ControllerCollection extends Collection
             ) ?
                 $allByName[count($allByName) - 1]
             :
-                new Controller(Kernel::getKernel()->atlas)
+                new Controller(Kernel::getKernel()->atlas, $this->logger)
         );
+    }
+
+    /**
+     * Will set the logger interface following PSR recommendations
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

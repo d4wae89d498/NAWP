@@ -8,7 +8,7 @@ namespace App\Datasources\Translation;
 
 /**
  * @property mixed $row_id int(10,0) NOT NULL
- * @property mixed $inserted_at datetime NOT NULL
+ * @property mixed $insrted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
  * @property mixed $lang varchar(10) NOT NULL
  * @property mixed $key varchar(500) NOT NULL

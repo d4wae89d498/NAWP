@@ -8,13 +8,19 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use Atlas\Orm\Atlas;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * The controller class, convert requests to states rendered as a json
  * or as a standard html template with custom js
  */
-class Controller
+class Controller implements LoggerAwareInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    public $logger;
     /**
      * The controller name
      * @var string
@@ -28,11 +34,13 @@ class Controller
     /**
      * Controller constructor.
      * @param Atlas $atlas
+     * @param LoggerInterface $logger
      */
-    public function __construct($atlas)
+    public function __construct(Atlas $atlas, LoggerInterface $logger)
     {
         $this->atlas = $atlas;
         $this->name = get_class($this);
+        $this->setLogger($logger);
     }
 
     /**
@@ -42,7 +50,6 @@ class Controller
      * @param string $response
      * @param string $method
      * @param array $args
-     * @param string $requestType
      * @return bool
      *
      */
@@ -54,5 +61,14 @@ class Controller
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 }

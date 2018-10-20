@@ -10,16 +10,14 @@ namespace App\Views\Elements\Admin;
 use App\iPolitic\NawpCore\Components\View;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
+use Psr\Log\LoggerInterface;
 
 class Page extends View implements TwigInterface
 {
     public $states = ["html_elements" => [], "pass" => ""];
-    public function __construct(ViewLogger $templateLogger, array $params = [])
+    public function __construct(ViewLogger $templateLogger, LoggerInterface $logger, array $params = [])
     {
-        echo "before build page" . PHP_EOL;
-        parent::__construct($templateLogger, $params);
-        echo "post build page" . PHP_EOL;
-        var_dump($this->states);
+        parent::__construct($templateLogger, $logger, $params);
     }
 
     public function twig(): void

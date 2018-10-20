@@ -68,13 +68,15 @@ class Admin extends Controller implements ControllerInterface
                 ->where('email = ', $_POST["email"])
                 ->fetchRecord();
             if ($userRecord->hashed_password !== Utils::hashPassword($_POST["password"])) {
+                $this->logger->alert("LOGIN REFUSED");
                 // wrong email and/or password
                 $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
             } else {
+                $this->logger->alert("LOGIN SUCCESS");
                 $uid = Utils::generateUID(9);
                 $url = "/admin";
                 if (Cookie::areCookieEnabled($viewLogger)) {
-                    Cookie::set($viewLogger, new Cookie("UID", $url));
+                    Cookie::set($viewLogger, new Cookie("UID", $uid));
                 } else {
                     $url = Utils::buildUrlParams($url, ["UID" => $uid]);
                 }
@@ -83,25 +85,6 @@ class Admin extends Controller implements ControllerInterface
                 //$loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
                 PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
                 return true;
-               /* // login success
-                // we generate a new uid
-                $uid = Utils::generateUID();
-                $url = "/admin";
-                var_dump("avion");
-                // if cookies are enable
-                if (Cookie::areCookieEnabled($viewLogger)) {
-                    // we set the cookie
-                    Cookie::set($viewLogger, new Cookie("UID", $uid));
-                    var_dump("b");
-                } else {
-                    // else we add it in url
-                    $url = $url . "?" . http_build_url(["UID" => $uid]);
-                    var_dump("c");
-                }
-                Session::set( $viewLogger, "user_id", $userRecord->row_id);
-                $loginMessage = "success tmp";
-                // PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
-                // return true;*/
             }
         }
 
@@ -109,7 +92,7 @@ class Admin extends Controller implements ControllerInterface
 
         $httpResponse .= " <!DOCTYPE html>
         <html lang=\"en\">" .
-            new \App\Views\Elements\Admin\Header($viewLogger, [
+            new \App\Views\Elements\Admin\Header($viewLogger, $this->logger, [
                     "page" => "Login",
                     "title" => "TEST".rand(0, 99),
                     "url" => $_SERVER["REQUEST_URI"],
@@ -126,11 +109,12 @@ class Admin extends Controller implements ControllerInterface
                 new \App\Views\Pages\Admin\Page(
 
                     $viewLogger,
+                    $this->logger,
                     [
                         "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                         "html_elements" => [
                             (
-                                new \App\Views\Elements\Admin\Login($viewLogger, [
+                                new \App\Views\Elements\Admin\Login($viewLogger, $this->logger, [
                                 "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                                 "message" => $loginMessage,
                                 "rand" => rand(0, 9),
@@ -140,7 +124,7 @@ class Admin extends Controller implements ControllerInterface
                         ],
                     ]
                 ) .
-                new \App\Views\Elements\Admin\Footer($viewLogger, []) . "
+                new \App\Views\Elements\Admin\Footer($viewLogger, $this->logger, []) . "
             </body>
         </html>";
         return true;
@@ -158,6 +142,7 @@ class Admin extends Controller implements ControllerInterface
         $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
             new \App\Views\Elements\Admin\Header(
                 $viewLogger,
+                $this->logger,
                 ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
             ) .
             "<body class=\"fix-header fix-sidebar card-no-border\">
@@ -171,19 +156,24 @@ class Admin extends Controller implements ControllerInterface
             new \App\Views\Pages\Admin\Page(
 
                 $viewLogger,
+                $this->logger,
                 [
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                     "html_elements" => [
                         (
-                        new \App\Views\Elements\Admin\Login($viewLogger, [
+                        new \App\Views\Elements\Admin\Login(
+                            $viewLogger,
+                            $this->logger,
+                            [
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                             "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), true),
                             "rand" => rand(0, 9)
-                        ])),
+                        ]
+                        )),
                     ],
                 ]
             ) .
-            new \App\Views\Elements\Admin\Footer($viewLogger, [])
+            new \App\Views\Elements\Admin\Footer($viewLogger, $this->logger, [])
             .
             "</body></html>";
         return true;

@@ -35,10 +35,10 @@ class Http
          * Used for creating controllers instance
          */
         $atlasInstance = &$kernel->atlas;
-        $params = [&$viewLogger, []];
+        $params = [&$viewLogger, $kernel->logger, []];
         Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
-        $params = [&$atlasInstance];
+        $params = [&$atlasInstance, $kernel->logger];
         Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
@@ -80,7 +80,7 @@ class Http
         echo $cli->title("some title");//, function(){return true;});
         echo $cli->desc("some desc");//, function(){return true;});
         echo $cli->list("some desc", "0001", "0002", "0003");//, function(){return true;});
-        echo $cli->log("some info", "underline", "title");//, function(){return true;});
+        echo $cli->logWithStyle("some info", "underline", "title");//, function(){return true;});
         $cli->check("anno func", function ():bool {
             sleep(2);
             return false;
@@ -97,8 +97,8 @@ class Http
             "http://0.0.0.0:5616",
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli) {
-                $cli->log("Got HTTP Request ", "info");
-                $response = [];
+                $cli->info("Got HTTP Request ");
+                $response = "";
                 try {
                     $kernel->handle(
                         $response,

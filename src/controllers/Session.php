@@ -79,19 +79,19 @@ class Session extends Controller implements ControllerInterface
     public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
         $httpResponse =
-        new \App\Views\Elements\Header($viewLogger, []) .
-        new \App\Views\Pages\Home($viewLogger, ["name" => "test", "html_elements" => [
-                new \App\Views\Elements\Menu($viewLogger, []),
-                    new \App\Views\Elements\Banner($viewLogger, []),
-                    new \App\Views\Elements\BannerBlocks($viewLogger, []),
-                    new \App\Views\Elements\Services($viewLogger, []),
-                    new \App\Views\Elements\Gallery($viewLogger, []),
-                    new \App\Views\Elements\OrderNow($viewLogger, []),
-                    new \App\Views\Elements\Testimonial($viewLogger, []),
-                    new \App\Views\Elements\Map($viewLogger, []),
-                    new \App\Views\Elements\BlogWrapper($viewLogger, []),
+        new \App\Views\Elements\Header($viewLogger, $this->logger, []) .
+        new \App\Views\Pages\Home($viewLogger, $this->logger, ["name" => "test", "html_elements" => [
+                new \App\Views\Elements\Menu($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\Banner($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\BannerBlocks($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\Services($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\Gallery($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\OrderNow($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\Testimonial($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\Map($viewLogger, $this->logger, []),
+                    new \App\Views\Elements\BlogWrapper($viewLogger, $this->logger, []),
         ]]) .
-        new \App\Views\Elements\Footer($viewLogger, []);
+        new \App\Views\Elements\Footer($viewLogger, $this->logger, []);
 
         return true;
     }

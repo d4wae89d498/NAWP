@@ -23,10 +23,10 @@ class SocketIO
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
         $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
         $atlasInstance = &$kernel->atlas;
-        $params = [&$viewLogger, []];
+        $params = [&$viewLogger, $kernel->logger, []];
         Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
-        $params = [&$atlasInstance];
+        $params = [&$atlasInstance, $kernel->logger];
         Kernel::setKernel($kernel);
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);

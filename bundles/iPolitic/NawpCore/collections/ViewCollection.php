@@ -9,23 +9,37 @@
 namespace App\iPolitic\NawpCore\Collections;
 
 use App\iPolitic\NawpCore\Components\{Collection};
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
  * @package App\iPolitic\NawpCore
  */
-class ViewCollection extends Collection
+class ViewCollection extends Collection implements LoggerAwareInterface
 {
-    
-     /**
-     * ControllerCollection constructor.
-     * @param array $input
-     * @param int $flags
-     * @param string $iterator_class
+    /**
+     * @var LoggerInterface
      */
+    public $logger;
+    /**
+    * ControllerCollection constructor.
+    * @param array $input
+    * @param int $flags
+    * @param string $iterator_class
+    */
     public function __construct(array $input = [], int $flags = 0, string $iterator_class = "ArrayIterator")
     {
         parent::__construct($input, $flags, $iterator_class);
+    }
+
+    /**
+     * Will set the logger instance following PSR recommendations
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

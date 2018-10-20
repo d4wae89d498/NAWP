@@ -7,14 +7,20 @@
  */
 namespace App\iPolitic\NawpCore\Components;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\Environment;
 
 /**
  * Template class.
  */
-abstract class View
+abstract class View implements LoggerAwareInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    public $logger;
     /**
      * The id of the template
      * @var string
@@ -35,10 +41,12 @@ abstract class View
      * Template constructor.
      * Will generate a new template id and add generated html and states to $e
      * @param \App\iPolitic\NawpCore\Components\ViewLogger $templateLogger
+     * @param LoggerInterface $logger
      * @param array $params
      */
-    public function __construct(ViewLogger &$templateLogger, array $params = [])
+    public function __construct(ViewLogger &$templateLogger, LoggerInterface $logger, array $params = [])
     {
+        $this->setLogger($logger);
         //we  reassign the template logger
         $this->templateLogger = &$templateLogger;
         $id = $this->generatedID = $this->templateLogger->generateTemplateID($this);
@@ -129,5 +137,17 @@ abstract class View
         $this->templateLogger->setTemplate($this->generatedID, $this);
         $html =  $twig->render($str, $this->get("states"));
         return $html;
+    }
+
+    /**
+     * Sets a logger instance on the object.
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

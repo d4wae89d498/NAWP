@@ -18,15 +18,13 @@ use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Session;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use App\DataSources\Categorie\Categorie;
-use App\DataSources\Log\Log;
 use App\DataSources\ContentsCategory\Contents;
-use App\DataSources\Translation\Translation;
-use App\DataSources\User\User;
 use App\DataSources\Content\ContentMapper;
 
-class Kernel
+class Kernel implements LoggerAwareInterface
 {
     public const CACHE_FOLDER_NAME = "cache";
     /**
@@ -35,9 +33,14 @@ class Kernel
     public static $twigArray = [];
 
     /**
-     * @var Logger $logger
+     * @var LoggerInterface $logger
      */
-    public static $logger;
+    public static $_logger;
+
+    /**
+     * @var LoggerInterface
+     */
+    public $logger;
 
     /**
      * @var string $cachePath
@@ -85,16 +88,15 @@ class Kernel
     {
         $dotEnv = new Dotenv();
         $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
-        self::$logger = new Logger();
         $this->init();
     }
 
     /**
      * @return Logger
      */
-    public static function cli(): Logger
+    public static function cli(): LoggerInterface
     {
-        return clone self::$logger;
+        return clone self::$_logger;
     }
 
     /**
@@ -140,11 +142,14 @@ class Kernel
      */
     public function init(): void
     {
+        $this->setLogger(new Logger());
         // set memory to 4go
         ini_set('memory_limit', '2048M');
         $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
         $this->controllerCollection = new ControllerCollection();
+        $this->controllerCollection->setLogger($this->logger);
         $this->viewCollection = new ViewCollection();
+        $this->viewCollection->setLogger($this->logger);
         $this->atlas = $this->getAtlas();
         //$this->loadRSA();
         self::setKernel($this);
@@ -212,5 +217,14 @@ class Kernel
             $arr['pdo'][1],
             $arr['pdo'][2]
         );
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger): void
+    {
+        self::$_logger = $this->logger = $logger;
     }
 }

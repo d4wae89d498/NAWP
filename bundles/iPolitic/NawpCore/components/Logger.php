@@ -7,11 +7,14 @@
  */
 namespace App\iPolitic\NawpCore\components;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+
 /**
  * Class Logger
  * @package App\iPolitic\NawpCore\components
  */
-class Logger
+class Logger implements LoggerInterface
 {
     const
         FOREGROUND = 38,
@@ -67,15 +70,16 @@ class Logger
             'desc' => ['cyan'],
             'list_title' => ['underline'],
             'check' => ['yellow'],
-            'info' => ['blue'],
-            'warning' => ['yellow'],
-            'debug' => ['magenta'],
-            'error' => ['red'],
-            'critical' => ['light_red', 'bold'],
-            'alert' => ['light_red'],
-            'emergency' => ['red', 'bold', 'underline'],
             'success' => ['green'],
-            'failure' => ['red']
+            'failure' => ['red'],
+            LogLevel::EMERGENCY => ['red', 'bold', 'underline'],
+            LogLevel::ALERT => ['light_red'],
+            LogLevel::CRITICAL => ['light_red', 'bold'],
+            LogLevel::ERROR => ['red'],
+            LogLevel::WARNING => ['yellow'],
+            LogLevel::NOTICE => ['yellow'],
+            LogLevel::INFO => ['blue'],
+            LogLevel::DEBUG => ['magenta'],
         ];
 
     /**
@@ -178,7 +182,7 @@ class Logger
         $caller = array_shift($trace);
         $ret =  ($fn = explode("\\", $caller['file']))[count($fn) - 1] . ":".$caller['line'];
         return $max ? ("    {" . $ret."} ") :
-                      (" ".$ret);
+            (" ".$ret);
     }
 
     /**
@@ -199,7 +203,7 @@ class Logger
      * @return Logger
      * @throws \Exception
      */
-    public function log(string $text, string ... $args): Logger
+    public function logWithStyle(string $text, string ... $args): Logger
     {
         $today = (string) date("F j, g:i a");
         var_dump($args);
@@ -265,7 +269,7 @@ class Logger
         $this->output =
             $this->applyStyles($title, "list_title") . " " .   self::formatFirstTrace(debug_backtrace()) .
             PHP_EOL .
-                "*" . join(PHP_EOL . "*", $elements) .
+            "*" . join(PHP_EOL . "*", $elements) .
             PHP_EOL;
         $this->storeInLog();
         return $this;
@@ -469,5 +473,165 @@ class Logger
     public function __toString(): string
     {
         return $this->toString();
+    }
+
+    /**
+     * Will bind the params in brackets in the given $message
+     * @param $message
+     * @param array $context
+     * @return string
+     */
+    public function interpolate($message, array $context = array())
+    {
+        // build a replacement array with braces around the context keys
+        $replace = array();
+        foreach ($context as $key => $val) {
+            // check that the value can be casted to string
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                $replace['{' . $key . '}'] = $val;
+            }
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
+    }
+
+    /**
+     * System is unusable.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function emergency($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::EMERGENCY);
+    }
+
+    /**
+     * Action must be taken immediately.
+     *
+     * Example: Entire website down, database unavailable, etc. This should
+     * trigger the SMS alerts and wake you up.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function alert($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::ALERT);
+    }
+
+    /**
+     * Critical conditions.
+     *
+     * Example: Application component unavailable, unexpected exception.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function critical($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::CRITICAL);
+    }
+
+    /**
+     * Runtime errors that do not require immediate action but should typically
+     * be logged and monitored.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function error($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::ERROR);
+    }
+
+    /**
+     * Exceptional occurrences that are not errors.
+     *
+     * Example: Use of deprecated APIs, poor use of an API, undesirable things
+     * that are not necessarily wrong.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function warning($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::WARNING);
+    }
+
+    /**
+     * Normal but significant events.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function notice($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::NOTICE);
+    }
+
+    /**
+     * Interesting events.
+     *
+     * Example: User logs in, SQL logs.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function info($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::INFO);
+    }
+
+    /**
+     * Detailed debug information.
+     *
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function debug($message, array $context = array())
+    {
+        $message = $this->interpolate($message, $context);
+        $this->logWithStyle($message, LogLevel::DEBUG);
+    }
+
+    /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed $level
+     * @param string $message
+     * @param array $context
+     * @return void
+     * @throws \Exception
+     */
+    public function log($level, $message, array $context = [])
+    {
+        if (defined("LogLevel::" . $level)) {
+            $this->$level($message, $context);
+        }
     }
 }
