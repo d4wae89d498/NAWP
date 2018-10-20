@@ -33,8 +33,8 @@ class ContentTable extends Table
   'primary' => true,
   'options' => null,
 ),
-        'insrted_at' => array(
-  'name' => 'insrted_at',
+        'inserted_at' => array(
+  'name' => 'inserted_at',
   'type' => 'datetime',
   'size' => null,
   'scale' => null,
@@ -114,7 +114,7 @@ class ContentTable extends Table
 
     const COLUMN_NAMES = [
         'row_id',
-        'insrted_at',
+        'inserted_at',
         'updated_at',
         'title',
         'content',
@@ -125,7 +125,7 @@ class ContentTable extends Table
 
     const COLUMN_DEFAULTS = [
         'row_id' => null,
-        'insrted_at' => null,
+        'inserted_at' => null,
         'updated_at' => null,
         'title' => null,
         'content' => null,

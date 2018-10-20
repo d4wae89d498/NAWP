@@ -8,7 +8,7 @@ namespace App\Datasources\User;
 
 /**
  * @property mixed $row_id int(10,0) NOT NULL
- * @property mixed $insrted_at datetime NOT NULL
+ * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
  * @property mixed $email varchar(255) NOT NULL
  * @property mixed $first_name varchar(255)
