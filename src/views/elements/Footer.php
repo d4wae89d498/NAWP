@@ -8,7 +8,6 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
@@ -25,7 +24,9 @@ class Footer extends View implements TwigInterface
         ]
     ];
 
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Footer_Wrapper Start-->
         <footer data-id="{{id}}" class="wdt_100">
             <!-- Footer_Container Start-->
@@ -99,5 +100,6 @@ class Footer extends View implements TwigInterface
         {% endfor %}
     </body>
 </html>
-    <?php }
+    <?php
+    }
 }

@@ -8,13 +8,14 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
 class Banner extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- BannerCol Start-->
         <div data-id="{{id}}" id="minimal-bootstrap-carousel" data-ride="carousel" class="carousel slide carousel-fade shop-slider">
             <!-- Wrapper for slides-->

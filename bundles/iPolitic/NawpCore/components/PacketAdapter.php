@@ -20,16 +20,18 @@ class PacketAdapter
     /**
      * Startup function, will remove all cache files before startup
      */
-    public static function init(): void {
+    public static function init(): void
+    {
         // removing cache files
         $files = glob(
             join(
-                DIRECTORY_SEPARATOR, [
+                DIRECTORY_SEPARATOR,
+                [
                 Kernel::getKernel()->cachePath, self::PACKET_ADAPTER_FOLDER , "*"]
             )
         );
-        foreach($files as $file){
-            if(!is_dir($file) && file_exists($file)) {
+        foreach ($files as $file) {
+            if (!is_dir($file) && file_exists($file)) {
                 @unlink($file);
             }
         }
@@ -40,7 +42,8 @@ class PacketAdapter
      * @param string $id
      * @return string
      */
-    public static function IDtoPath(string $id): string {
+    public static function IDtoPath(string $id): string
+    {
         return join(
             DIRECTORY_SEPARATOR,
             [
@@ -65,8 +68,7 @@ class PacketAdapter
      * @param string $requestType
      * @throws \iPolitic\Solex\RouterException
      */
-    public static function redirectTo
-    (
+    public static function redirectTo(
         string &$response,
         ViewLogger &$viewLogger,
         string $url,
@@ -78,7 +80,7 @@ class PacketAdapter
             Http::header("Location: " . $url);
         } else {
             $_SERVER["REQUEST_URI"] = $url;
-            Kernel::getKernel()->handle (
+            Kernel::getKernel()->handle(
                 $response,
                 isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : ViewLogger::DEFAULT_REQUEST_TYPE,
                 $_SERVER["REQUEST_URI"],
@@ -95,11 +97,12 @@ class PacketAdapter
      * @return string
      * @throws \Exception
      */
-    public static function storeAndGet(ViewLogger $viewLogger): string {
+    public static function storeAndGet(ViewLogger $viewLogger): string
+    {
         if ($viewLogger->requestType === "SOCKET") {
             // id should be available as post clientVar or something like that
             $hashedId = $_POST["originalClientVar"];
-            // here session is not available
+        // here session is not available
         } else {
             $hashedId = Session::id($viewLogger);
             $filePath = self::IDtoPath($hashedId);

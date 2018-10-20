@@ -37,15 +37,16 @@ abstract class View
      * @param \App\iPolitic\NawpCore\Components\ViewLogger $templateLogger
      * @param array $params
      */
-    public function __construct(ViewLogger &$templateLogger, array $params = []) {
+    public function __construct(ViewLogger &$templateLogger, array $params = [])
+    {
         //we  reassign the template logger
         $this->templateLogger = &$templateLogger;
         $id = $this->generatedID = $this->templateLogger->generateTemplateID($this);
         // if the given $params array is non empty, we set all $states elements using $params key and values
-        if (count($params) > 0 ) {
-          foreach ($params as $k => $v) {
-              $this->states[$k] = $v;
-          }
+        if (count($params) > 0) {
+            foreach ($params as $k => $v) {
+                $this->states[$k] = $v;
+            }
         }
         $this->states['id'] = $id;
         $this->states['references'] = [];
@@ -53,11 +54,11 @@ abstract class View
             /**
              * @var View $view
              */
-            foreach($this->states['html_elements'] as $view) {
+            foreach ($this->states['html_elements'] as $view) {
                 array_push($this->states['references'], $view->states['id']);
             }
         }
-        $this->templateLogger->setTemplate($id,$this);
+        $this->templateLogger->setTemplate($id, $this);
     }
 
     /**
@@ -65,7 +66,8 @@ abstract class View
      * @param $name
      * @param $value
      */
-    public function setState(string $name, $value): void {
+    public function setState(string $name, $value): void
+    {
         $tpl = $this->templateLogger->getTemplate($this->generatedID);
         $tpl["states"][$name] = $value;
         $this->templateLogger->setTemplate($this->generatedID, $tpl);
@@ -77,7 +79,8 @@ abstract class View
      * @param $name
      * @return mixed
      */
-    public function getState(string $name) {
+    public function getState(string $name)
+    {
         return $this->templateLogger->getTemplate($this->generatedID)["states"][$name];
     }
 
@@ -86,7 +89,8 @@ abstract class View
      * @param $name
      * @param $value
      */
-    public function set(string $name, $value): void {
+    public function set(string $name, $value): void
+    {
         $tpl = $this->templateLogger->getTemplate($this->generatedID);
         $tpl[$name] = $value;
         $this->templateLogger->setTemplate($this->generatedID, $tpl);
@@ -98,7 +102,8 @@ abstract class View
      * @param $name
      * @return mixed
      */
-    public function get(string $name) {
+    public function get(string $name)
+    {
         return $this->templateLogger->getTemplate($this->generatedID)[$name];
     }
 
@@ -110,19 +115,19 @@ abstract class View
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function __toString(): string {
+    public function __toString(): string
+    {
         $twig = $this->get("twig");
         $str = 'giventwig';
         $twig = new Environment(new ArrayLoader(array(
             $str => $twig,
         )));
         $m = "beforeRender";
-        if(method_exists ($this , $m)) {
+        if (method_exists($this, $m)) {
             $this->$m();
         }
         $this->templateLogger->setTemplate($this->generatedID, $this);
         $html =  $twig->render($str, $this->get("states"));
         return $html;
     }
-
 }

@@ -8,13 +8,14 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
 class BannerBlocks extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <div data-id="{{id}}" class="green_bg wdt_100">
             <ul class="bnr_btm_services">
                 <li class="service_img1">

@@ -22,7 +22,7 @@ class Exception
         $log .= "<br /><b>Error Message :</b>" . $e->getMessage();
         $log .= "<br /><b>Error File :</b>" . $e->getFile();
         $log .= "<br /><b>Error File Line :</b>" . $e->getLine();
-        $log .= "<br /><b>Error Trace :</b><br />" . preg_replace("/\n/",'<br>',$e->getTraceAsString());
+        $log .= "<br /><b>Error Trace :</b><br />" . preg_replace("/\n/", '<br>', $e->getTraceAsString());
         $log .= "</div>";
         return $log;
     }
@@ -31,7 +31,8 @@ class Exception
      * @param string $env
      * @throws \Exception
      */
-    public static function checkRequireEnv(string $env): void {
+    public static function checkRequireEnv(string $env): void
+    {
         if (!isset($_ENV[$env])) {
             throw new \Exception("configs/.env file does not contain definition for the name : " . $env);
         }

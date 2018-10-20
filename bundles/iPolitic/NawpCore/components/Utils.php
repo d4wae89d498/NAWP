@@ -16,9 +16,10 @@ class Utils
      * @param $var
      * @param bool $exitScript
      */
-    public static function p($var, bool $exitScript = false): void {
+    public static function p($var, bool $exitScript = false): void
+    {
         var_dump($var);
-        if($exitScript) {
+        if ($exitScript) {
             exit;
         }
         return;
@@ -29,7 +30,8 @@ class Utils
      * @param string $tag
      * @return mixed
      */
-    public static function strInTag(string $input, string $tag): string {
+    public static function strInTag(string $input, string $tag): string
+    {
         $matches = [];
         $pattern = "#<".$tag.".*?>([^<]+)</".$tag.">#";
         preg_match_all($pattern, $input, $matches);
@@ -44,9 +46,12 @@ class Utils
      * @param string $string
      * @return string
      */
-    public static function hideTwigIn(string $string) : string {
-        return str_replace("}", "²==//", str_replace
-            ("{", "==²//", $string)
+    public static function hideTwigIn(string $string) : string
+    {
+        return str_replace(
+            "}",
+            "²==//",
+            str_replace("{", "==²//", $string)
         );
     }
 
@@ -55,10 +60,11 @@ class Utils
      * @param mixed $func
      * @return string
      */
-    public static function ocb($func): string {
+    public static function ocb($func): string
+    {
         ob_start();
-            call_user_func($func);
-            $res = ob_get_contents();
+        call_user_func($func);
+        $res = ob_get_contents();
         ob_end_clean();
         return $res;
     }
@@ -68,7 +74,8 @@ class Utils
      * @param string $url
      * @return array
      */
-    public static function parseUrlParams(string $url): array {
+    public static function parseUrlParams(string $url): array
+    {
         $output = [];
         $exploded = explode("?", $url);
         if (isset($exploded[1])) {
@@ -82,7 +89,8 @@ class Utils
      * @param string $url
      * @return string
      */
-    public static function getUrlWithoutArgs(string $url): string {
+    public static function getUrlWithoutArgs(string $url): string
+    {
         return(explode("?", $url)[0]);
     }
 
@@ -92,7 +100,8 @@ class Utils
      * @param array $params
      * @return string
      */
-    public static function buildUrlParams(string $url, array $params): string {
+    public static function buildUrlParams(string $url, array $params): string
+    {
         return self::getUrlWithoutArgs($url) . "?" . http_build_query($params);
     }
 
@@ -102,7 +111,8 @@ class Utils
      * @return string
      * @throws \Exception
      */
-    public static function  generateUID(int $length = 20): string {
+    public static function generateUID(int $length = 20): string
+    {
         if (function_exists("random_bytes")) {
             $bytes = random_bytes(ceil($length / 2));
         } elseif (function_exists("openssl_random_pseudo_bytes")) {
@@ -118,7 +128,8 @@ class Utils
      * @return string
      * @throws \Exception
      */
-    public static function hashPassword(string $password): string {
+    public static function hashPassword(string $password): string
+    {
         Exception::checkRequireEnv("PASSWORD_SALT");
         return sha1($password . $_ENV["PASSWORD_SALT"]);
     }

@@ -119,9 +119,11 @@ class Logger
      * @return Logger
      * @throws \Exception
      */
-    public function _applyStyles(string $text, array $styles): Logger {
+    public function _applyStyles(string $text, array $styles): Logger
+    {
         // we use templates if needed by merging
-        foreach ($s = array_map(function($element){ return
+        foreach ($s = array_map(function ($element) {
+            return
             isset(self::$templates[$element]) ? self::$templates[$element] : $element;
         }, $styles) as $k => $v) {
             if (is_array($v)) {
@@ -137,7 +139,7 @@ class Logger
         foreach ($styles as $k => $v) {
             if (isset($this->themes[$v])) {
                 $sequences = array_merge($sequences, $this->themeSequence($v));
-            } else if ($this->isValidStyle($v)) {
+            } elseif ($this->isValidStyle($v)) {
                 $sequences[] = $this->styleSequence($v);
             } else {
                 throw new \Exception($v);
@@ -160,7 +162,8 @@ class Logger
      * @return Logger
      * @throws \Exception
      */
-    public function applyStyles(string $text, string ... $args): Logger {
+    public function applyStyles(string $text, string ... $args): Logger
+    {
         return $this->_applyStyles($text, $args);
     }
 
@@ -170,9 +173,10 @@ class Logger
      * @param bool $max
      * @return string
      */
-    public static function formatFirstTrace(array $trace, bool $max = true): string {
+    public static function formatFirstTrace(array $trace, bool $max = true): string
+    {
         $caller = array_shift($trace);
-        $ret =  ($fn = explode("\\",$caller['file']))[count($fn) - 1] . ":".$caller['line'];
+        $ret =  ($fn = explode("\\", $caller['file']))[count($fn) - 1] . ":".$caller['line'];
         return $max ? ("    {" . $ret."} ") :
                       (" ".$ret);
     }
@@ -180,9 +184,10 @@ class Logger
     /**
      * Will store in log the given value of $this->output
      */
-    private function storeInLog(): void {
+    private function storeInLog(): void
+    {
         $cleanStr = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $this->output);
-        file_put_contents(getenv("LOG_FILE_PATH"), $cleanStr , FILE_APPEND | LOCK_EX);
+        file_put_contents(getenv("LOG_FILE_PATH"), $cleanStr, FILE_APPEND | LOCK_EX);
         return;
     }
 
@@ -199,9 +204,9 @@ class Logger
         $today = (string) date("F j, g:i a");
         var_dump($args);
         var_dump("[" . $today . "] " . $text);
-        $string = "[" . $today . self::formatFirstTrace(debug_backtrace(), false) ."] " . $this->_applyStyles( $text, $args) . PHP_EOL ;
+        $string = "[" . $today . self::formatFirstTrace(debug_backtrace(), false) ."] " . $this->_applyStyles($text, $args) . PHP_EOL ;
         $this->output = $string;
-        for($i = 0; $i < count($args) - 1; $i++) {
+        for ($i = 0; $i < count($args) - 1; $i++) {
             if ($args[$i] === "emergency") {
                 $this->storeInLog();
                 echo  $this->output . PHP_EOL;
@@ -221,15 +226,16 @@ class Logger
      * @throws \Exception
      * @return Logger
      */
-    public function check(string $text, callable $callback, bool $echo = true): Logger {
-        $checkingString = function() use($text): string {
+    public function check(string $text, callable $callback, bool $echo = true): Logger
+    {
+        $checkingString = function () use ($text): string {
             $this->storeInLog();
             return (string) $this->applyStyles("[Checking] -> " .  $text, "check") . " ... ";
         };
-        $responseString = function() use($callback): string {
+        $responseString = function () use ($callback): string {
             $result =   (bool) $callback();
             $this->storeInLog();
-            return (string) $this->applyStyles($result ? "SUCCESS" : "FAILURE", $result ? "success" : "failure" ) . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
+            return (string) $this->applyStyles($result ? "SUCCESS" : "FAILURE", $result ? "success" : "failure") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
         };
         if ($echo) {
             echo $checkingString();
@@ -253,7 +259,8 @@ class Logger
      * @throws \Exception
      * @return Logger
      */
-    public function list(string $title, string ...$elements): Logger {
+    public function list(string $title, string ...$elements): Logger
+    {
         $elements = is_array($elements[0]) ? $elements[0] : $elements;
         $this->output =
             $this->applyStyles($title, "list_title") . " " .   self::formatFirstTrace(debug_backtrace()) .
@@ -270,7 +277,8 @@ class Logger
      * @throws \Exception
      * @return Logger
      */
-    public function desc(string $text): Logger {
+    public function desc(string $text): Logger
+    {
         $this->output =  $this->applyStyles($text, "desc") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
         $this->storeInLog();
         return $this;
@@ -282,7 +290,8 @@ class Logger
      * @throws \Exception
      * @return Logger
      */
-    public function title(string $text): Logger {
+    public function title(string $text): Logger
+    {
         $this->output =  $this->applyStyles($text, "title") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
         $this->storeInLog();
         return $this;
@@ -449,7 +458,8 @@ class Logger
     /**
      * @return string
      */
-    public function toString(): string {
+    public function toString(): string
+    {
         return $this->output;
     }
 

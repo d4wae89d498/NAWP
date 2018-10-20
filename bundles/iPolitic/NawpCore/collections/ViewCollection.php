@@ -15,7 +15,8 @@ use App\iPolitic\NawpCore\Components\{Collection};
  * Provide storage and match for a controller list
  * @package App\iPolitic\NawpCore
  */
-class ViewCollection extends Collection {
+class ViewCollection extends Collection
+{
     
      /**
      * ControllerCollection constructor.

@@ -8,13 +8,14 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
 class BlogWrapper extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Blog_Wrapper Start-->
         <div data-id="{{id}}" class="pad_94_100 wdt_100">
             <div class="container">

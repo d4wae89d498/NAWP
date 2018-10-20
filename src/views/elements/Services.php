@@ -12,7 +12,9 @@ use App\iPolitic\NawpCore\Components\View;
 
 class Services extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Services Start-->
         <div data-id="{{id}}" class="service_bg wdt_100 pad_100_196">
             <div class="container">

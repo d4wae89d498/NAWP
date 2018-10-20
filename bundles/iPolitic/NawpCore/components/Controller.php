@@ -10,10 +10,11 @@ namespace App\iPolitic\NawpCore\Components;
 use Atlas\Orm\Atlas;
 
 /**
- * The controller class, convert requests to states rendered as a json 
+ * The controller class, convert requests to states rendered as a json
  * or as a standard html template with custom js
  */
-class Controller {
+class Controller
+{
     /**
      * The controller name
      * @var string
@@ -45,9 +46,10 @@ class Controller {
      * @return bool
      *
      */
-    public function call(ViewLogger &$viewLogger, string &$response, string $method, $args = []): bool {
+    public function call(ViewLogger &$viewLogger, string &$response, string $method, $args = []): bool
+    {
         //var_dump("IN CALLL" . $method);
-        if (method_exists($this,$method)) {
+        if (method_exists($this, $method)) {
             return $this->$method($viewLogger, $response, $args);
         } else {
             return false;

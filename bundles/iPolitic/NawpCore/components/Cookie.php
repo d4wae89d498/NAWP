@@ -48,7 +48,8 @@ class Cookie
      * Will set a cookie
      * @param Cookie $cookie
      */
-    public static function setHttpCookie(Cookie $cookie): void {
+    public static function setHttpCookie(Cookie $cookie): void
+    {
         if (self::isAllowedCookie($cookie->name)) {
             $expireDate = date("D, d-m-Y H:i:s", time() + $cookie->duration) . ' GMT';
             Http::header("Set-Cookie: {$cookie->name}={$cookie->value}; Expires={$expireDate};");
@@ -60,7 +61,8 @@ class Cookie
      * Will remove a cookie from an hhtp request
      * @param string $cookieName
      */
-    public static function removeHttpCookie(string $cookieName): void {
+    public static function removeHttpCookie(string $cookieName): void
+    {
         $val = "";
         $expireDate = date("D, d-m-Y H:i:s", time() - 3600) . ' GMT';
         Http::header("Set-Cookie: {$cookieName}={$val}; Expires={$expireDate};");
@@ -70,7 +72,8 @@ class Cookie
      * Will return all defined Http cookies
      * @return array
      */
-    public static function getHttpCookies(): array {
+    public static function getHttpCookies(): array
+    {
         return $_COOKIE;
     }
 
@@ -79,9 +82,9 @@ class Cookie
      * @param string $cookieName
      * @return bool
      */
-    public static function isAllowedCookie(string $cookieName): bool {
-        $a = in_array
-        (
+    public static function isAllowedCookie(string $cookieName): bool
+    {
+        $a = in_array(
             $cookieName,
             array_merge(
                 [Cookie::DEFAULT_TEST_COOKIE_STR],
@@ -98,7 +101,8 @@ class Cookie
      * @param Cookie $cookie
      * @param bool $noHttp
      */
-    public static function set(ViewLogger &$viewLogger, Cookie $cookie, $noHttp = false): void {
+    public static function set(ViewLogger &$viewLogger, Cookie $cookie, $noHttp = false): void
+    {
         if (self::isAllowedCookie($cookie->name)) {
             if ($viewLogger->requestType !== "SOCEKT") {
                 if (!$noHttp) {
@@ -117,13 +121,12 @@ class Cookie
      * Will set a first cookie so that we can test it later
      * @param ViewLogger $viewLogger
      */
-    public static function setTestCookie(ViewLogger &$viewLogger): void {
+    public static function setTestCookie(ViewLogger &$viewLogger): void
+    {
         if (!self::areCookieEnabled($viewLogger)) {
-            self::set
-            (
+            self::set(
                 $viewLogger,
-                new Cookie
-                (
+                new Cookie(
                     self::DEFAULT_TEST_COOKIE_STR,
                     self::DEFAULT_TEST_COOKIE_STR,
                     self::DEFAULT_COOKIE_DURATION
@@ -137,7 +140,8 @@ class Cookie
      * @param ViewLogger $viewLogger
      * @return bool
      */
-    public static function areCookieEnabled(ViewLogger &$viewLogger): bool {
+    public static function areCookieEnabled(ViewLogger &$viewLogger): bool
+    {
         return $viewLogger->cookieEnabledLocked ? $viewLogger->areCookieEnabled : self::isset($viewLogger, self::DEFAULT_TEST_COOKIE_STR);
     }
 
@@ -146,11 +150,13 @@ class Cookie
      * @param string $name
      * @return string
      */
-    public static function get(ViewLogger &$viewLogger, string $name): string {
+    public static function get(ViewLogger &$viewLogger, string $name): string
+    {
         return
             $viewLogger->cookies[$name] =
             $_COOKIE[$name] =
-            (isset($viewLogger->cookies[$name])
+            (
+                isset($viewLogger->cookies[$name])
             ?
                 $viewLogger->cookies[$name]
             :
@@ -163,7 +169,8 @@ class Cookie
      * @param string $key
      * @return bool
      */
-    public static function  isset(ViewLogger $viewLogger, string $key): bool {
+    public static function isset(ViewLogger $viewLogger, string $key): bool
+    {
         return
             isset($viewLogger->cookies[$key])
             ?
@@ -176,7 +183,8 @@ class Cookie
      * @param ViewLogger $viewLogger
      * @param string $key
      */
-    public static function  remove(ViewLogger &$viewLogger, string $key): void {
+    public static function remove(ViewLogger &$viewLogger, string $key): void
+    {
         if ($viewLogger->requestType !== "SOCKET") {
             self::removeHttpCookie($key);
         }
@@ -187,7 +195,8 @@ class Cookie
     /**
      * @param ViewLogger $viewLogger
      */
-    public static function  destroy(ViewLogger &$viewLogger): void {
+    public static function destroy(ViewLogger &$viewLogger): void
+    {
         $viewLogger->cookies = [];
         return;
     }

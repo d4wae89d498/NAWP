@@ -7,12 +7,14 @@
  */
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
+
 class Gallery extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Project Start-->
         <div data-id="{{id}}" class="project_Gal wdt_100">
             <div class="project_gal_left">

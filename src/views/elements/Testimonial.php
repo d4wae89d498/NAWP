@@ -12,7 +12,9 @@ use App\iPolitic\NawpCore\Components\View;
 
 class Testimonial extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Client_Testimonial Start-->
         <div data-id="{{id}}" class="pad_94_100 client_bg wdt_100">
             <div class="container">

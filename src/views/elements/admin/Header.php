@@ -35,7 +35,9 @@ class Header extends View implements TwigInterface
         "url" => ""
     ];
 
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <head>
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -57,5 +59,6 @@ class Header extends View implements TwigInterface
                 <script src="{{file}}"></script>
             {% endfor %}
         </head>
-    <?php }
+    <?php
+    }
 }

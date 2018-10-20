@@ -11,6 +11,7 @@ namespace App\iPolitic\NawpCore\Interfaces;
  * Interface ControllerInterface
  * @package App\iPolitic\NawpCore\Interfaces
  */
-interface ControllerInterface {
+interface ControllerInterface
+{
     public function getMethods(): array;
 }

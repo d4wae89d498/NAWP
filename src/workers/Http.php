@@ -7,8 +7,10 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\{ Exception, Utils};
-use Workerman\ {Worker, WebServer};
+use App\iPolitic\NawpCore\Components\Exception;
+use App\iPolitic\NawpCore\Components\Utils;
+use Workerman\Worker;
+use Workerman\WebServer;
 
 class Http
 {
@@ -41,8 +43,8 @@ class Http
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
         $array = [];
-        foreach($kernel->viewCollection as $k => $v) {
-            $array[$k] = Utils::HideTwigIn(Utils::ocb(function() use($v) {
+        foreach ($kernel->viewCollection as $k => $v) {
+            $array[$k] = Utils::HideTwigIn(Utils::ocb(function () use ($v) {
                 $v->twig();
             }));
         }
@@ -79,7 +81,10 @@ class Http
         echo $cli->desc("some desc");//, function(){return true;});
         echo $cli->list("some desc", "0001", "0002", "0003");//, function(){return true;});
         echo $cli->log("some info", "underline", "title");//, function(){return true;});
-        $cli->check("anno func", function():bool {sleep(2);return false;});
+        $cli->check("anno func", function ():bool {
+            sleep(2);
+            return false;
+        });
         /*
         $atlas = $kernel->getAtlas();
 
@@ -95,7 +100,7 @@ class Http
                 $cli->log("Got HTTP Request ", "info");
                 $response = [];
                 try {
-                    $kernel->handle (
+                    $kernel->handle(
                         $response,
                         isset($_SERVER["REQUEST_METHOD"]) ?
                         $_SERVER["REQUEST_METHOD"] : "GET",
@@ -113,10 +118,11 @@ class Http
                     );
                     throw $exception;
                 }
-            });
+            }
+        );
         $this->worker->name = "http";
         $this->worker->count = 1;
-        $this->worker->addRoot("127.0.0.1", join(DIRECTORY_SEPARATOR,[__DIR__,"..","..","public"]));
+        $this->worker->addRoot("127.0.0.1", join(DIRECTORY_SEPARATOR, [__DIR__,"..","..","public"]));
         Worker::runAll();
     }
 }

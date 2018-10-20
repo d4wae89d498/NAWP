@@ -8,13 +8,14 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
 class AboutUS extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- About_Us Start-->
         <div data-id="{{id}}" class="pad_100 wdt_100">
             <div class="container">

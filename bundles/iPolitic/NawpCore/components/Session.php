@@ -37,7 +37,8 @@ class Session
      * Will return the full path to self::SESSION_FILE
      * @return string
      */
-    public static function getFilePath(): string {
+    public static function getFilePath(): string
+    {
         return join(DIRECTORY_SEPARATOR, [Kernel::getKernel()->cachePath, self::SESSION_FILE]);
     }
 
@@ -46,7 +47,8 @@ class Session
      * @return string
      * @throws \Exception
      */
-    public static function id(ViewLogger $viewLogger): string {
+    public static function id(ViewLogger $viewLogger): string
+    {
         return
             (isset($_GET["UID"])
                 ?
@@ -69,7 +71,8 @@ class Session
      * @return string
      * @throws \Exception
      */
-    public static function get(ViewLogger $viewLogger, string $key, $id = ""): string {
+    public static function get(ViewLogger $viewLogger, string $key, $id = ""): string
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         return self::$session[$id][$key];
     }
@@ -81,7 +84,8 @@ class Session
      * @return array
      * @throws \Exception
      */
-    public static function getAll(ViewLogger $viewLogger, $id = ""): array {
+    public static function getAll(ViewLogger $viewLogger, $id = ""): array
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         return isset(self::$session[$id]) ? self::$session[$id] : [];
     }
@@ -94,7 +98,8 @@ class Session
      * @param string $id
      * @throws \Exception
      */
-    public static function set(ViewLogger $viewLogger, string $key, string $value, $id = ""): void {
+    public static function set(ViewLogger $viewLogger, string $key, string $value, $id = ""): void
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         self::$session[$id][$key] = $value;
         self::saveChanges();
@@ -109,7 +114,8 @@ class Session
      * @return bool
      * @throws \Exception
      */
-    public static function isset(ViewLogger $viewLogger, string $key, $id = "") : bool {
+    public static function isset(ViewLogger $viewLogger, string $key, $id = "") : bool
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         return isset(self::$session[$id][$key]);
     }
@@ -121,7 +127,8 @@ class Session
      * @param string $id
      * @throws \Exception
      */
-    public static function remove(ViewLogger $viewLogger, string $key, $id = "") : void {
+    public static function remove(ViewLogger $viewLogger, string $key, $id = "") : void
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         if (self::isset($viewLogger, $key)) {
             unset(self::$session[$id][$key]);
@@ -135,7 +142,8 @@ class Session
      * @param string $id
      * @throws \Exception
      */
-    public static function destroy(ViewLogger $viewLogger, $id = "") : void {
+    public static function destroy(ViewLogger $viewLogger, $id = "") : void
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         unset(self::$session[$id]);
         self::saveChanges();
@@ -148,7 +156,8 @@ class Session
      * @return bool
      * @throws \Exception
      */
-    public static function isLoggedIn(ViewLogger $viewLogger, string $id = "") : bool {
+    public static function isLoggedIn(ViewLogger $viewLogger, string $id = "") : bool
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         return isset(self::$session[$id]);
     }
@@ -159,7 +168,8 @@ class Session
      * @param string $id
      * @throws \Exception
      */
-    public static function logIn(ViewLogger $viewLogger, string $id = ""): void {
+    public static function logIn(ViewLogger $viewLogger, string $id = ""): void
+    {
         $id = $id !== "" ? $id : Session::id($viewLogger);
         self::$session[$id] = [];
         self::$session[$id]["expire_date"] = strtotime(date("Y-m-d H:i:s", strtotime('+'.self::sessionSecondsDuration.' seconds')));
@@ -172,10 +182,11 @@ class Session
      * @param ViewLogger $viewLogger
      * @throws \Exception
      */
-    public static function tokenExpireCheck(ViewLogger $viewLogger): void {
+    public static function tokenExpireCheck(ViewLogger $viewLogger): void
+    {
         echo "checking expirity ..." . PHP_EOL;
         foreach (self::$session as $token => $v) {
-            if(!isset(self::$session[$token]["expire_date"]) || (self::$session[$token]["expire_date"] <  strtotime(date("Y-m-d H:i:s")))) {
+            if (!isset(self::$session[$token]["expire_date"]) || (self::$session[$token]["expire_date"] <  strtotime(date("Y-m-d H:i:s")))) {
                 echo "token expired" . PHP_EOL;
                 self::destroy($viewLogger, $token);
             }
@@ -187,8 +198,9 @@ class Session
     /**
      * Will load the session var using a serialized txt file if one
      */
-    public static function init() {
-        if(file_exists(self::getFilePath()) && (filesize(self::getFilePath()) > 0)) {
+    public static function init()
+    {
+        if (file_exists(self::getFilePath()) && (filesize(self::getFilePath()) > 0)) {
             $handle = fopen(self::getFilePath(), "r");
             self::$session = unserialize(fread($handle, filesize(self::getFilePath())));
         } else {
@@ -202,14 +214,15 @@ class Session
      * @param viewLogger $viewLogger
      * @throws \Exception
      */
-    public static function tick(viewLogger $viewLogger): void {
+    public static function tick(viewLogger $viewLogger): void
+    {
 
         /**
          * If a prime number is generated, we check for token expirity
          */
         $generatedNumber = 0;
-        if ( call_user_func_array(
-            function ($n)use(&$generatedNumber){
+        if (call_user_func_array(
+            function ($n) use (&$generatedNumber) {
                 for ($i=~-$n**.5|0;$i&&$n%$i--;) {
                     sleep(0);
                 }
@@ -217,9 +230,11 @@ class Session
             },
             [$generatedNumber = mt_rand()]
             )
-        )   self::tokenExpireCheck($viewLogger);
+        ) {
+            self::tokenExpireCheck($viewLogger);
+        }
         $token = self::id($viewLogger);
-        if(!self::isLoggedIn($viewLogger, $token)) {
+        if (!self::isLoggedIn($viewLogger, $token)) {
             self::logIn($viewLogger, $token);
         }
         self::saveChanges();
@@ -229,7 +244,8 @@ class Session
     /**
      * Will save the current sessions
      */
-    public static function saveChanges() {
+    public static function saveChanges()
+    {
         $handle = fopen(self::getFilePath(), "w");
         fwrite($handle, serialize(self::$session));
     }

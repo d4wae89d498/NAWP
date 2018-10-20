@@ -22,60 +22,60 @@ class SysdiagramsTable extends Table
     const NAME = 'sysdiagrams';
 
     const COLUMNS = [
-        'name' => array (
+        'name' => array(
   'name' => 'name',
   'type' => 'nvarchar',
   'size' => 128,
-  'scale' => NULL,
+  'scale' => null,
   'notnull' => true,
-  'default' => NULL,
+  'default' => null,
   'autoinc' => false,
   'primary' => false,
-  'options' => NULL,
+  'options' => null,
 ),
-        'principal_id' => array (
+        'principal_id' => array(
   'name' => 'principal_id',
   'type' => 'int',
   'size' => 10,
   'scale' => 0,
   'notnull' => true,
-  'default' => NULL,
+  'default' => null,
   'autoinc' => false,
   'primary' => false,
-  'options' => NULL,
+  'options' => null,
 ),
-        'diagram_id' => array (
+        'diagram_id' => array(
   'name' => 'diagram_id',
   'type' => 'int',
   'size' => 10,
   'scale' => 0,
   'notnull' => true,
-  'default' => NULL,
+  'default' => null,
   'autoinc' => true,
   'primary' => true,
-  'options' => NULL,
+  'options' => null,
 ),
-        'version' => array (
+        'version' => array(
   'name' => 'version',
   'type' => 'int',
   'size' => 10,
   'scale' => 0,
   'notnull' => false,
-  'default' => NULL,
+  'default' => null,
   'autoinc' => false,
   'primary' => false,
-  'options' => NULL,
+  'options' => null,
 ),
-        'definition' => array (
+        'definition' => array(
   'name' => 'definition',
   'type' => 'varbinary',
   'size' => -1,
-  'scale' => NULL,
+  'scale' => null,
   'notnull' => false,
-  'default' => NULL,
+  'default' => null,
   'autoinc' => false,
   'primary' => false,
-  'options' => NULL,
+  'options' => null,
 ),
     ];
 

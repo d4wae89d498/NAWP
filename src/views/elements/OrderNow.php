@@ -12,7 +12,9 @@ use App\iPolitic\NawpCore\Components\View;
 
 class OrderNow extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Stop_Location Start-->
         <div data-id="{{id}}" class="stop_location_col wdt_100 stopgreen_bg">
             <div class="container">

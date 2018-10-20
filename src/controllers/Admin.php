@@ -27,7 +27,9 @@ class Admin extends Controller implements ControllerInterface
      * Describes controller methods
      * @return array
      */
-    public function getMethods(): array { return
+    public function getMethods(): array
+    {
+        return
         [
             [
                 "method"    => "adminMiddleware",
@@ -56,10 +58,11 @@ class Admin extends Controller implements ControllerInterface
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
+    public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    {
         $loginMessage = "default";
         $atlas = (Kernel::getKernel())->atlas;
-        if(isset($_POST["email"]) && isset($_POST["password"])) {
+        if (isset($_POST["email"]) && isset($_POST["password"])) {
             $userRecord = $atlas
                 ->select(User::class)
                 ->where('email = ', $_POST["email"])
@@ -88,10 +91,9 @@ class Admin extends Controller implements ControllerInterface
 
         $httpResponse .= " <!DOCTYPE html>
         <html lang=\"en\">" .
-            new \App\Views\Elements\Admin\Header
-                ($viewLogger, [
+            new \App\Views\Elements\Admin\Header($viewLogger, [
                     "page" => "Login",
-                    "title" => "TEST".rand(0,99),
+                    "title" => "TEST".rand(0, 99),
                     "url" => $_SERVER["REQUEST_URI"],
                     "cookies" => base64_encode(json_encode($viewLogger->cookies)),
                 ]) .
@@ -103,8 +105,7 @@ class Admin extends Controller implements ControllerInterface
                     <svg class=\"circular\" viewBox=\"25 25 50 50\">
                     <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>
                 </div>" .
-                new \App\Views\Pages\Admin\Page
-                (
+                new \App\Views\Pages\Admin\Page(
 
                     $viewLogger,
                     [
@@ -114,9 +115,9 @@ class Admin extends Controller implements ControllerInterface
                                 new \App\Views\Elements\Admin\Login($viewLogger, [
                                 "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                                 "message" => $loginMessage,
-                                "rand" => rand(0,9),
+                                "rand" => rand(0, 9),
                                 "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
-                                "cookiestr" => print_r($viewLogger->cookies,1)
+                                "cookiestr" => print_r($viewLogger->cookies, 1)
                             ])),
                         ],
                     ]
@@ -133,11 +134,13 @@ class Admin extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      */
-    public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
+    public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    {
         $loginMessage = "SUCCESS";
         $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
             new \App\Views\Elements\Admin\Header(
-                $viewLogger, ["page" => "Login", "title" => "TEST".rand(0,99), "url" => $_SERVER["REQUEST_URI"]]
+                $viewLogger,
+                ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
             ) .
             "<body class=\"fix-header fix-sidebar card-no-border\">
         <!-- ============================================================== -->
@@ -147,8 +150,7 @@ class Admin extends Controller implements ControllerInterface
             <svg class=\"circular\" viewBox=\"25 25 50 50\">
             <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>
         </div>" .
-            new \App\Views\Pages\Admin\Page
-            (
+            new \App\Views\Pages\Admin\Page(
 
                 $viewLogger,
                 [
@@ -159,7 +161,7 @@ class Admin extends Controller implements ControllerInterface
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
                             "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), 1),
                             "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
-                            "rand" => rand(0,9)
+                            "rand" => rand(0, 9)
                         ])),
                     ],
                 ]
@@ -179,15 +181,16 @@ class Admin extends Controller implements ControllerInterface
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool {
+    public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    {
         echo "IN ADMINMIDDLEWARE OF REQUEST : ";
         var_dump($args);
         var_dump($_GET);
         echo PHP_EOL;
-       // exit;
-        if(stristr($_SERVER["REQUEST_URI"], "/admin")) {
+        // exit;
+        if (stristr($_SERVER["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
-            if (!Session::isset( $viewLogger, "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
+            if (!Session::isset($viewLogger, "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
                 PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin/login", $args, $viewLogger->requestType);
                 // We release the request

@@ -22,7 +22,8 @@ class Page extends View implements TwigInterface
         var_dump($this->states);
     }
 
-    public function twig(): void {
+    public function twig(): void
+    {
         ?>
 
         <!-- ============================================================== -->

@@ -8,13 +8,14 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
 class Map extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Start Map-->
         <div data-id="{{id}}" class="wdt_100">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 pad_zero">

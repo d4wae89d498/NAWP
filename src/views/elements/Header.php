@@ -8,7 +8,6 @@
 
 namespace App\Views\Elements;
 
-
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
@@ -26,7 +25,9 @@ class Header extends View implements TwigInterface
         "viewport" => "width=device-width, initial-scale=1"
     ];
 
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,5 +41,6 @@ class Header extends View implements TwigInterface
         {% endfor %}
     </head>
     <body>
-    <?php }
+    <?php
+    }
 }

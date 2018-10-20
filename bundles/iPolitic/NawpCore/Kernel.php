@@ -19,16 +19,15 @@ use App\iPolitic\NawpCore\Components\Session;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
 use Symfony\Component\Dotenv\Dotenv;
-use App\DataSources\{
-    Categorie\Categorie,
-    Log\Log,
-    ContentsCategory\Contents,
-    Translation\Translation,
-    User\User,
-    Content\ContentMapper
-};
+use App\DataSources\Categorie\Categorie;
+use App\DataSources\Log\Log;
+use App\DataSources\ContentsCategory\Contents;
+use App\DataSources\Translation\Translation;
+use App\DataSources\User\User;
+use App\DataSources\Content\ContentMapper;
 
-class Kernel {
+class Kernel
+{
     public const CACHE_FOLDER_NAME = "cache";
     /**
      * @var array
@@ -66,14 +65,16 @@ class Kernel {
     /**
      * @param $kernel
      */
-    public static function setKernel(&$kernel): void {
+    public static function setKernel(&$kernel): void
+    {
         self::$kernel = $kernel;
     }
 
     /**
      * @return Kernel
      */
-    public static function getKernel(): Kernel {
+    public static function getKernel(): Kernel
+    {
         return self::$kernel;
     }
 
@@ -91,7 +92,8 @@ class Kernel {
     /**
      * @return Logger
      */
-    public static function cli(): Logger {
+    public static function cli(): Logger
+    {
         return clone self::$logger;
     }
 
@@ -99,16 +101,17 @@ class Kernel {
      * Wil recursivly require_once all files in the given directory
      * @param string $directory
      */
-    public static function loadDir(string $directory): void {
-        if(is_dir($directory)) {
+    public static function loadDir(string $directory): void
+    {
+        if (is_dir($directory)) {
             $scan = scandir($directory);
             unset($scan[0], $scan[1]); //unset . and ..
-            foreach($scan as $file) {
-                if(is_dir($directory."/".$file)) {
+            foreach ($scan as $file) {
+                if (is_dir($directory."/".$file)) {
                     self::loadDir($directory."/".$file);
                 } else {
                     if (!file_exists($directory."/.noInclude")) {
-                        if(strpos($file, '.php') !== false) {
+                        if (strpos($file, '.php') !== false) {
                             require_once($directory."/".$file);
                         }
                     }
@@ -127,7 +130,8 @@ class Kernel {
      * @param ViewLogger|null $viewLogger
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, string $requestType, $requestArgs,  $packet = null, $array = [], &$viewLogger = null): void {
+    public function handle(&$response, string $requestType, $requestArgs, $packet = null, $array = [], &$viewLogger = null): void
+    {
         $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet, $array, $viewLogger);
     }
 
@@ -137,7 +141,7 @@ class Kernel {
     public function init(): void
     {
         // set memory to 4go
-        ini_set('memory_limit','2048M');
+        ini_set('memory_limit', '2048M');
         $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
         $this->controllerCollection = new ControllerCollection();
         $this->viewCollection = new ViewCollection();
@@ -154,11 +158,11 @@ class Kernel {
      * @param array $arguments
      * @param string $componentName
      */
-    public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName = ""): void {
+    public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName = ""): void
+    {
         // foreach controllers
-        array_map
-        (
-            function($component) use (&$collection) {
+        array_map(
+            function ($component) use (&$collection) {
                 /**
                  * @var mixed $component the component instance that will be added to the collection
                  */
@@ -166,17 +170,16 @@ class Kernel {
             },
             (
             // remove null values
-            array_filter
-            (
+            array_filter(
                 // convert declared class name to controller instance if match, or null value
-                array_map
-                (
+                array_map(
                     function (string $className) use ($componentName, &$arguments) {
                         // if a valid $className was given, we continue
-                        if( stristr($className, "\\" . ucfirst($componentName) . "\\") !== false ) {
+                        if (stristr($className, "\\" . ucfirst($componentName) . "\\") !== false) {
                             // if the $arguments array is not empty, we simply instantiate $componentName
-                            if(count($arguments) == 0)
+                            if (count($arguments) == 0) {
                                 $obj = new $componentName;
+                            }
                             // else we call $className constructor using given $arguments and Reflection class
                             else {
                                 $r = new \ReflectionClass($className);
@@ -192,7 +195,8 @@ class Kernel {
                     // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
                     \get_declared_classes()
                 )
-            ))
+            )
+            )
         );
     }
 
@@ -200,14 +204,13 @@ class Kernel {
      * Returns a new Atlas instance
      * @return Atlas
      */
-    public function getAtlas() : Atlas {
+    public function getAtlas() : Atlas
+    {
         $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", ".atlas-config.php"]);
-        return Atlas::new
-        (
+        return Atlas::new(
             $arr['pdo'][0],
             $arr['pdo'][1],
             $arr['pdo'][2]
         );
     }
-
 }

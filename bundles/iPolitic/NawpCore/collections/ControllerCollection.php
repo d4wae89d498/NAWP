@@ -11,7 +11,11 @@ use App\iPolitic\NawpCore\components\Cookie;
 use App\iPolitic\NawpCore\components\Packet;
 use App\iPolitic\NawpCore\Kernel;
 use iPolitic\Solex\Router;
-use App\iPolitic\NawpCore\Components\{Collection, Controller, PacketAdapter, Utils, ViewLogger};
+use App\iPolitic\NawpCore\Components\Collection;
+use App\iPolitic\NawpCore\Components\Controller;
+use App\iPolitic\NawpCore\Components\PacketAdapter;
+use App\iPolitic\NawpCore\Components\Utils;
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 
 /**
@@ -19,7 +23,8 @@ use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
  * Provide storage and match for a controller list
  * @package App\iPolitic\NawpCore
  */
-class ControllerCollection extends Collection {
+class ControllerCollection extends Collection
+{
     
      /**
      * ControllerCollection constructor.
@@ -44,7 +49,8 @@ class ControllerCollection extends Collection {
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function handle(&$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void {
+    public function handle(&$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void
+    {
         $_GET = $GLOBALS["_GET"] = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $packet, $requestType);
@@ -53,11 +59,10 @@ class ControllerCollection extends Collection {
             if (isset($_SERVER["HTTP_REFERER"])) {
                 $parsedHttpReferer = Utils::parseUrlParams($_SERVER["HTTP_REFERER"]);
                 $parsedHttpUri = $params = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
-                if ( isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"]) ){
+                if (isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"])) {
                     $params["UID"] = $parsedHttpReferer["UID"];
                     if (!stristr($_SERVER["REQUEST_URI"], "logout")) {
-                        PacketAdapter::redirectTo
-                        (
+                        PacketAdapter::redirectTo(
                             $response,
                             $viewLogger,
                             Utils::buildUrlParams($_SERVER["REQUEST_URI"], $params),
@@ -80,10 +85,10 @@ class ControllerCollection extends Collection {
             }
         }
         // for each controller methods ordered by priority
-        foreach($this->getOrderedByPriority() as $controllerMethod) {
+        foreach ($this->getOrderedByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
             // we force a match if wildcard used
-            if($controllerMethod["router"][1] === "*") {
+            if ($controllerMethod["router"][1] === "*") {
                 $routerResponse = [""];
             } else {
                 // create a new router for that method
@@ -93,14 +98,15 @@ class ControllerCollection extends Collection {
                     "method" => $controllerMethod["router"][0],
                     "route" => $controllerMethod["router"][1]
                 ]);
-                $routerResponse = $dynamicRouter->match($requestType,
+                $routerResponse = $dynamicRouter->match(
+                    $requestType,
                     is_array($requestArgs) && isset($requestArgs['url']) ?
                         $requestArgs['url'] :
-                            (is_string($requestArgs) ? $requestArgs : ""));
-
+                            (is_string($requestArgs) ? $requestArgs : "")
+                );
             }
             // execute controller method if router matched or wildecas used
-            if(!empty($routerResponse)) {
+            if (!empty($routerResponse)) {
                 /**
                  * @var $controller Controller
                  */
@@ -122,7 +128,8 @@ class ControllerCollection extends Collection {
      * Will the current controller array orded by their priority
      * @return array
      */
-    public function getOrderedByPriority(): array {
+    public function getOrderedByPriority(): array
+    {
         $queue = [];
         /**
          * Copy all controllers methods to queue and add controller name as methods params
@@ -131,15 +138,14 @@ class ControllerCollection extends Collection {
         foreach ($this->getArrayCopy() as $v) {
             if ($v instanceof Controller && is_array($methods = $v->getMethods())) {
                 foreach ($methods as $k => $u) {
-                  //  echo "method : " . $u["method"] . PHP_EOL;
+                    //  echo "method : " . $u["method"] . PHP_EOL;
                     $methods[$k]["controller"] = $v->name;
                     array_push($queue, $methods[$k]);
                 }
             }
         }
         // order by priority value
-        usort($queue,  function ($a, $b)
-        {
+        usort($queue, function ($a, $b) {
             return ($a["priority"] === $b["priority"]) ? 0 : ($a["priority"] > $b["priority"]) ? -1 : 1;
         });
         return $queue;
@@ -150,11 +156,11 @@ class ControllerCollection extends Collection {
      * @param string $controllerName
      * @return array
      */
-    public function getAllByName(string $controllerName): array {
+    public function getAllByName(string $controllerName): array
+    {
         $matches = null;
         $controllers =  $this->getArrayCopy();
-        $matches = array_filter
-        (
+        $matches = array_filter(
             $controllers,
             function ($controller) use ($controllerName, &$match) {
                 return ($controller->name === $controllerName);
@@ -168,11 +174,11 @@ class ControllerCollection extends Collection {
      * @param string $controllerName
      * @return Controller
      */
-    public function getByName(string $controllerName): Controller {
+    public function getByName(string $controllerName): Controller
+    {
         return
         (
-            isset
-            (
+            isset(
                 (
                     $allByName = $this->getAllByName($controllerName)
                 )

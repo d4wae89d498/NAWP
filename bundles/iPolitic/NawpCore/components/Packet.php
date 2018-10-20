@@ -12,8 +12,8 @@ namespace App\iPolitic\NawpCore\components;
  * Class Packet
  * @package App\iPolitic\NawpCore\components
  */
-class Packet implements \ArrayAccess {
-
+class Packet implements \ArrayAccess
+{
     public const DEFAULT_OBJ = [];
 
     /**
@@ -35,15 +35,15 @@ class Packet implements \ArrayAccess {
      * @param bool $decryptClientVar
      * @throws \Exception
      */
-    public function __construct(array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false) {
+    public function __construct(array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false)
+    {
         $this->socketAdapter = new PacketAdapter();
         $nData = [];
-        if (gettype($data) === "array")
-        {
+        if (gettype($data) === "array") {
             $nData = $data;
         }
         foreach ($this->container as $k => $v) {
-            if(isset($nData[$k])){
+            if (isset($nData[$k])) {
                 $valueAddedInContainer = $nData[$k];
                 // decrypt packet adapter file
                 if ($k === "clientVar" && $decryptClientVar) {
@@ -54,8 +54,8 @@ class Packet implements \ArrayAccess {
                 elseif ($k === "cookies") {
                     $valueAddedInContainer = [];
                     $cookieSplit = explode("; ", $nData[$k]);
-                    for($i = 0; $i < count($cookieSplit); $i++) {
-                        $cur = explode("=",$cookieSplit[$i]);
+                    for ($i = 0; $i < count($cookieSplit); $i++) {
+                        $cur = explode("=", $cookieSplit[$i]);
                         $valueAddedInContainer[$cur[0]] = isset($cur[1]) ? $cur[1] : "";
                     }
                 }
@@ -68,7 +68,8 @@ class Packet implements \ArrayAccess {
      * Convert the object to a normal array
      * @return array
      */
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return (array) $this->container;
     }
 
@@ -77,7 +78,8 @@ class Packet implements \ArrayAccess {
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (is_null($offset)) {
             $this->container[] = $value;
         } else {
@@ -90,7 +92,8 @@ class Packet implements \ArrayAccess {
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->container[$offset]);
     }
 
@@ -98,7 +101,8 @@ class Packet implements \ArrayAccess {
      * Will delete a value using a key
      * @param mixed $offset
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->container[$offset]);
     }
 
@@ -107,14 +111,16 @@ class Packet implements \ArrayAccess {
      * @param mixed $offset
      * @return mixed|null
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
 
     /**
      * Will use the packet adaptor to make socket packets similar to http ones
      */
-    public function useAdaptor(): Packet {
+    public function useAdaptor(): Packet
+    {
         // file name that contains needed sessions data
         $originalClientVar = $this->container["clientVar"];
         $this->container["data"]["clientVar"] = $originalClientVar;

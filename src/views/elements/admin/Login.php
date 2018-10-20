@@ -22,7 +22,9 @@ class Login extends View implements TwigInterface
         "cookie_on" => "false"
     ];
 
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
     <section data-id="{{id}}" id="wrapper">
         <!-- ============================================================== -->
         <!-- Main wrapper - style you can find in pages.scss -->

@@ -97,13 +97,14 @@ class ViewLogger
      * @param string $templateID
      * @param mixed $template
      */
-    public function setTemplate(string $templateID, $template): void {
-        if(gettype($template) === 'array') {
+    public function setTemplate(string $templateID, $template): void
+    {
+        if (gettype($template) === 'array') {
             $this->templatesData[$templateID] = $template;
         } else {
-            foreach(self::$templatesFields as $k => $v) {
+            foreach (self::$templatesFields as $k => $v) {
                 if (is_callable([$template, $k])) {
-                    $this->templatesData[$templateID][$k] = Utils::ocb(function() use ($template, $k) {
+                    $this->templatesData[$templateID][$k] = Utils::ocb(function () use ($template, $k) {
                         $template->$k();
                     });
                     if ($v !== null) {
@@ -120,7 +121,8 @@ class ViewLogger
      * @param string $templateID
      * @return mixed
      */
-    public function getTemplate(string $templateID): array {
+    public function getTemplate(string $templateID): array
+    {
         return $this->templatesData[$templateID];
     }
 
@@ -129,12 +131,13 @@ class ViewLogger
      * @param View $view
      * @return string
      */
-    public function generateTemplateID(View $view): string {
+    public function generateTemplateID(View $view): string
+    {
         $tplName = get_class($view);
         $isAvailable = false;
         $i = 0;
         $tyName = "";
-        while(!$isAvailable) {
+        while (!$isAvailable) {
             $tyName = $tplName . $i;
             if (!isset($this->templatesData[$tyName])) {
                 $isAvailable = true;
@@ -148,36 +151,39 @@ class ViewLogger
      * Will return all templates
      * @return array
      */
-    public function getStates(): array {
+    public function getStates(): array
+    {
         // will remove all html_ like states and replace
         $array = [];
-        foreach($this->templatesData as $id => $template) {
+        foreach ($this->templatesData as $id => $template) {
             $array[$id] = [];
             if (isset($template['states']) && is_array($template['states'])) {
-                foreach($template['states'] as $k => $v) {
-                   if ($k !== self::HTML_STATES_PREFIX) {
+                foreach ($template['states'] as $k => $v) {
+                    if ($k !== self::HTML_STATES_PREFIX) {
                         $array[$id][$k] = $v;
                         //echo " template " . (string) $k . " added for " . $id . PHP_EOL;
-                   }
+                    }
                 }
             }
         }
         return $array;
-     }
+    }
 
     /**
      * Will generate vanilla JS should be rendered in page footer
      * @return string
      */
-    public function generateJS(): string {
+    public function generateJS(): string
+    {
         // var_dump($this->array);
         $kernel = Kernel::getKernel();
         $packetAdapter = new PacketAdapter();
-        $output = Utils::ocb(function() use (&$packetAdapter, $kernel) { ?>
+        $output = Utils::ocb(function () use (&$packetAdapter, $kernel) {
+            ?>
             window['templates'] = [];
             window['baseTemplates'] = [];
             <?php $this->renderedTemplates = [];
-            foreach($this->getStates() as $id => $states):
+            foreach ($this->getStates() as $id => $states):
                 $this->renderedTemplates[$id] = $states; ?>
                 if (typeof window['templates'][<?=json_encode($id) ?>] === 'undefined') {
                     window['templates'][<?=json_encode($id) ?>] = {
@@ -185,11 +191,11 @@ class ViewLogger
                     };
                 }
             <?php endforeach; ?>
-            <?php foreach($kernel->viewCollection as $k => $v):
+            <?php foreach ($kernel->viewCollection as $k => $v):
                 /**
                  * @var $v View
                  */
-                if(isset($v->states) && isset($this->array[$k])): ?>
+                if (isset($v->states) && isset($this->array[$k])): ?>
                     window['baseTemplates']['<?=$k?>'] = {
                         generatedID: (<?=json_encode(["generatedID" => $v->generatedID])?>)["generatedID"],
                         twig: (<?=json_encode(["twig" => $this->array[$k]]) ?>)["twig"],
@@ -207,11 +213,14 @@ class ViewLogger
      * Will generate vanilla CSS should be rendered in page footer
      * @return string
      */
-    public function generateCSS(): string {
-        return Utils::ocb(function() { ?>
-            <?php  foreach($this->templatesData as $template): ?>
+    public function generateCSS(): string
+    {
+        return Utils::ocb(function () {
+            ?>
+            <?php  foreach ($this->templatesData as $template): ?>
                 <?=$template["css"][0]?>
             <?php endforeach; ?>
-        <?php });
+        <?php
+        });
     }
 }

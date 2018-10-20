@@ -7,7 +7,8 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\{ Packet, Utils };
+use App\iPolitic\NawpCore\Components\Packet;
+use App\iPolitic\NawpCore\Components\Utils;
 use Workerman\ {Worker};
 
 class SocketIO
@@ -30,9 +31,9 @@ class SocketIO
         $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
         Kernel::setKernel($kernel);
         $array = [];
-        foreach($kernel->viewCollection as $k => $v) {
-            $array[$k] = Utils::hideTwigIn(Utils::ocb(function() use($v) {
-                    $v->twig();
+        foreach ($kernel->viewCollection as $k => $v) {
+            $array[$k] = Utils::hideTwigIn(Utils::ocb(function () use ($v) {
+                $v->twig();
             }));
         }
         $cli = new \App\iPolitic\NawpCore\components\Logger();
@@ -45,10 +46,10 @@ class SocketIO
                 $cli->log("Got SOCKET Request", "info");
                 echo "got packet" . PHP_EOL;
                 foreach ($data["data"] as $key => $array) {
-                   if(isset($array["name"]) && isset($array["value"])) {
-                       $data["data"][$array["name"]] = $array["value"];
-                       unset($data["data"][$key]);
-                   }
+                    if (isset($array["name"]) && isset($array["value"])) {
+                        $data["data"][$array["name"]] = $array["value"];
+                        unset($data["data"][$key]);
+                    }
                 }
 
 
@@ -60,20 +61,19 @@ class SocketIO
                     $packet = (new Packet($data, true))
                         ->useAdaptor()
                         ->toArray();
-                    $kernel->handle
-                    (
+                    $kernel->handle(
                         $response,
                         "SOCKET",
                         $_SERVER["REQUEST_URI"],
                         $packet,
                         $array
                     );
-                    if(is_array($response)) {
+                    if (is_array($response)) {
                         $newResponse = [];
                         foreach ($response as $k => $v) {
-                            if(is_array($v)) {
+                            if (is_array($v)) {
                                 foreach ($v as $u => $w) {
-                                    if(is_array($w)) {
+                                    if (is_array($w)) {
                                         foreach ($w as $a => $b) {
                                             $newResponse[$k][$u][$a] = $b;
                                         }

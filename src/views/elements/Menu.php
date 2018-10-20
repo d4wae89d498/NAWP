@@ -12,7 +12,9 @@ use App\iPolitic\NawpCore\Components\View;
 
 class Menu extends View implements TwigInterface
 {
-    public function twig(): void { ?>
+    public function twig(): void
+    {
+        ?>
         <!-- Header Topbar Start-->
         <div data-id="{{id}}" class="hdr_variation2">
             <div class="hdr_col">
