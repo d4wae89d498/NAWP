@@ -80,9 +80,9 @@ class Admin extends Controller implements ControllerInterface
                 }
                 $_GET["UID"] = $uid;
                 Session::set($viewLogger, "user_id", 5);
-                $loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
-                //PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
-                //return true;
+                //$loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
+                PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
+                return true;
                /* // login success
                 // we generate a new uid
                 $uid = Utils::generateUID();
