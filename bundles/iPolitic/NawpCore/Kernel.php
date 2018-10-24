@@ -144,7 +144,7 @@ class Kernel implements LoggerAwareInterface
     {
         $this->setLogger(new Logger());
         // set memory to 4go
-        ini_set('memory_limit', '2048M'); 
+        ini_set('memory_limit', '2048M');
         $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
         $this->controllerCollection = new ControllerCollection();
         $this->controllerCollection->setLogger($this->logger);

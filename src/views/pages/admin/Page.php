@@ -21,11 +21,12 @@ class Page extends View implements TwigInterface
     public function twig() : void
     {
         ?>
-            <div data-id="{{id}}">
+            <section data-id="{{id}}">
+                TESTTTTTTT BANANE
                 {% for element in html_elements %}
                 {{ element | raw}}
                 {% endfor %}
-            </div>
+            </section>
         <?php
     }
 }

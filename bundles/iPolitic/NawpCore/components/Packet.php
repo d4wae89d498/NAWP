@@ -25,7 +25,7 @@ class Packet implements \ArrayAccess
      * The packets components
      * @var array
      */
-    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => []];
+    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => [], "http_referer" => null];
 
     private $originalClientVar;
 
