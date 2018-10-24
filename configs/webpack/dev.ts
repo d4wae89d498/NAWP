@@ -15,7 +15,7 @@ module.exports = merge(commonConfig, {
   },
   devtool: "cheap-module-eval-source-map",
   output: {
-      filename: "generated_js/app.min.js",
+      filename: "js/app.min.js",
       path: resolve(__dirname, "../../public"),
       publicPath: "/",
   },

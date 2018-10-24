@@ -20,7 +20,7 @@ class Footer extends View implements TwigInterface
             1 => "/assets/js/jquery.touchSwipe.min.js",
             2 => "/assets/js/theme.js",
             3 => "/assets/js/responsive_bootstrap_carousel.js",
-            4 => "/generated_js/app.min.js",
+            4 => "/js/app.min.js",
         ]
     ];
 

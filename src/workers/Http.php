@@ -59,6 +59,7 @@ class Http
             }
         }
         echo "\n";
+        $cnt = [];
         if ($cli->are256ColorsSupported()) {
             echo "Foreground colors:\n";
             for ($i = 1; $i <= 255; $i++) {
@@ -96,8 +97,9 @@ class Http
         $this->worker = new WebServer(
             "http://0.0.0.0:5616",
             [],
-            function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli) {
-                $cli->info("Got HTTP Request ");
+            function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli, &$cnt) {
+                array_push($cnt, "TEST");
+                $cli->info("Got HTTP Request " . count($cnt));
                 $response = "";
                 try {
                     $kernel->handle(

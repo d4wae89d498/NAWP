@@ -2,7 +2,6 @@ import * as io from "socket.io-client";
 import * as $ from "jquery";
 import {ClientSideRendering} from "./clientSideRendering";
 import {NoRedirection} from "./noRedicrection";
-
 export class SocketClient {
     /*
      * Instance of current socket

@@ -7,16 +7,23 @@
 #2 | NAWP division |_____________________________________________
 
 configs/.env                # keep your dotenv file secret
-public/generated_js/*.js    # not webpack-generated javascript
+public/js/*.js              # not webpack-generated javascript
+public/css/*.css            # no css files
 cache/*.txt                 # no sessions cache file
 cache/packet_adapter/*.txt  # no packet adapter cache files
 logs/*.txt                  # no logs
+public/vendor               # no vendor dir
 
 #3 | Packages managements division |_____________________________
 
-composer.lock               # no composer lock file
-vendor                      # no composer packages
-package-lock.json           # no npm lock file
 node_modules                # no npm packages
+vendor                      # no composer packages
+bower_components            # no bower packages
+composer.lock               # no composer lock file
+package-lock.json           # no npm lock file
 yarn.lock                   # no yarn lock file
 yarn-error.log              # no yarn logs
+
+#4 | Packages division | _______________________________________
+
+.php_cs.cache               # no php cs fix cache

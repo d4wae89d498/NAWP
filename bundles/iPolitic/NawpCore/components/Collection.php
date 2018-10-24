@@ -7,7 +7,6 @@ namespace App\iPolitic\NawpCore\Components;
  */
 class Collection extends \ArrayObject
 {
-
     /**
      * Collection constructor.
      * @param array $input
@@ -25,6 +24,7 @@ class Collection extends \ArrayObject
      * @param $func
      * @param $argv
      * @return mixed
+     *
      */
     public function __call($func, $argv)
     {
