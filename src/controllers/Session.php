@@ -32,11 +32,11 @@ class Session extends Controller implements ControllerInterface
             [
                 "method"    => "sessionsMiddleware",
                 "router"    => ["*", "*"],
-                "priority"  => 9,
+                "priority"  => 999,
             ],
             [
                 "method"    => "home",
-                "router"    => ["GET", "/"],
+                "router"    => ["*", "/"],
                 "priority"  => 0,
             ],
             [
@@ -78,21 +78,48 @@ class Session extends Controller implements ControllerInterface
      */
     public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-        $httpResponse =
-        new \App\Views\Elements\Header($viewLogger, $this->logger, []) .
-        new \App\Views\Pages\Home($viewLogger, $this->logger, ["name" => "test", "html_elements" => [
-                new \App\Views\Elements\Menu($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\Banner($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\BannerBlocks($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\Services($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\Gallery($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\OrderNow($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\Testimonial($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\Map($viewLogger, $this->logger, []),
-                    new \App\Views\Elements\BlogWrapper($viewLogger, $this->logger, []),
-        ]]) .
-        new \App\Views\Elements\Footer($viewLogger, $this->logger, []);
+        echo "in home function";
+        $httpResponse = "<!DOCTYPE html><html lang=\"en\">" .
+            new \App\Views\Elements\Header(
+                $viewLogger,
+                $this->logger,
+                ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
+            ) .
+            "<body>" .
+            new \App\Views\Pages\Page(
 
+                $viewLogger,
+                $this->logger,
+                [
+                    "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                    "html_elements" => [
+                        new \App\Views\Elements\Menu(
+                            $viewLogger,
+                            $this->logger,
+                            [
+
+                            ]
+                        ),
+                        new \App\Views\Elements\Carousel(
+                            $viewLogger,
+                            $this->logger,
+                            [
+
+                            ]
+                        ),
+                        new \App\Views\Elements\Marketing(
+                            $viewLogger,
+                            $this->logger,
+                            [
+
+                            ]
+                        ),
+                    ],
+                ]
+            ) .
+            new \App\Views\Elements\Footer($viewLogger, $this->logger, [])
+            .
+            "</body></html>";
         return true;
     }
 

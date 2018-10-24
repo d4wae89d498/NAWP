@@ -125,9 +125,11 @@ class Packet implements \ArrayAccess
         $originalClientVar = $this->container["clientVar"];
         $this->container["data"]["clientVar"] = $originalClientVar;
         $this->container["data"]["originalClientVar"] = $this->originalClientVar;
+
         // setting php globals
         $_SERVER["REQUEST_URI"] = $this->container["url"];
         $_SERVER["HTTP_REFERER"] = $this->container["http_referer"];
+
         $_GET = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
         $_POST = $this->container["data"];
         $_POST["templates"] = $this->container["templates"];
@@ -135,6 +137,7 @@ class Packet implements \ArrayAccess
         $GLOBALS["_POST"] = $_POST;
         $GLOBALS["_GET"] = $_GET;
         $GLOBALS["_SERVER"] = $_SERVER;
+
         return $this;
     }
 }

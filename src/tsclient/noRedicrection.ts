@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+const $ = window["$"];
 import {SocketClient} from "./socketClient";
 
 /**

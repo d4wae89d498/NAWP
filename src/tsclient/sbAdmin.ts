@@ -1,6 +1,5 @@
-import * as $ from "jquery";
-
 export function init() {
+    const $ = window["$"];
     $(function() {
         $("#side-menu").metisMenu();
     });

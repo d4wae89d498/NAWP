@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+const $ = window["$"];
 import {twig} from "twig";
 import {NoRedirection} from "./noRedicrection";
 import * as morphdom from "morphdom";

@@ -11,7 +11,7 @@ use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 use App\Views\Elements as Elements;
 
-class Home extends View implements TwigInterface
+class Page extends View implements TwigInterface
 {
     public $states = ["name" => "default", "html_elements" => []];
 

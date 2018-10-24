@@ -5,9 +5,9 @@
  * Date: 7/31/2018
  * Time: 9:03 PM
  */
-
 namespace App\Views\Elements;
 
+use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\TwigInterface;
 use App\iPolitic\NawpCore\Components\View;
 
@@ -16,31 +16,43 @@ class Header extends View implements TwigInterface
     public $states = [
         "css" => [
             // main css goes here
-            0 => "/assets/css/style.css",
-            1 => "/assets/plugins/Stroke-Gap-Icons-Webfont/style.css"
+            0 => "/vendor/bootstrap/css/bootstrap.min.css",
+            1 => "/vendor/metisMenu/metisMenu.min.css",
+            2 => "/css/sb-admin-2.css",
+            3 => "/vendor/font-awesome/css/font-awesome.min.css",
+        ],
+        "js" => [
+            0 => "https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js",
+            1 => "https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js",
         ],
         "title" => "Ferme de cornaton",
         "page" => "Home",
-        "charset" => "UTF-8",
-        "viewport" => "width=device-width, initial-scale=1"
+        "url" => "",
+        "cookies" => [],
     ];
 
     public function twig(): void
     {
         ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="{{charset}}">
-        <title>{{page}} | {{title}}</title>
-        <!-- mobile responsive meta-->
-        <meta name="viewport" content="{{viewport}}">
-        <!-- main stylesheet-->
-        {% for file in css %}
-            <link rel="stylesheet" href="{{file}}">
-        {% endfor %}
-    </head>
-    <body>
+        <head>
+
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="description" content="Somewho webapp">
+            <meta name="author" content="Marc FAUSSURIER">
+            <meta name="data-url" content="{{ url }}">
+            <meta name="data-cookies" content="{{ cookies }}">
+            <title>{{ title }} - {{ page }}</title>
+            <!-- CSS loop -->
+            {% for file in css %}
+                <link href="{{ file }}" rel="stylesheet">
+            {% endfor %}
+            <!-- JS loop -->
+            {% for file in js %}
+                <script src="{{ file }}"></script>
+            {% endfor %}
+        </head>
     <?php
     }
 }

@@ -99,7 +99,8 @@ class Admin extends Controller implements ControllerInterface
                     "url" => $_SERVER["REQUEST_URI"],
                     "cookies" => base64_encode(json_encode($viewLogger->cookies)),
                 ]) .
-                new \App\Views\Pages\Admin\Page(
+            "<body>" .
+            new \App\Views\Pages\Admin\Page(
 
                     $viewLogger,
                     $this->logger,
@@ -138,14 +139,7 @@ class Admin extends Controller implements ControllerInterface
                 $this->logger,
                 ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
             ) .
-            "<body class=\"fix-header fix-sidebar card-no-border\">
-        <!-- ============================================================== -->
-        <!-- Preloader - style you can find in spinners.css -->
-        <!-- ============================================================== -->
-        <div class=\"preloader\">
-            <svg class=\"circular\" viewBox=\"25 25 50 50\">
-            <circle class=\"path\" cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke-width=\"2\" stroke-miterlimit=\"10\" /> </svg>
-        </div>" .
+            "<body>" .
             new \App\Views\Pages\Admin\Page(
 
                 $viewLogger,
