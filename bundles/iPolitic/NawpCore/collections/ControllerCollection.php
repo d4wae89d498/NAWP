@@ -116,12 +116,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                  * @var $controller Controller
                  */
                 $controllerMethod["controller"] = "\\" . $controllerMethod["controller"];
-                echo "looking for controller : " . $controllerMethod["controller"] . PHP_EOL;
-                $controller = new $controllerMethod["controller"](Kernel::getKernel()->atlas, Kernel::cli());
-                /*var_dump($controller);
-                exit;*/
-                echo "calling controller : " . $controller->name . PHP_EOL;
-                //var_dump($controller);
+                $controller = new $controllerMethod["controller"](Kernel::$_atlas, Kernel::$_logger);
                 if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse)) {
                     // nothing special to do right now
                     break;

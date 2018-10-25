@@ -38,6 +38,11 @@ class Kernel implements LoggerAwareInterface
     public static $_logger;
 
     /**
+     * @var Atlas
+     */
+    public static $_atlas;
+
+    /**
      * @var LoggerInterface
      */
     public $logger;
@@ -150,7 +155,7 @@ class Kernel implements LoggerAwareInterface
         $this->controllerCollection->setLogger($this->logger);
         $this->viewCollection = new ViewCollection();
         $this->viewCollection->setLogger($this->logger);
-        $this->atlas = $this->getAtlas();
+        $this->atlas = self::$_atlas = $this->getAtlas();
         //$this->loadRSA();
         self::setKernel($this);
         PacketAdapter::init();
