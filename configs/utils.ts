@@ -20,7 +20,7 @@ export async function isStrInFile(fpath: string, needle: string, linesLimit: num
 }
 
 export function getLine(fileName, lineNo): Promise<string> {
-    return new Promise(resolve => {
+    return new Promise<string>(resolve => {
         fs.readFile(fileName, function (err, data) {
             if (err) throw err;
 

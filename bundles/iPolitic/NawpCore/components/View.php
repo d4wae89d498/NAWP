@@ -135,7 +135,12 @@ abstract class View implements LoggerAwareInterface
             $this->$m();
         }
         $this->templateLogger->setTemplate($this->generatedID, $this);
-        $html =  $twig->render($str, $this->get("states"));
+        try {
+            $html =  $twig->render($str, $this->get("states"));
+        }
+        catch (\Exception $ex) {
+            return $ex->getMessage();
+        }
         return $html;
     }
 

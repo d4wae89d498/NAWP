@@ -83,7 +83,8 @@ class Session extends Controller implements ControllerInterface
             new \App\Views\Elements\Header(
                 $viewLogger,
                 $this->logger,
-                ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
+                ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"],
+                    "cookies" => base64_encode(json_encode($viewLogger->cookies))]
             ) .
             "<body>" .
             new \App\Views\Pages\Page(

@@ -115,7 +115,13 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 /**
                  * @var $controller Controller
                  */
-                $controller = $this->getByName($controllerMethod["controller"]);
+                $controllerMethod["controller"] = "\\" . $controllerMethod["controller"];
+                echo "looking for controller : " . $controllerMethod["controller"] . PHP_EOL;
+                $controller = new $controllerMethod["controller"](Kernel::getKernel()->atlas, Kernel::cli());
+                /*var_dump($controller);
+                exit;*/
+                echo "calling controller : " . $controller->name . PHP_EOL;
+                //var_dump($controller);
                 if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse)) {
                     // nothing special to do right now
                     break;
@@ -154,45 +160,6 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             return ($a["priority"] === $b["priority"]) ? 0 : ($a["priority"] > $b["priority"]) ? -1 : 1;
         });
         return $queue;
-    }
-
-    /**
-     * Returns all controllers that match a controllerName
-     * @param string $controllerName
-     * @return array
-     */
-    public function getAllByName(string $controllerName): array
-    {
-        $matches = null;
-        $controllers =  $this->getArrayCopy();
-        $matches = array_filter(
-            $controllers,
-            function ($controller) use ($controllerName, &$match) {
-                return ($controller->name === $controllerName);
-            }
-        );
-        return $matches ;
-    }
-
-    /**
-     * Will return a new controller using its namespace name
-     * @param string $controllerName
-     * @return Controller
-     */
-    public function getByName(string $controllerName): Controller
-    {
-        return
-        (
-            isset(
-                (
-                    $allByName = $this->getAllByName($controllerName)
-                )
-                [count($allByName) - 1]
-            ) ?
-                $allByName[count($allByName) - 1]
-            :
-                new Controller(Kernel::getKernel()->atlas, $this->logger)
-        );
     }
 
     /**
