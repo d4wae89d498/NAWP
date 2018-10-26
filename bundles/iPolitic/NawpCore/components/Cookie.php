@@ -91,7 +91,6 @@ class Cookie
                 explode(",", $_ENV["COOKIE_WHITELIST"])
             )
         );
-        echo "IS ALLOWED : " . $cookieName . " : " . ($a ? "true" : "false");
         return $a;
     }
 

@@ -41,7 +41,6 @@ class SocketIO
         $io = new \PHPSocketIO\SocketIO(8070);
 
         $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel, $array, $cli) {
-            echo "got connection" . PHP_EOL;
             $socket->on("packet", function (array $data) use (&$kernel, $socket, $array, $cli) {
                 $cli->log("Got SOCKET Request", "info");
                 echo "got packet" . PHP_EOL;

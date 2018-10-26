@@ -75,7 +75,6 @@ class PacketAdapter
         array $args = [],
         string $requestType = ViewLogger::DEFAULT_REQUEST_TYPE
     ): void {
-        echo "REDIRECTING TO : " . $url . PHP_EOL;
         if (strtolower($requestType) !== "socket") {
             Http::header("Location: " . $url);
         } else {

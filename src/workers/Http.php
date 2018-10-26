@@ -51,6 +51,7 @@ class Http
 
 
         $cli = new \App\iPolitic\NawpCore\components\Logger();
+        /*
         echo "Colors are supported: " . ($cli->isSupported() ? 'Yes' : 'No') . "\n";
         echo "256 colors are supported: " . ($cli->are256ColorsSupported() ? 'Yes' : 'No') . "\n\n";
         if ($cli->isSupported()) {
@@ -86,6 +87,7 @@ class Http
             sleep(2);
             return false;
         });
+        */
         /*
         $atlas = $kernel->getAtlas();
 
@@ -97,9 +99,8 @@ class Http
         $this->worker = new WebServer(
             "http://0.0.0.0:5616",
             [],
-            function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli, &$cnt) {
-                array_push($cnt, "TEST");
-                $cli->info("Got HTTP Request " . count($cnt));
+            function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli) {
+                $cli->info("Got HTTP Request ");
                 $response = "";
                 try {
                     $kernel->handle(

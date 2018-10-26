@@ -206,8 +206,6 @@ class Logger implements LoggerInterface
     public function logWithStyle(string $text, string ... $args): Logger
     {
         $today = (string) date("F j, g:i a");
-        var_dump($args);
-        var_dump("[" . $today . "] " . $text);
         $string = "[" . $today . self::formatFirstTrace(debug_backtrace(), false) ."] " . $this->_applyStyles($text, $args) . PHP_EOL ;
         $this->output = $string;
         for ($i = 0; $i < count($args) - 1; $i++) {

@@ -177,11 +177,6 @@ class Admin extends Controller implements ControllerInterface
      */
     public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-        echo "IN ADMINMIDDLEWARE OF REQUEST : ";
-        var_dump($args);
-        var_dump($_GET);
-        echo PHP_EOL;
-        // exit;
         if (stristr($_SERVER["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
             if (!Session::isset($viewLogger, "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
