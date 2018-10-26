@@ -100,7 +100,6 @@ class Http
             "http://0.0.0.0:5616",
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel, &$array, $cli) {
-                $cli->info("Got HTTP Request ");
                 $response = "";
                 try {
                     $kernel->handle(

@@ -28,14 +28,13 @@ class Header extends View implements TwigInterface
         "title" => "Ferme de cornaton",
         "page" => "Admin",
         "url" => "",
-        "cookies" => [],
+        "cookies" => "",
     ];
 
     public function twig(): void
     {
         ?>
         <head>
-
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,12 +44,12 @@ class Header extends View implements TwigInterface
             <meta name="data-cookies" content="{{ cookies }}">
             <title>{{ title }} - {{ page }}</title>
             <!-- CSS loop -->
-            {% for file in css %}
-                <link href="{{ file }}" rel="stylesheet">
+            {% for jsFile in css %}
+                <link href="{{ jsFile }}" rel="stylesheet">
             {% endfor %}
             <!-- JS loop -->
-            {% for file in js %}
-                <script src="{{ file }}"></script>
+            {% for cssFile in js %}
+                <script src="{{ cssFile }}"></script>
             {% endfor %}
         </head>
     <?php

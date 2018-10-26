@@ -89,6 +89,8 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 }
             }
         }
+        $controllerMethodsCalled = [];
+
         // for each controller methods ordered by priority
         foreach ($this->getOrderedByPriority() as $controllerMethod) {
             //var_dump($controllerMehod);
@@ -117,6 +119,10 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                  */
                 $controllerMethod["controller"] = "\\" . $controllerMethod["controller"];
                 $controller = new $controllerMethod["controller"](Kernel::$_atlas, Kernel::$_logger);
+                array_push(
+                    $controllerMethodsCalled,
+                    ($arr = explode("\\", $controller->name))[count($arr) - 1]
+                    . "::". $controllerMethod["method"]);
                 if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse)) {
                     // nothing special to do right now
                     break;
@@ -127,6 +133,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             $serverGenerated = $viewLogger->renderedTemplates;
             $response = json_encode($serverGenerated);
         }
+        $this->logger->info("[".$requestType."] - '".$_SERVER["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'");
         return;
     }
 
@@ -145,8 +152,14 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             if ($v instanceof Controller && is_array($methods = $v->getMethods())) {
                 foreach ($methods as $k => $u) {
                     //  echo "method : " . $u["method"] . PHP_EOL;
-                    $methods[$k]["controller"] = $v->name;
-                    array_push($queue, $methods[$k]);
+                    $rqType = $methods[$k]["router"][0];
+                    if (
+                        (($_SERVER["REQUEST_URI"] === "*") || ($rqType === "*")) ||
+                        ($_SERVER["REQUEST_URI"] === $rqType)
+                    ) {
+                        $methods[$k]["controller"] = $v->name;
+                        array_push($queue, $methods[$k]);
+                    }
                 }
             }
         }

@@ -175,12 +175,13 @@ class Logger implements LoggerInterface
      * Convert debug trace to file line
      * @param array $trace
      * @param bool $max
+     * @param int $minus
      * @return string
      */
-    public static function formatFirstTrace(array $trace, bool $max = true): string
+    public static function formatTrace(array $trace, int $minus = 2, bool $max = true): string
     {
         $caller = array_shift($trace);
-        $ret =  ($fn = explode("\\", $caller['file']))[count($fn) - 1] . ":".$caller['line'];
+        $ret =  ($fn = explode("\\", $caller['file']))[count($fn) - $minus] . ":".$caller['line'];
         return $max ? ("    {" . $ret."} ") :
             (" ".$ret);
     }
@@ -206,7 +207,7 @@ class Logger implements LoggerInterface
     public function logWithStyle(string $text, string ... $args): Logger
     {
         $today = (string) date("F j, g:i a");
-        $string = "[" . $today . self::formatFirstTrace(debug_backtrace(), false) ."] " . $this->_applyStyles($text, $args) . PHP_EOL ;
+        $string = "[" . $today . self::formatTrace(debug_backtrace(), 2, false) ."] " . $this->_applyStyles($text, $args) . PHP_EOL ;
         $this->output = $string;
         for ($i = 0; $i < count($args) - 1; $i++) {
             if ($args[$i] === "emergency") {
@@ -237,7 +238,7 @@ class Logger implements LoggerInterface
         $responseString = function () use ($callback): string {
             $result =   (bool) $callback();
             $this->storeInLog();
-            return (string) $this->applyStyles($result ? "SUCCESS" : "FAILURE", $result ? "success" : "failure") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
+            return (string) $this->applyStyles($result ? "SUCCESS" : "FAILURE", $result ? "success" : "failure") . self::formatTrace(debug_backtrace()) . PHP_EOL;
         };
         if ($echo) {
             echo $checkingString();
@@ -265,7 +266,7 @@ class Logger implements LoggerInterface
     {
         $elements = is_array($elements[0]) ? $elements[0] : $elements;
         $this->output =
-            $this->applyStyles($title, "list_title") . " " .   self::formatFirstTrace(debug_backtrace()) .
+            $this->applyStyles($title, "list_title") . " " .   self::formatTrace(debug_backtrace()) .
             PHP_EOL .
             "*" . join(PHP_EOL . "*", $elements) .
             PHP_EOL;
@@ -281,7 +282,7 @@ class Logger implements LoggerInterface
      */
     public function desc(string $text): Logger
     {
-        $this->output =  $this->applyStyles($text, "desc") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
+        $this->output =  $this->applyStyles($text, "desc") . self::formatTrace(debug_backtrace()) . PHP_EOL;
         $this->storeInLog();
         return $this;
     }
@@ -294,7 +295,7 @@ class Logger implements LoggerInterface
      */
     public function title(string $text): Logger
     {
-        $this->output =  $this->applyStyles($text, "title") . self::formatFirstTrace(debug_backtrace()) . PHP_EOL;
+        $this->output =  $this->applyStyles($text, "title") . self::formatTrace(debug_backtrace()) . PHP_EOL;
         $this->storeInLog();
         return $this;
     }
@@ -502,10 +503,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::EMERGENCY);
+        echo $this->logWithStyle($message, LogLevel::EMERGENCY);
+        return;
     }
 
     /**
@@ -519,10 +521,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::ALERT);
+        echo $this->logWithStyle($message, LogLevel::ALERT);
+        return;
     }
 
     /**
@@ -535,10 +538,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::CRITICAL);
+        echo $this->logWithStyle($message, LogLevel::CRITICAL);
+        return;
     }
 
     /**
@@ -550,10 +554,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function error($message, array $context = array())
+    public function error($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::ERROR);
+        echo $this->logWithStyle($message, LogLevel::ERROR);
+        return;
     }
 
     /**
@@ -567,10 +572,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::WARNING);
+        echo $this->logWithStyle($message, LogLevel::WARNING);
+        return;
     }
 
     /**
@@ -581,10 +587,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::NOTICE);
+        echo $this->logWithStyle($message, LogLevel::NOTICE);
+        return;
     }
 
     /**
@@ -597,10 +604,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function info($message, array $context = array())
+    public function info($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::INFO);
+        echo $this->logWithStyle($message, LogLevel::INFO);
+        return;
     }
 
     /**
@@ -611,10 +619,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = array()) : void
     {
         $message = $this->interpolate($message, $context);
-        $this->logWithStyle($message, LogLevel::DEBUG);
+        echo $this->logWithStyle($message, LogLevel::DEBUG);
+        return;
     }
 
     /**
@@ -626,10 +635,11 @@ class Logger implements LoggerInterface
      * @return void
      * @throws \Exception
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []) : void
     {
         if (defined("LogLevel::" . $level)) {
             $this->$level($message, $context);
         }
+        return;
     }
 }

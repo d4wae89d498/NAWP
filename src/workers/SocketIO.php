@@ -43,7 +43,6 @@ class SocketIO
         $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel, $array, $cli) {
             $socket->on("packet", function (array $data) use (&$kernel, $socket, $array, $cli) {
                 $cli->log("Got SOCKET Request", "info");
-                echo "got packet" . PHP_EOL;
                 foreach ($data["data"] as $key => $array) {
                     if (isset($array["name"]) && isset($array["value"])) {
                         $data["data"][$array["name"]] = $array["value"];
