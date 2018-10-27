@@ -19,36 +19,12 @@ class SocketIO
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
 
         $kernel = new Kernel();
-        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "src"]));
-        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bundles"]));
-        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger();
-        $atlasInstance = &$kernel->atlas;
-        $params = [&$viewLogger, $kernel->logger, []];
-        Kernel::setKernel($kernel);
-        $kernel->fillCollectionWithComponents($kernel->viewCollection, $params, 'views');
-        $params = [&$atlasInstance, $kernel->logger];
-        Kernel::setKernel($kernel);
-        $kernel->fillCollectionWithComponents($kernel->controllerCollection, $params, 'controllers');
-        Kernel::setKernel($kernel);
-        $array = [];
-        foreach ($kernel->viewCollection as $k => $v) {
-            $array[$k] = Utils::hideTwigIn(Utils::ocb(function () use ($v) {
-                $v->twig();
-            }));
-        }
-        $cli = new \App\iPolitic\NawpCore\components\Logger();
         //Worker::$eventLoopClass = '\Workerman\Events\Ev';
         $io = new \PHPSocketIO\SocketIO(8070);
 
-        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel, $array, $cli) {
-            $socket->on("packet", function (array $data) use (&$kernel, $socket, $array, $cli) {
-                $cli->log("Got SOCKET Request", "info");
-                foreach ($data["data"] as $key => $array) {
-                    if (isset($array["name"]) && isset($array["value"])) {
-                        $data["data"][$array["name"]] = $array["value"];
-                        unset($data["data"][$key]);
-                    }
-                }
+        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {
+            $socket->on("packet", function (array $data) use (&$kernel, $socket) {
+                $kernel->logger->log("Got SOCKET Request", "info");
 
 
                 try {
@@ -56,7 +32,7 @@ class SocketIO
                      * @var $socket \PHPSocketIO\Socket
                      */
                     $response = "";
-                    $packet = (new Packet($data, true))
+                    $packet = (new Packet($kernel, $data, true))
                         ->useAdaptor()
                         ->toArray();
                     $kernel->handle(
@@ -64,7 +40,7 @@ class SocketIO
                         "SOCKET",
                         $_SERVER["REQUEST_URI"],
                         $packet,
-                        $array
+                        $kernel->rawTwig
                     );
                     if (is_array($response)) {
                         $newResponse = [];

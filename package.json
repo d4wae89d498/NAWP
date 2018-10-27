@@ -23,7 +23,7 @@
     "build-dev": "npm run pre-build && webpack -d --config=configs/webpack/dev.ts",
     "build-prod": "npm run pre-build && webpack -p --config=configs/webpack/prod.ts",
     "watch": "npm run pre-build && concurrently \"npm run watch-client\" \"npm run watch-server\" --kill-others",
-    "watch-client": "webpack -d --config=configs/webpack/dev.js --watch",
+    "watch-client": "webpack -d --config=configs/webpack/dev.ts --watch",
     "watch-server": "nodemon --exec \"npm run start\"",
     "lint": "tslint './src/**/*.ts*' --format stylish --force",
     "generate-models": "php ./vendor/atlas/cli/bin/atlas-skeleton.php ./.atlas-config.php && npm run cs-fix",

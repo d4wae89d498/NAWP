@@ -57,15 +57,11 @@ class Session extends Controller implements ControllerInterface
      * @param string $httpResponse
      * @param array $args
      * @return bool
-     * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-
-        //die("session tick");
-        CSession::tick($viewLogger);
-        $httpResponse .= (CSession::isset($viewLogger, "TEST") ? CSession::get($viewLogger, "TEST") : "") . " " . CSession::id($viewLogger);
-        CSession::set($viewLogger, "TEST", "Pomme");
+        $viewLogger->getSession()->set("TEST", "Pomme");
         return false;
     }
 
@@ -78,7 +74,6 @@ class Session extends Controller implements ControllerInterface
      */
     public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-        echo "in home function";
         $httpResponse = "<!DOCTYPE html><html lang=\"en\">" .
             new \App\Views\Elements\Header(
                 $viewLogger,
@@ -132,7 +127,7 @@ class Session extends Controller implements ControllerInterface
      */
     public function notFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-        $httpResponse .= " ERROR 404";
+       // $httpResponse .= " ERROR 404";
         return true;
     }
 
@@ -145,7 +140,7 @@ class Session extends Controller implements ControllerInterface
      */
     public function socketNotFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-        $httpResponse .= " ERROR 404";
+       // $httpResponse .= " ERROR 404";
         return true;
     }
 }

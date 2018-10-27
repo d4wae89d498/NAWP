@@ -50,18 +50,19 @@ class Admin extends Controller implements ControllerInterface
     }
 
     /**
-     *  Bind the login page of the admin backend
+     * Bind the login page of the admin backend
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
      * @return bool
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
     public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
         $loginMessage = "default";
-        $atlas = (Kernel::getKernel())->atlas;
+        $atlas = $viewLogger->kernel->atlas;
         if (isset($_POST["email"]) && isset($_POST["password"])) {
             $userRecord = $atlas
                 ->select(User::class)
@@ -82,15 +83,13 @@ class Admin extends Controller implements ControllerInterface
                     $url = Utils::buildUrlParams($url, ["UID" => $uid]);
                 }
                 $_GET["UID"] = $uid;
-                Session::set($viewLogger, "user_id", 5);
+                $viewLogger->getSession()->set("user_id", 5);
                 //$loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
                 PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
                 return true;
             }
         }
-
-
-
+        $loginMessage = $viewLogger->getSession()->id();
         $httpResponse .= " <!DOCTYPE html>
         <html lang=\"en\">" .
             new \App\Views\Elements\Admin\Header($viewLogger, $this->logger, [
@@ -129,6 +128,7 @@ class Admin extends Controller implements ControllerInterface
      * @param string $httpResponse
      * @param array $args
      * @return bool
+     * @throws \Exception
      */
     public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
@@ -167,11 +167,12 @@ class Admin extends Controller implements ControllerInterface
     }
 
     /**
-     *  The admin middleware function, manage common features of all /admin* matches
+     * The admin middleware function, manage common features of all /admin* matches
      * @param ViewLogger $viewLogger
      * @param string $httpResponse
      * @param array $args
      * @return bool
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
@@ -179,7 +180,7 @@ class Admin extends Controller implements ControllerInterface
     {
         if (stristr($_SERVER["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
-            if (!Session::isset($viewLogger, "user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
+            if (!$viewLogger->getSession()->isset("user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
                 PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin/login", $args, $viewLogger->requestType);
                 // We release the request

@@ -7,46 +7,27 @@
  */
 namespace App\iPolitic\NawpCore;
 
-use App\Datasources\Content\Content;
-use App\Datasources\ContentsCategory\ContentsCategory;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
 use App\iPolitic\NawpCore\components\Logger;
 use App\iPolitic\NawpCore\components\Packet;
-use App\iPolitic\NawpCore\Components\PacketAdapter;
-use App\iPolitic\NawpCore\Components\Session;
+use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Cache\Simple\FilesystemCache;
+use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use App\DataSources\ContentsCategory\Contents;
-use App\DataSources\Content\ContentMapper;
 
 class Kernel implements LoggerAwareInterface
 {
     public const CACHE_FOLDER_NAME = "cache";
     /**
-     * @var array
-     */
-    public static $twigArray = [];
-
-    /**
-     * @var LoggerInterface $logger
-     */
-    public static $_logger;
-
-    /**
-     * @var Atlas
-     */
-    public static $_atlas;
-
-    /**
      * @var LoggerInterface
      */
     public $logger;
-
     /**
      * @var string $cachePath
      */
@@ -59,49 +40,33 @@ class Kernel implements LoggerAwareInterface
      * @var ViewCollection $viewCollection
      */
     public $viewCollection;
-
-
     /**
      * @var Atlas
      */
     public $atlas;
     /**
-     * @var Kernel
+     * @var CacheInterface
      */
-    public static $kernel;
-
+    public $sessionCache;
     /**
-     * @param $kernel
+     * @var CacheInterface
      */
-    public static function setKernel(&$kernel): void
-    {
-        self::$kernel = $kernel;
-    }
-
+    public $packetAdapterCache;
     /**
-     * @return Kernel
+     * @var array
      */
-    public static function getKernel(): Kernel
-    {
-        return self::$kernel;
-    }
+    public $rawTwig = [];
 
     /**
      * Kernel constructor.
      */
     public function __construct()
     {
+        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"]));
+        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "bundles"]));
         $dotEnv = new Dotenv();
         $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
         $this->init();
-    }
-
-    /**
-     * @return Logger
-     */
-    public static function cli(): LoggerInterface
-    {
-        return clone self::$_logger;
     }
 
     /**
@@ -139,7 +104,7 @@ class Kernel implements LoggerAwareInterface
      */
     public function handle(&$response, string $requestType, $requestArgs, $packet = null, $array = [], &$viewLogger = null): void
     {
-        $this->controllerCollection->handle($response, $requestType, $requestArgs, $packet, $array, $viewLogger);
+        $this->controllerCollection->handle($this, $response, $requestType, $requestArgs, $packet, $array, $viewLogger);
     }
 
     /**
@@ -155,11 +120,27 @@ class Kernel implements LoggerAwareInterface
         $this->controllerCollection->setLogger($this->logger);
         $this->viewCollection = new ViewCollection();
         $this->viewCollection->setLogger($this->logger);
-        $this->atlas = self::$_atlas = $this->getAtlas();
-        //$this->loadRSA();
-        self::setKernel($this);
-        PacketAdapter::init();
-        Session::init();
+        $this->atlas = $this->getAtlas();
+        $this->packetAdapterCache = new FilesystemCache();
+        $this->sessionCache = new FilesystemCache();
+
+        /**
+         * Used for logging views
+         */
+        $viewLogger = new Components\ViewLogger($this);
+        /**
+         * Used for creating controllers instance
+         */
+        $atlasInstance = &$this->atlas;
+        $params = [&$viewLogger, $this->logger, []];
+        $this->fillCollectionWithComponents($this->viewCollection, $params, 'views');
+        $params = [&$atlasInstance, $this->logger];
+        $this->fillCollectionWithComponents($this->controllerCollection, $params, 'controllers');
+        foreach ($this->viewCollection as $k => $v) {
+            $this->rawTwig[$k] = Utils::HideTwigIn(Utils::ocb(function () use ($v) {
+                $v->twig();
+            }));
+        }
     }
 
     /**
@@ -230,6 +211,6 @@ class Kernel implements LoggerAwareInterface
      */
     public function setLogger(LoggerInterface $logger): void
     {
-        self::$_logger = $this->logger = $logger;
+        $this->logger = $logger;
     }
 }

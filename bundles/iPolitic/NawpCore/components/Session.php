@@ -18,6 +18,18 @@ use App\iPolitic\NawpCore\Kernel;
 class Session
 {
     /**
+     * @var
+     */
+    public $viewLogger;
+    /**
+     * @var array
+     */
+    public $data = [];
+    /**
+     * @var int
+     */
+    public $sessionExpireDate;
+    /**
      * The session array
      * @var array
      */
@@ -34,20 +46,35 @@ class Session
     public const SESSION_FILE = 'sessions.txt';
 
     /**
-     * Will return the full path to self::SESSION_FILE
-     * @return string
+     * Session constructor.
+     * @param ViewLogger $viewLogger
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \Exception
      */
-    public static function getFilePath(): string
+    public function __construct(ViewLogger $viewLogger)
     {
-        return join(DIRECTORY_SEPARATOR, [Kernel::getKernel()->cachePath, self::SESSION_FILE]);
+        $this->viewLogger = $viewLogger;
+        $this->firstPopulate();
     }
 
     /**
-     * @param ViewLogger $viewLogger
+     * Will populate the session data array using currently stored values if ones
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \Exception
+     */
+    public function firstPopulate() : void
+    {
+        if ($this->viewLogger->kernel->sessionCache->has($this->id())) {
+            $cachedValue = $this->viewLogger->kernel->sessionCache->get($this->id());
+            $this->data = unserialize($cachedValue);
+        }
+    }
+
+    /**
      * @return string
      * @throws \Exception
      */
-    public static function id(ViewLogger $viewLogger): string
+    public function id(): string
     {
         return
             (isset($_GET["UID"])
@@ -55,8 +82,8 @@ class Session
                 $_GET["UID"]
                 :
                 (
-                    Cookie::isset($viewLogger, "UID") ?
-                        Cookie::get($viewLogger, "UID")
+                    Cookie::isset($this->viewLogger, "UID") ?
+                        Cookie::get($this->viewLogger, "UID")
                     :
                         Utils::generateUID()
                 )
@@ -65,189 +92,108 @@ class Session
 
     /**
      * Will return a session value using a visitor token
-     * @param ViewLogger $viewLogger
      * @param string $key
      * @param string $id
      * @return string
      * @throws \Exception
      */
-    public static function get(ViewLogger $viewLogger, string $key, $id = ""): string
+    public function get(string $key, $id = ""): string
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        return self::$session[$id][$key];
+        return $this->data[$key];
     }
 
     /**
      * Will return a session value using a visitor token
-     * @param ViewLogger $viewLogger
-     * @param string $id
      * @return array
      * @throws \Exception
      */
-    public static function getAll(ViewLogger $viewLogger, $id = ""): array
+    public function getAll(): array
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        return isset(self::$session[$id]) ? self::$session[$id] : [];
+        return $this->data;
     }
 
     /**
      * Will set a session value using a key
-     * @param ViewLogger $viewLogger
      * @param string $key
      * @param string $value
-     * @param string $id
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function set(ViewLogger $viewLogger, string $key, $value, $id = ""): void
+    public function set(string $key, $value): void
     {
         $value = strval($value);
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        self::$session[$id][$key] = $value;
-        self::saveChanges();
+        $this->data[$key] = $value;
+        $this->saveChanges();
         return;
     }
 
     /**
      * Return true if the key exists for this visitorToken
-     * @param ViewLogger $viewLogger
      * @param string $key
-     * @param string $id
      * @return bool
      * @throws \Exception
      */
-    public static function isset(ViewLogger $viewLogger, string $key, $id = "") : bool
+    public function isset(string $key) : bool
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        return isset(self::$session[$id][$key]);
+        return isset($this->data[$key]);
     }
 
     /**
      * Will remove an item if exists using its key
-     * @param ViewLogger $viewLogger
      * @param string $key
-     * @param string $id
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function remove(ViewLogger $viewLogger, string $key, $id = "") : void
+    public function remove(string $key) : void
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        if (self::isset($viewLogger, $key)) {
-            unset(self::$session[$id][$key]);
+        if ($this->isset($key)) {
+            unset($this->data[$key]);
         }
-        self::saveChanges();
+        $this->saveChanges();
     }
 
     /**
      * Will destroy a session
-     * @param ViewLogger $viewLogger
-     * @param string $id
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function destroy(ViewLogger $viewLogger, $id = "") : void
+    public function destroy() : void
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        unset(self::$session[$id]);
-        self::saveChanges();
+        $this->viewLogger->kernel->sessionCache->delete($this->id());
     }
 
     /**
      * Returns true if visitorToken (current user) is loggen in
-     * @param ViewLogger $viewLogger
-     * @param string $id
      * @return bool
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function isLoggedIn(ViewLogger $viewLogger, string $id = "") : bool
+    public function isLoggedIn() : bool
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        return isset(self::$session[$id]);
+        return $this->viewLogger->kernel->sessionCache->has($this->id());
     }
 
     /**
      * Returns true if visitorToken (current user) is loggen in
-     * @param ViewLogger $viewLogger
-     * @param string $id
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \Exception
      */
-    public static function logIn(ViewLogger $viewLogger, string $id = ""): void
+    public function logIn(): void
     {
-        $id = $id !== "" ? $id : Session::id($viewLogger);
-        self::$session[$id] = [];
-        self::$session[$id]["expire_date"] = strtotime(date("Y-m-d H:i:s", strtotime('+'.self::sessionSecondsDuration.' seconds')));
-        self::saveChanges();
+        $this->data = [];
+        $this->sessionExpireDate = time() + 60 * 60 * 24 * 15;
+        $this->saveChanges();
         return;
     }
 
-    /**
-     *  Will destroy all expired session
-     * @param ViewLogger $viewLogger
-     * @throws \Exception
-     */
-    public static function tokenExpireCheck(ViewLogger $viewLogger): void
-    {
-        echo "checking expirity ..." . PHP_EOL;
-        foreach (self::$session as $token => $v) {
-            if (!isset(self::$session[$token]["expire_date"]) || (self::$session[$token]["expire_date"] <  strtotime(date("Y-m-d H:i:s")))) {
-                echo "token expired" . PHP_EOL;
-                self::destroy($viewLogger, $token);
-            }
-        }
-        self::saveChanges();
-        return;
-    }
-
-    /**
-     * Will load the session var using a serialized txt file if one
-     */
-    public static function init()
-    {
-        if (file_exists(self::getFilePath()) && (filesize(self::getFilePath()) > 0)) {
-            $handle = fopen(self::getFilePath(), "r");
-            self::$session = unserialize(fread($handle, filesize(self::getFilePath())));
-        } else {
-            self::$session = [];
-            self::saveChanges();
-        }
-    }
-
-    /**
-     * Will tick the session and clean the expired ones if needed
-     * @param viewLogger $viewLogger
-     * @throws \Exception
-     */
-    public static function tick(viewLogger $viewLogger): void
-    {
-
-        /**
-         * If a prime number is generated, we check for token expirity
-         */
-        $generatedNumber = 0;
-        if (call_user_func_array(
-            function ($n) use (&$generatedNumber) {
-                for ($i=~-$n**.5|0;$i&&$n%$i--;) {
-                    sleep(0);
-                }
-                return!$i&$n>2|$n==2;
-            },
-            [$generatedNumber = mt_rand()]
-            )
-        ) {
-            self::tokenExpireCheck($viewLogger);
-        }
-        $token = self::id($viewLogger);
-        if (!self::isLoggedIn($viewLogger, $token)) {
-            self::logIn($viewLogger, $token);
-        }
-        self::saveChanges();
-        return;
-    }
 
     /**
      * Will save the current sessions
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \Exception
      */
-    public static function saveChanges()
+    public function saveChanges() : void
     {
-        $handle = fopen(self::getFilePath(), "w");
-        fwrite($handle, serialize(self::$session));
+        $this->viewLogger->kernel->sessionCache->set($this->id(), serialize($this->data), time() - $this->sessionExpireDate);
     }
 }

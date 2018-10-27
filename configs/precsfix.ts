@@ -4,7 +4,6 @@ import {bindArr, isDir, isStrInFile, replaceInFile} from "./utils";
 
 async function proceedDir(dirPath: string, deep: number = 0): Promise<any> {
     return new Promise<any>(resolve => {
-        // console.log(bindArr("%t | Scanning : %s", {"%s": dirPath, "%t" : "*".repeat(deep)}));
         fs.readdir(dirPath, async (err, files) => {
             for (let file in files) {
                 let filePath: string;

@@ -8,6 +8,7 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
+use Psr\SimpleCache\CacheInterface;
 use Workerman\Protocols\Http;
 
 class PacketAdapter
@@ -16,48 +17,20 @@ class PacketAdapter
      * Folder name in root/cache
      */
     public const PACKET_ADAPTER_FOLDER = "packet_adapter";
+    /**
+     * @var CacheInterface
+     */
+    public $cache;
 
     /**
-     * Startup function, will remove all cache files before startup
+     * PacketAdapter constructor.
+     * @param CacheInterface $cache
      */
-    public static function init(): void
+    public function __construct(CacheInterface $cache)
     {
-        // removing cache files
-        $files = glob(
-            join(
-                DIRECTORY_SEPARATOR,
-                [
-                Kernel::getKernel()->cachePath, self::PACKET_ADAPTER_FOLDER , "*"]
-            )
-        );
-        foreach ($files as $file) {
-            if (!is_dir($file) && file_exists($file)) {
-                @unlink($file);
-            }
-        }
+        $this->cache = $cache;
     }
 
-    /**
-     * Will return a packet adapter cache path of the given id
-     * @param string $id
-     * @return string
-     */
-    public static function IDtoPath(string $id): string
-    {
-        return join(
-            DIRECTORY_SEPARATOR,
-            [
-                dirname(__FILE__) ,
-                "..",
-                "..",
-                "..",
-                "..",
-                "cache",
-                self::PACKET_ADAPTER_FOLDER,
-                $id . ".txt",
-            ]
-        );
-    }
 
     /**
      *  Will redirect the http or the socket response
@@ -79,7 +52,7 @@ class PacketAdapter
             Http::header("Location: " . $url);
         } else {
             $_SERVER["REQUEST_URI"] = $url;
-            Kernel::getKernel()->handle(
+            $viewLogger->kernel->handle(
                 $response,
                 isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : ViewLogger::DEFAULT_REQUEST_TYPE,
                 $_SERVER["REQUEST_URI"],
@@ -95,41 +68,27 @@ class PacketAdapter
      * @param ViewLogger $viewLogger
      * @return string
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function storeAndGet(ViewLogger $viewLogger): string
+    public function storeAndGet(ViewLogger $viewLogger): string
     {
         if ($viewLogger->requestType === "SOCKET") {
-            // id should be available as post clientVar or something like that
             $hashedId = $_POST["originalClientVar"];
-        // here session is not available
         } else {
-            $hashedId = Session::id($viewLogger);
-            $filePath = self::IDtoPath($hashedId);
-            // here Session is available
-            if (file_exists($filePath)) {
-                unlink(self::IDtoPath($hashedId));
-            }
-            $fp = fopen(self::IDtoPath(Session::id($viewLogger)), "w+");
-            fwrite($fp, (serialize($_SERVER)));
+            $hashedId = $viewLogger->getSession()->id();
         }
-
+        $this->cache->set($hashedId, serialize($_SERVER));
         return $hashedId;
     }
 
     /**
      * Will return a packetAdapter cached file
      * @param string $id
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @return array
      */
-    public static function readFile(string $id): array
+    public function get(string $id): array
     {
-        if (file_exists($filePath = self::IDtoPath($id))) {
-            $fp = fopen($filePath, 'r') or die('cant open file');
-            return unserialize(
-                fread($fp, filesize($filePath))
-            );
-        } else {
-            return [];
-        }
+        return unserialize($this->cache->get($id));
     }
 }

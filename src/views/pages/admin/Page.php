@@ -22,7 +22,6 @@ class Page extends View implements TwigInterface
     {
         ?>
             <section data-id="{{id}}">
-                TESTTTTTTT BANANE
                 {% for element in html_elements %}
                 {{ element | raw}}
                 {% endfor %}

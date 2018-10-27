@@ -45,6 +45,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
     /**
      * Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRU
+     * @param Kernel $kernel
      * @param string $response
      * @param string $requestType
      * @param string $requestArgs
@@ -54,11 +55,11 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function handle(&$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void
+    public function handle(Kernel &$kernel, &$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void
     {
         $_GET = $GLOBALS["_GET"] = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
         $response = "";
-        $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($array, $packet, $requestType);
+        $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $array, $packet, $requestType);
         // redirecting to the same page with needed UID param if none where passed to $_SERVER REQUEST URI
         if (!Cookie::areCookieEnabled($viewLogger)) {
             if (isset($_SERVER["HTTP_REFERER"])) {
@@ -118,7 +119,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                  * @var $controller Controller
                  */
                 $controllerMethod["controller"] = "\\" . $controllerMethod["controller"];
-                $controller = new $controllerMethod["controller"](Kernel::$_atlas, Kernel::$_logger);
+                $controller = new $controllerMethod["controller"]($kernel->atlas, $kernel->logger);
                 array_push(
                     $controllerMethodsCalled,
                     ($arr = explode("\\", $controller->name))[count($arr) - 1]

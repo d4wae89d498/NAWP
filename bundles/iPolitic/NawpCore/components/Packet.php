@@ -7,6 +7,8 @@
  */
 namespace App\iPolitic\NawpCore\components;
 
+use App\iPolitic\NawpCore\Kernel;
+
 /**
  * The packet Class
  * Class Packet
@@ -20,7 +22,7 @@ class Packet implements \ArrayAccess
      * The socket adapter
      * @var PacketAdapter
      */
-    private $socketAdapter;
+    private $packetAdapter;
     /**
      * The packets components
      * @var array
@@ -31,13 +33,15 @@ class Packet implements \ArrayAccess
 
     /**
      * Packet constructor.
+     * @param Kernel $kernel
      * @param array $data
      * @param bool $decryptClientVar
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function __construct(array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false)
+    public function __construct(Kernel &$kernel, array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false)
     {
-        $this->socketAdapter = new PacketAdapter();
+        $this->packetAdapter = new PacketAdapter($kernel->packetAdapterCache);
         $nData = [];
         if (gettype($data) === "array") {
             $nData = $data;
@@ -48,7 +52,9 @@ class Packet implements \ArrayAccess
                 // decrypt packet adapter file
                 if ($k === "clientVar" && $decryptClientVar) {
                     $this->originalClientVar = $valueAddedInContainer;
-                    $valueAddedInContainer = $this->socketAdapter->readFile($valueAddedInContainer);
+                    if ($kernel->packetAdapterCache->has($valueAddedInContainer)) {
+                        $valueAddedInContainer = $this->packetAdapter->get($valueAddedInContainer);
+                    }
                 }
                 // decrypt json cookies
                 elseif ($k === "cookies") {
@@ -121,6 +127,13 @@ class Packet implements \ArrayAccess
      */
     public function useAdaptor(): Packet
     {
+        foreach ( $this->container["data"] as $key => $array) {
+            if (isset($array["name"]) && isset($array["value"])) {
+                $this->container["data"][$array["name"]] = $array["value"];
+                unset($this->container["data"][$key]);
+            }
+        }
+
         // file name that contains needed sessions data
         $originalClientVar = $this->container["clientVar"];
         $this->container["data"]["clientVar"] = $originalClientVar;

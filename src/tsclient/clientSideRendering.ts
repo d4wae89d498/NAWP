@@ -35,8 +35,6 @@ export class ClientSideRendering {
         window["csr"] = this;
         // if this template id is already in memory
         if (window["templates"].hasOwnProperty(templateDataId)) {
-            console.log(this.TemplateNameToId(templateDataId));
-            console.log(this.TemplateNameToId(templateDataId, true));
             const baseTpl: any =  window["baseTemplates"].find((e) => {
                 return e.generatedID === this.TemplateNameToId(templateDataId, true);
             });
@@ -50,8 +48,6 @@ export class ClientSideRendering {
                 return rendered;
             }
             const selectedElement = $("[data-id=\"" + templateDataId + "\"]");
-            console.log("length : ( 1 ) : " + selectedElement.length + " states : " + Object.keys(states).length + " data : " +
-                baseTpl.twig.length);
             selectedElement[0].outerHTML = rendered;
 
         }
@@ -79,7 +75,6 @@ export class ClientSideRendering {
                 }
                 const selectedElement = $("[data-id=\"" + this.getMaxType(templateDataId) + "\"]");
                 selectedElement.after(rendered);
-                console.log("length : ( 1 ) : " + selectedElement.length);
 
             }
         }
@@ -166,10 +161,8 @@ export class ClientSideRendering {
                     let generated = "";
                     generated = await ClientSideRendering.render(tplKey, states[tplKey], true);
                     generatedString += generated;
-                    console.log("rendering : " + tplKey);
                     window["templates"][tplKey] = {states: states[tplKey]};
                     if (deep === 0) {
-                        console.log(generated);
                         const attrIdSelector = $("[data-id=\"" + tplKey + "\"]");
                         let templateSelector: any = attrIdSelector.length > 0 ?
                             attrIdSelector :
@@ -179,11 +172,8 @@ export class ClientSideRendering {
                         a.setAttribute("data-id" , tplKey);
                         if (templateSelector.prop("nodeName") === "HEAD" || (typeof templateSelector[0] !== "undefined" && templateSelector[0].innerHTML !== a.innerHTML)) {
                             // using morphdom diffing for updating only the minimal data
-                            console.log(templateSelector[0]);
-                            console.log(a);
                             const oldUrl = this.getCurrentUrl();
                             morphdom(templateSelector[0], a);
-                            console.log("Applied!");
                             if (templateSelector.prop("nodeName") === "HEAD") {
                                 const newUrl = this.getCurrentUrl();
                                 // if url changed we push it to update the browser URL

@@ -40,17 +40,21 @@ export class NoRedirection {
                         delete shortTemplate[template]["twig"];
                     }
                 }
-                // logging it
-                console.log($(e.target).attr("id"));
-                console.log("form redirection canceled");
-                console.log("form action : ");
-                console.log(formAction);
-                console.log("form data : ");
-                console.log(formData);
                 this.SocketClient.socket.emit("packet", {data: formData, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate, cookies: document.cookie, http_referer: window.location.href});
             });
         // }
-        console.log("form to ajax applied");
+        // if we are on login / register page
+        if (window.location.href.indexOf("admin/login") > -1) {
+            // hiding by default registration area
+            $("#registrationSection").slideToggle();
+            // expect when switching
+            $("[name=\"accessTypeRadio\"]").on("click",
+                () => {
+                    console.log("Button toggled");
+                    $("#registrationSection").slideToggle();
+                }
+            );
+        }
         return;
     }
 }

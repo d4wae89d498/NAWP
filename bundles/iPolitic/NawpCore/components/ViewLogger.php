@@ -2,7 +2,6 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
-
 /**
  * ViewLogger will store all the data given to the template class
  *
@@ -36,14 +35,18 @@ class ViewLogger
      */
     public $areCookieEnabled = false;
     public $cookieEnabledLocked = false;
+    public $kernel;
+    public $sessionInstance = null;
     /**
      * ViewLogger constructor.
+     * @param Kernel $kernel
      * @param null $array
      * @param Packet|null $packet
      * @param string $requestType
      */
-    public function __construct($array = null, $packet = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
+    public function __construct(Kernel &$kernel, $array = null, $packet = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
     {
+        $this->kernel = $kernel;
         $this->requestType = $requestType;
         if ($array !== null) {
             $this->array = $array;
@@ -176,9 +179,10 @@ class ViewLogger
     public function generateJS(): string
     {
         // var_dump($this->array);
-        $kernel = Kernel::getKernel();
-        $packetAdapter = new PacketAdapter();
-        $output = Utils::ocb(function () use (&$packetAdapter, $kernel) {
+        var_dump($this->kernel);
+       // exit;
+        $packetAdapter = new PacketAdapter($this->kernel->packetAdapterCache);
+        $output = Utils::ocb(function () use (&$packetAdapter) {
             ?>
             window['templates'] = [];
             window['baseTemplates'] = [];
@@ -191,7 +195,7 @@ class ViewLogger
                     };
                 }
             <?php endforeach; ?>
-            <?php foreach ($kernel->viewCollection as $k => $v):
+            <?php foreach ($this->kernel->viewCollection as $k => $v):
                 /**
                  * @var $v View
                  */
@@ -222,5 +226,17 @@ class ViewLogger
             <?php endforeach; ?>
         <?php
         });
+    }
+
+    /**
+     * @return \App\iPolitic\NawpCore\Components\Session
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function getSession(): Session
+    {
+        if ($this->sessionInstance === null) {
+            $this->sessionInstance =  new Session($this);
+        }
+        return $this->sessionInstance;
     }
 }
