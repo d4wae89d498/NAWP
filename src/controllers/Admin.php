@@ -89,7 +89,7 @@ class Admin extends Controller implements ControllerInterface
                 return true;
             }
         }
-        $loginMessage = $viewLogger->getSession()->id();
+        $loginMessage = $viewLogger->getSession()->id() . " || " . print_r($_POST, true);
         $httpResponse .= " <!DOCTYPE html>
         <html lang=\"en\">" .
             new \App\Views\Elements\Admin\Header($viewLogger, $this->logger, [

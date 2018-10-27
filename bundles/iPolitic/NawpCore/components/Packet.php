@@ -27,7 +27,7 @@ class Packet implements \ArrayAccess
      * The packets components
      * @var array
      */
-    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => [], "http_referer" => null];
+    private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => [], "http_referer" => null, "original_client_var"];
 
     private $originalClientVar;
 
@@ -51,6 +51,7 @@ class Packet implements \ArrayAccess
                 $valueAddedInContainer = $nData[$k];
                 // decrypt packet adapter file
                 if ($k === "clientVar" && $decryptClientVar) {
+                    $this->container["original_client_var"] = $valueAddedInContainer;
                     $this->originalClientVar = $valueAddedInContainer;
                     if ($kernel->packetAdapterCache->has($valueAddedInContainer)) {
                         $valueAddedInContainer = $this->packetAdapter->get($valueAddedInContainer);
@@ -127,7 +128,7 @@ class Packet implements \ArrayAccess
      */
     public function useAdaptor(): Packet
     {
-        foreach ( $this->container["data"] as $key => $array) {
+        foreach ($this->container["data"] as $key => $array) {
             if (isset($array["name"]) && isset($array["value"])) {
                 $this->container["data"][$array["name"]] = $array["value"];
                 unset($this->container["data"][$key]);
@@ -135,18 +136,16 @@ class Packet implements \ArrayAccess
         }
 
         // file name that contains needed sessions data
-        $originalClientVar = $this->container["clientVar"];
-        $this->container["data"]["clientVar"] = $originalClientVar;
-        $this->container["data"]["originalClientVar"] = $this->originalClientVar;
+        unset($this->container["data"]["clientVar"]);
+        $this->container["data"]["originalClientVar"] = $this->container["original_client_var"];
+        $_POST = $this->container["data"];
 
         // setting php globals
         $_SERVER["REQUEST_URI"] = $this->container["url"];
         $_SERVER["HTTP_REFERER"] = $this->container["http_referer"];
 
         $_GET = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
-        $_POST = $this->container["data"];
-        $_POST["templates"] = $this->container["templates"];
-
+        var_dump($_POST);
         $GLOBALS["_POST"] = $_POST;
         $GLOBALS["_GET"] = $_GET;
         $GLOBALS["_SERVER"] = $_SERVER;

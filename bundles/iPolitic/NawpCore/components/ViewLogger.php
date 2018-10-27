@@ -178,9 +178,6 @@ class ViewLogger
      */
     public function generateJS(): string
     {
-        // var_dump($this->array);
-        var_dump($this->kernel);
-       // exit;
         $packetAdapter = new PacketAdapter($this->kernel->packetAdapterCache);
         $output = Utils::ocb(function () use (&$packetAdapter) {
             ?>

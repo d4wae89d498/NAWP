@@ -48,15 +48,15 @@ class Login extends View implements TwigInterface
                                     <div id="commonLoginSection">
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-italic"></i></span>
-                                            <input type="text" class="form-control" placeholder="First name">
+                                            <input type="text" class="form-control" name="firstName" placeholder="First name">
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-font"></i> </span>
-                                            <input type="text" class="form-control" placeholder="Last name">
+                                            <input type="text" class="form-control" name="lastName" placeholder="Last name">
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><span class="glyphicon  glyphicon-map-marker"></span> </span>
-                                            <input type="text" class="form-control" placeholder="Birth place">
+                                            <input type="text" class="form-control" name="birthPlace" placeholder="Birth place">
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-key"></i> </span>
@@ -74,20 +74,25 @@ class Login extends View implements TwigInterface
                                     <div id="registrationSection">
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><span class="fa fa-birthday-cake"></span> </span>
-                                            <input type="date" class="form-control" placeholder="Birth date">
+                                            <input type="date" class="form-control" name="birthPlace" placeholder="Birth date">
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-key"></i> </span>
-                                            <input class="form-control" placeholder="Pin confirmation" name="pin" type="password" value="">
+                                            <input class="form-control" placeholder="Pin confirmation" name="pin2" type="password" value="">
                                         </div>
                                         <div class="checkbox">
                                             <label>
-                                                <input name="remember" type="checkbox" value="cookie">Remember me using a cookie
+                                                <input name="remember" type="radio" value="cookie">Remember me using a cookie
                                             </label>
                                         </div>
                                         <div class="checkbox">
                                             <label>
-                                                <input name="remember" type="checkbox" value="url">Remember me using url param
+                                                <input name="remember" type="radio" value="url">Remember me using url param
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="remember" type="radio" value="off">Logout on page exit
                                             </label>
                                         </div>
                                     </div>

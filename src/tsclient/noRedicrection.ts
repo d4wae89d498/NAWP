@@ -1,3 +1,5 @@
+import LoginForm from "./elements/loginForm";
+
 const $ = window["$"];
 import {SocketClient} from "./socketClient";
 
@@ -6,7 +8,11 @@ import {SocketClient} from "./socketClient";
  */
 export class NoRedirection {
     public SocketClient: SocketClient;
+    public pages: object;
     public constructor() {
+        this.pages = [
+            new LoginForm(),
+        ];
         this.SocketClient = new SocketClient(this);
         this.init();
     }
@@ -17,14 +23,10 @@ export class NoRedirection {
 
     /**
      * Will apply the no redirection rule to all the dom form tags
+     * Called at each page init // refresh
      */
 
     public applyForm(): void {
-        // we retrive all forms
-        // let formElements: any = $("form");
-        // foreach forms
-       // for (let formElement in formElements) {
-            // when submitting formElement
         $("form").on("submit",
             (e: Event) => {
                 // we prevent it from reloading
@@ -42,19 +44,15 @@ export class NoRedirection {
                 }
                 this.SocketClient.socket.emit("packet", {data: formData, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate, cookies: document.cookie, http_referer: window.location.href});
             });
-        // }
-        // if we are on login / register page
-        if (window.location.href.indexOf("admin/login") > -1) {
-            // hiding by default registration area
-            $("#registrationSection").slideToggle();
-            // expect when switching
-            $("[name=\"accessTypeRadio\"]").on("click",
-                () => {
-                    console.log("Button toggled");
-                    $("#registrationSection").slideToggle();
-                }
-            );
+
+        for (let page in this.pages) {
+            this.pages[page].refreshTick();
         }
         return;
     }
+}
+
+
+export interface IElement {
+    refreshTick(): void;
 }

@@ -25,8 +25,6 @@ class SocketIO
         $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {
             $socket->on("packet", function (array $data) use (&$kernel, $socket) {
                 $kernel->logger->log("Got SOCKET Request", "info");
-
-
                 try {
                     /**
                      * @var $socket \PHPSocketIO\Socket
@@ -58,8 +56,6 @@ class SocketIO
                         $response = $newResponse;
                     }
                     $socket->emit("packetout", $response);
-                    echo "test";
-                    echo PHP_EOL;
                     return;
                 } catch (Exception $ex) {
                     while (@ob_end_flush());

@@ -67,7 +67,6 @@
     "concurrently": "^4.0.1",
     "copy-dir": "^0.4.0",
     "dotenv": "^6.1.0",
-    "jquery": "^3.3.1",
     "morphdom": "^2.3.3",
     "nodemon": "^1.18.4",
     "socket.io-client": "^1.4",
