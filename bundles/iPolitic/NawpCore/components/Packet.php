@@ -7,17 +7,18 @@
  */
 namespace App\iPolitic\NawpCore\components;
 
+use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
 use App\iPolitic\NawpCore\Kernel;
+use Psr\Container\ContainerInterface;
 
 /**
  * The packet Class
  * Class Packet
  * @package App\iPolitic\NawpCore\components
  */
-class Packet implements \ArrayAccess
+class Packet implements \ArrayAccess, ContainerInterface
 {
     public const DEFAULT_OBJ = [];
-
     /**
      * The socket adapter
      * @var PacketAdapter
@@ -28,8 +29,6 @@ class Packet implements \ArrayAccess
      * @var array
      */
     private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => [], "http_referer" => null, "original_client_var"];
-
-    private $originalClientVar;
 
     /**
      * Packet constructor.
@@ -52,7 +51,6 @@ class Packet implements \ArrayAccess
                 // decrypt packet adapter file
                 if ($k === "clientVar" && $decryptClientVar) {
                     $this->container["original_client_var"] = $valueAddedInContainer;
-                    $this->originalClientVar = $valueAddedInContainer;
                     if ($kernel->packetAdapterCache->has($valueAddedInContainer)) {
                         $valueAddedInContainer = $this->packetAdapter->get($valueAddedInContainer);
                     }
@@ -151,5 +149,28 @@ class Packet implements \ArrayAccess
         $GLOBALS["_SERVER"] = $_SERVER;
 
         return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return mixed
+     * @throws NAWPNotFoundExceptionInterface
+     */
+    public function get($id)
+    {
+        if ($this->has($id)) {
+            return $this->container[$id];
+        } else {
+            throw new NAWPNotFoundExceptionInterface();
+        }
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function has($id)
+    {
+        return isset ($this->container[$id]);
     }
 }

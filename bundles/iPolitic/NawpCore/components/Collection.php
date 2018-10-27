@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 namespace App\iPolitic\NawpCore\Components;
 
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
 /**
  * Class ArrayObject
  * @package App\iPolitic\NawpCore
  */
-class Collection extends \ArrayObject
+class Collection extends \ArrayObject implements ContainerInterface
 {
     /**
      * Collection constructor.
@@ -32,5 +35,23 @@ class Collection extends \ArrayObject
             throw new \BadMethodCallException(__CLASS__.'->'.$func);
         }
         return call_user_func_array($func, array_merge(array($this->getArrayCopy()), $argv));
+    }
+
+    /**
+     * @param string $id
+     * @return mixed
+     * @throws NotFoundExceptionInterface
+     */
+    public function get($id) {
+        $array = $this->getArrayCopy();
+        if (!isset($array[$id])) {
+            throw new NAWPNotFoundExceptionInterface();
+        }
+        return $array[$id];
+    }
+
+    public function has($id) : bool
+    {
+        return isset($array[$id]);
     }
 }

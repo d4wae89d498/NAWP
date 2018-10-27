@@ -8,7 +8,7 @@
 
 namespace App\iPolitic\NawpCore\Components;
 
-class Exception
+class Exception extends \Exception
 {
     public static function catch(\Exception $e): string
     {
