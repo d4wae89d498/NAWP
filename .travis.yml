@@ -4,8 +4,5 @@ php:
 - 7.1
 - 7.2
 
-before_install:
-- nvm install 11.0
-
-install:
-- npm install
+script:
+- phpunit tests
