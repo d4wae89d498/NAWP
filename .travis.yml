@@ -6,3 +6,6 @@ php:
 
 script:
 - phpunit --bootstrap vendor/autoload.php tests/
+
+before_install:
+- composer install
