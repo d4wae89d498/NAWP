@@ -7,6 +7,7 @@
  */
 namespace App\iPolitic\NawpCore\Components;
 
+use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -34,11 +35,6 @@ class Session implements ContainerInterface
     public const sessionSecondsDuration = 45 * 60; // 45 min
 
     /**
-     * The session file name when is stored serialmized data
-     */
-    public const SESSION_FILE = 'sessions.txt';
-
-    /**
      * Session constructor.
      * @param ViewLogger $viewLogger
      * @throws \Psr\SimpleCache\InvalidArgumentException
@@ -46,6 +42,7 @@ class Session implements ContainerInterface
      */
     public function __construct(ViewLogger $viewLogger)
     {
+        $this->sessionExpireDate = self::sessionSecondsDuration;
         $this->viewLogger = $viewLogger;
         $this->firstPopulate();
     }
@@ -88,15 +85,18 @@ class Session implements ContainerInterface
     }
 
     /**
-     * Will return a session value using a visitor token
+     *  Will return a session value using a visitor token
      * @param string $key
-     * @param string $id
      * @return string
-     * @throws \Exception
+     * @throws NAWPNotFoundExceptionInterface
      */
-    public function get($key, $id = ""): string
+    public function get($key): string
     {
-        return $this->data[$key];
+        if ($this->has($key)) {
+            return $this->data[$key];
+        } else {
+            throw new NAWPNotFoundExceptionInterface();
+        }
     }
 
     /**
@@ -118,6 +118,9 @@ class Session implements ContainerInterface
      */
     public function set(string $key, $value): void
     {
+        if (!$this->isLoggedIn()) {
+            $this->logIn();
+        }
         $value = strval($value);
         $this->data[$key] = $value;
         $this->saveChanges();
@@ -125,12 +128,12 @@ class Session implements ContainerInterface
     }
 
     /**
-     * @param string $id
+     * @param string $key
      * @return bool
      */
-    public function has($id) : bool
+    public function has($key) : bool
     {
-        return isset($this->data[$id]);
+        return (isset($this->data[$key]));
     }
 
     /**
@@ -154,7 +157,7 @@ class Session implements ContainerInterface
      */
     public function destroy() : void
     {
-        $this->viewLogger->kernel->sessionCache->delete($this->id());
+        $this->logIn();
     }
 
     /**
@@ -189,6 +192,6 @@ class Session implements ContainerInterface
      */
     public function saveChanges() : void
     {
-        $this->viewLogger->kernel->sessionCache->set($this->id(), serialize($this->data), time() - $this->sessionExpireDate);
+        $this->viewLogger->kernel->sessionCache->set($this->id(), serialize($this->data), time() + $this->sessionExpireDate);
     }
 }

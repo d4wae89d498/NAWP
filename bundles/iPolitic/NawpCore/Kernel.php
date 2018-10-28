@@ -10,12 +10,10 @@ namespace App\iPolitic\NawpCore;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
-use App\iPolitic\NawpCore\Components\Exception;
 use App\iPolitic\NawpCore\components\Logger;
 use App\iPolitic\NawpCore\components\Packet;
 use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use App\iPolitic\NawpCore\Components\Utils;
@@ -114,7 +112,7 @@ class Kernel implements LoggerAwareInterface
     }
 
     /**
-     * Will boot the kernel
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function init(): void
     {
@@ -127,8 +125,8 @@ class Kernel implements LoggerAwareInterface
         $this->viewCollection = new ViewCollection();
         $this->viewCollection->setLogger($this->logger);
         $this->atlas = $this->getAtlas();
-        $this->packetAdapterCache = new FilesystemCache('', 0, $this->cachePath);
-        $this->sessionCache = new FilesystemCache('', 0, $this->cachePath);
+        $this->packetAdapterCache = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"]));
+        $this->sessionCache = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"]));
 
         /**
          * Used for logging views

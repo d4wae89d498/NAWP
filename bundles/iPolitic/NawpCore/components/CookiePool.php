@@ -30,6 +30,7 @@ class CookiePool implements ContainerInterface
     public function __construct(ViewLogger $viewLogger)
     {
         $this->viewLogger = $viewLogger;
+        $this->getAll();
     }
 
     /**
@@ -89,7 +90,7 @@ class CookiePool implements ContainerInterface
     public function set(Cookie $cookie, $noHttp = false): void
     {
         if (self::isAllowedCookie($cookie->name)) {
-            if ($this->viewLogger->requestType !== "SOCEKT") {
+            if ($this->viewLogger->requestType !== "SOCKET") {
                 if (!$noHttp) {
                     self::setHttpCookie($cookie);
                 }
