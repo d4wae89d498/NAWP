@@ -78,19 +78,19 @@ class Admin extends Controller implements ControllerInterface
                 $this->logger->alert("LOGIN SUCCESS");
                 $uid = Utils::generateUID(9);
                 $url = "/admin";
-                if (Cookie::areCookieEnabled($viewLogger)) {
-                    Cookie::set($viewLogger, new Cookie("UID", $uid));
+                if ($viewLogger->cookiePoolInstance->areCookieEnabled()) {
+                    $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
                 } else {
                     $url = Utils::buildUrlParams($url, ["UID" => $uid]);
                 }
                 $_GET["UID"] = $uid;
-                $viewLogger->getSession()->set("user_id", 5);
+                $viewLogger->sessionInstance->set("user_id", 5);
                 //$loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
                 PacketAdapter::redirectTo($httpResponse, $viewLogger, $args, $viewLogger->requestType);
                 return true;
             }
         }
-        $loginMessage = $viewLogger->getSession()->id() . " || " . print_r($_POST, true);
+        $loginMessage = $viewLogger->sessionInstance->id() . " || " . print_r($_POST, true);
         $httpResponse .= " <!DOCTYPE html>
         <html lang=\"en\">" .
             new \App\Views\Elements\Admin\Header($viewLogger, $this->logger, [
@@ -155,7 +155,7 @@ class Admin extends Controller implements ControllerInterface
                             $this->logger,
                             [
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                            "message" => $loginMessage . " SESSION : " . print_r($viewLogger->getSession()->getAll(), true),
+                            "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
                             "rand" => rand(0, 9)
                         ]
                         )),
@@ -182,10 +182,10 @@ class Admin extends Controller implements ControllerInterface
     {
         if (stristr($_SERVER["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
-            if (!$viewLogger->getSession()->isset("user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
+            if (!$viewLogger->sessionInstance->has("user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
                 $_SERVER["REQUEST_URI"] = "/admin/login";
-                PacketAdapter::redirectTo($httpResponse, $viewLogger,  $args, $viewLogger->requestType);
+                PacketAdapter::redirectTo($httpResponse, $viewLogger, $args, $viewLogger->requestType);
                 // We release the request
                 return true;
             }

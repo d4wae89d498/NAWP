@@ -12,6 +12,9 @@ use Workerman\Worker;
 use Workerman\WebServer;
 use Jasny\HttpMessage\ServerRequest;
 
+/**
+ * Class Http
+ */
 class Http
 {
     /**
@@ -28,7 +31,7 @@ class Http
         // needed lines for startup
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
         $kernel = new Kernel();
-
+        Worker::$eventLoopClass = $_ENV["EVENT_LOOP_CLASS"];
         $this->worker = new WebServer(
             "http://0.0.0.0:" .$_ENV["HTTP_WORKER_PORT"],
             [],
@@ -37,8 +40,7 @@ class Http
                     \App\iPolitic\NawpCore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
                     $response = (
-                        new \App\iPolitic\NawpCore\components\RequestHandler
-                        (
+                        new \App\iPolitic\NawpCore\components\RequestHandler(
                             $kernel,
                             isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                         )

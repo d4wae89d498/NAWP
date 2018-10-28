@@ -127,8 +127,8 @@ class Kernel implements LoggerAwareInterface
         $this->viewCollection = new ViewCollection();
         $this->viewCollection->setLogger($this->logger);
         $this->atlas = $this->getAtlas();
-        $this->packetAdapterCache = new FilesystemCache('',0, $this->cachePath);
-        $this->sessionCache = new FilesystemCache('',0, $this->cachePath);
+        $this->packetAdapterCache = new FilesystemCache('', 0, $this->cachePath);
+        $this->sessionCache = new FilesystemCache('', 0, $this->cachePath);
 
         /**
          * Used for logging views

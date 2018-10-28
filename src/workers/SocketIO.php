@@ -24,9 +24,8 @@ class SocketIO
     public function __construct()
     {
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
-
         $kernel = new Kernel();
-        //Worker::$eventLoopClass = '\Workerman\Events\Ev';
+        Worker::$eventLoopClass = $_ENV["EVENT_LOOP_CLASS"];
         $io = new \PHPSocketIO\SocketIO($_ENV["SOCKETIO_WORKER_PORT"]);
 
         $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {

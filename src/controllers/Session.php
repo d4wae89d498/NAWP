@@ -61,7 +61,7 @@ class Session extends Controller implements ControllerInterface
      */
     public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-        $viewLogger->getSession()->set("TEST", "Pomme");
+        $viewLogger->sessionInstance->set("TEST", "Pomme");
         return false;
     }
 

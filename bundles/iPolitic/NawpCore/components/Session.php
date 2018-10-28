@@ -7,15 +7,14 @@
  */
 namespace App\iPolitic\NawpCore\Components;
 
-use App\iPolitic\NawpCore\interfaces\CArray;
-use App\iPolitic\NawpCore\Kernel;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Session
  * Provide php native session replacement
  * @package App\iPolitic\NawpCore\Components
  */
-class Session
+class Session implements ContainerInterface
 {
     /**
      * @var
@@ -72,13 +71,14 @@ class Session
      */
     public function id(): string
     {
-        $uid = (isset($_GET["UID"])
+        $uid = (
+            isset($_GET["UID"])
             ?
             $_GET["UID"]
             :
             (
-            Cookie::isset($this->viewLogger, "UID") ?
-                Cookie::get($this->viewLogger, "UID")
+            $this->viewLogger->cookiePoolInstance->has("UID") ?
+                $this->viewLogger->cookiePoolInstance->get("UID")
                 :
                 Utils::generateUID()
             )
@@ -94,7 +94,7 @@ class Session
      * @return string
      * @throws \Exception
      */
-    public function get(string $key, $id = ""): string
+    public function get($key, $id = ""): string
     {
         return $this->data[$key];
     }
@@ -125,14 +125,12 @@ class Session
     }
 
     /**
-     * Return true if the key exists for this visitorToken
-     * @param string $key
+     * @param string $id
      * @return bool
-     * @throws \Exception
      */
-    public function isset(string $key) : bool
+    public function has($id) : bool
     {
-        return isset($this->data[$key]);
+        return isset($this->data[$id]);
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\iPolitic\NawpCore\components;
-
 
 use App\iPolitic\NawpCore\Kernel;
 use Jasny\HttpMessage\Response;
@@ -56,5 +55,4 @@ class RequestHandler
         // var_dump($psrResponse);
         return $response;
     }
-
 }

@@ -62,11 +62,11 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
     {
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $request, $array, $packet, $requestType);
-        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1) ) {
-            Cookie::destroy($viewLogger);
+        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
+            $viewLogger->cookiePoolInstance->destroy();
         }
         // redirecting to the same page with needed UID param if none where passed to $_SERVER REQUEST URI
-        if (!Cookie::areCookieEnabled($viewLogger)) {
+        if (!$viewLogger->cookiePoolInstance->areCookieEnabled()) {
             if (isset($request->getServerParams()["HTTP_REFERER"])) {
                 $parsedHttpReferer = Utils::parseUrlParams($request->getServerParams()["HTTP_REFERER"]);
                 $parsedHttpUri = $params = Utils::parseUrlParams($request->getServerParams()["HTTP_REFERER"]);
@@ -79,8 +79,8 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                             $viewLogger,
                             $array
                         );
-                        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1) ) {
-                            Cookie::destroy($viewLogger);
+                        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
+                            $viewLogger->cookiePoolInstance->destroy();
                         }
                         return;
                     }
@@ -88,11 +88,11 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             }
         }
         // removing for disallowed cookie
-        foreach (Cookie::getAll($viewLogger) as $k => $v) {
-            if (!Cookie::isAllowedCookie($k)) {
-                Cookie::remove($viewLogger, $k);
+        foreach ($viewLogger->cookiePoolInstance->getAll() as $k => $v) {
+            if (!$viewLogger->cookiePoolInstance->isAllowedCookie($k)) {
+                $viewLogger->cookiePoolInstance->remove($k);
             } else {
-                Cookie::set($viewLogger, new Cookie($k, $v), true);
+                $viewLogger->cookiePoolInstance->set(new Cookie($k, $v), true);
             }
         }
 
@@ -139,26 +139,26 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             $response = json_encode($serverGenerated);
         }
         $toLog = "";
-        if (isset($_ENV["LOG_REQUEST"]) && (((int) $_ENV["LOG_REQUEST"]) === 1) ) {
-           $toLog .= "[".$requestType."] - '".$request->getServerParams()["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'" . PHP_EOL;
+        if (isset($_ENV["LOG_REQUEST"]) && (((int) $_ENV["LOG_REQUEST"]) === 1)) {
+            $toLog .= "[".$requestType."] - '".$request->getServerParams()["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'" . PHP_EOL;
         }
-        if (isset($_ENV["LOG_POST"]) && (((int) $_ENV["LOG_POST"]) === 1) ) {
+        if (isset($_ENV["LOG_POST"]) && (((int) $_ENV["LOG_POST"]) === 1)) {
             $toLog .= " * post -> " . json_encode($_POST) . PHP_EOL;
         }
-        if (isset($_ENV["LOG_GET"]) && (((int) $_ENV["LOG_GET"]) === 1) ) {
+        if (isset($_ENV["LOG_GET"]) && (((int) $_ENV["LOG_GET"]) === 1)) {
             $toLog .= " * get -> " . json_encode($_POST) . PHP_EOL;
         }
-        if (isset($_ENV["LOG_COOKIE"]) && (((int) $_ENV["LOG_COOKIE"]) === 1) ) {
-            $toLog .= " * cookies -> : " . json_encode(Cookie::getAll($viewLogger)) . PHP_EOL;
+        if (isset($_ENV["LOG_COOKIE"]) && (((int) $_ENV["LOG_COOKIE"]) === 1)) {
+            $toLog .= " * cookies -> : " . json_encode($viewLogger->cookiePoolInstance->getAll()) . PHP_EOL;
         }
-        if (isset($_ENV["LOG_SESSION"]) && (((int) $_ENV["LOG_SESSION"]) === 1) ) {
-            $toLog .= " * session -> : " . json_encode($viewLogger->getSession()->getAll()) . PHP_EOL;
+        if (isset($_ENV["LOG_SESSION"]) && (((int) $_ENV["LOG_SESSION"]) === 1)) {
+            $toLog .= " * session -> : " . json_encode($viewLogger->sessionInstance->getAll()) . PHP_EOL;
         }
         if (!empty($toLog)) {
             $this->logger->info($toLog);
         }
-        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1) ) {
-            Cookie::destroy($viewLogger);
+        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
+            $viewLogger->cookiePoolInstance->destroy();
         }
         return;
     }

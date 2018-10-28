@@ -3,6 +3,7 @@ namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
 use Psr\Http\Message\ServerRequestInterface;
+use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
 
 /**
  * ViewLogger will store all the data given to the template class
@@ -60,21 +61,28 @@ class ViewLogger
      */
     public $request;
     /**
-     * @var null|Session
+     * @var Session
      */
-    private $sessionInstance = null;
+    public $sessionInstance;
+    /**
+     * @var CookiePool
+     */
+    public $cookiePoolInstance;
 
     /**
      * ViewLogger constructor.
      * @param Kernel $kernel
      * @param ServerRequestInterface $request
      * @param null $array
-     * @param Packet|null $packet
+     * @param null $packet
      * @param string $requestType
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function __construct(Kernel &$kernel, ServerRequestInterface &$request, $array = null, $packet = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
     {
         $this->kernel = $kernel;
+        $this->cookiePoolInstance = new CookiePool($this);
+        $this->sessionInstance = new Session($this);
         $this->request = $request;
         $this->requestType = $requestType;
         if ($array !== null) {
@@ -85,32 +93,13 @@ class ViewLogger
             // and if cookies were passed
             if (isset($packet["cookies"]) && is_array($packet["cookies"])) {
                 foreach ($packet["cookies"] as $k => $v) {
-                    Cookie::set($this, new Cookie($k, $v));
+                    $this->cookiePoolInstance->set(new Cookie($k, $v));
                 }
             }
         }
-        $this->areCookieEnabled = Cookie::areCookieEnabled($this);
+        $this->areCookieEnabled =  $this->cookiePoolInstance->areCookieEnabled();
         $this->cookieEnabledLocked = true;
-        Cookie::setTestCookie($this);
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        // if we are retrieving the cookie array
-        if ($name === "cookies") {
-            // we check iuf $_COOKIES are array
-            if (isset($_COOKIE) && is_array($_COOKIE) && is_array($this->cookies)) {
-                // if yes we set it in $this->cookies array
-                foreach ($_COOKIE as $k => $v) {
-                    $this->cookies[$k] = $v;
-                }
-            }
-        }
-        return $this->$name;
+        $this->cookiePoolInstance->setTestCookie();
     }
 
     /**
@@ -241,17 +230,5 @@ class ViewLogger
             <?php endforeach; ?>
         <?php
         });
-    }
-
-    /**
-     * @return \App\iPolitic\NawpCore\Components\Session
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public function getSession(): Session
-    {
-        if ($this->sessionInstance === null) {
-            $this->sessionInstance =  new Session($this);
-        }
-        return $this->sessionInstance;
     }
 }

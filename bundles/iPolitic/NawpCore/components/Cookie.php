@@ -7,17 +7,19 @@
  */
 namespace App\iPolitic\NawpCore\components;
 
-use Workerman\Protocols\Http;
+use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Cookie
  * @package App\iPolitic\NawpCore\components
  */
-class Cookie
+class Cookie implements ContainerInterface
 {
     public const COOKIE8_SID_KEY = "SID";
     public const DEFAULT_COOKIE_DURATION = 30 * 60; // in seconds
     public const DEFAULT_TEST_COOKIE_STR = "TEST_COOKIE"; // test cookie name for checking if cookies are enabled or not
+
     /**
      * @var string
      */
@@ -45,180 +47,23 @@ class Cookie
     }
 
     /**
-     * Will set a cookie
-     * @param Cookie $cookie
-     */
-    public static function setHttpCookie(Cookie $cookie): void
-    {
-        if (self::isAllowedCookie($cookie->name)) {
-            $expireDate = date("D, d-m-Y H:i:s", time() + $cookie->duration) . ' GMT';
-            Http::header("Set-Cookie: {$cookie->name}={$cookie->value}; Expires={$expireDate};");
-        }
-        return;
-    }
-
-    /**
-     * Will remove a cookie from an hhtp request
-     * @param string $cookieName
-     */
-    public static function removeHttpCookie(string $cookieName): void
-    {
-        $val = "";
-        $expireDate = date("D, d-m-Y H:i:s", time() - 3600) . ' GMT';
-        Http::header("Set-Cookie: {$cookieName}={$val}; Expires={$expireDate};");
-    }
-
-    /**
-     * Will return all defined Http cookies
-     * @return array
-     */
-    public static function getHttpCookies(): array
-    {
-        return $_COOKIE;
-    }
-
-    /**
-     * Will return true if this cookie name is allowed, false else.
-     * @param string $cookieName
-     * @return bool
-     */
-    public static function isAllowedCookie(string $cookieName): bool
-    {
-       return in_array(
-            $cookieName,
-            array_merge(
-                [Cookie::DEFAULT_TEST_COOKIE_STR],
-                explode(",", $_ENV["COOKIE_WHITELIST"])
-            )
-        );
-    }
-
-    /**
-     * Should set cookie in http header, 20
-     * @param ViewLogger $viewLogger
-     * @param Cookie $cookie
-     * @param bool $noHttp
-     */
-    public static function set(ViewLogger &$viewLogger, Cookie $cookie, $noHttp = false): void
-    {
-        if (self::isAllowedCookie($cookie->name)) {
-            if ($viewLogger->requestType !== "SOCEKT") {
-                if (!$noHttp) {
-                    self::setHttpCookie($cookie);
-                }
-            }
-            $viewLogger->cookies[$cookie->name] =
-            $GLOBALS["_COOKIE"][$cookie->name] =
-            $_COOKIE[$cookie->name] =
-                $cookie->value;
-        }
-        return;
-    }
-
-    /**setTestCookie
-     * Will set a first cookie so that we can test it later
-     * @param ViewLogger $viewLogger
-     */
-    public static function setTestCookie(ViewLogger &$viewLogger): void
-    {
-        if (!self::areCookieEnabled($viewLogger)) {
-            self::set(
-                $viewLogger,
-                new Cookie(
-                    self::DEFAULT_TEST_COOKIE_STR,
-                    self::DEFAULT_TEST_COOKIE_STR,
-                    self::DEFAULT_COOKIE_DURATION
-                )
-            );
-        }
-        return;
-    }
-
-    /**
-     * @param ViewLogger $viewLogger
-     * @return bool
-     */
-    public static function areCookieEnabled(ViewLogger &$viewLogger): bool
-    {
-        return $viewLogger->cookieEnabledLocked ? $viewLogger->areCookieEnabled : self::isset($viewLogger, self::DEFAULT_TEST_COOKIE_STR);
-    }
-
-    /**
-     * @param ViewLogger $viewLogger
-     * @param string $name
-     * @return string
-     */
-    public static function get(ViewLogger &$viewLogger, string $name): string
-    {
-        return
-            $viewLogger->cookies[$name] =
-            $_COOKIE[$name] =
-            (
-                isset($viewLogger->cookies[$name])
-            ?
-                $viewLogger->cookies[$name]
-            :
-                $_COOKIE[$name]
-            );
-    }
-
-    /**
-     * @param ViewLogger $viewLogger
      * @param string $key
      * @return bool
      */
-    public static function isset(ViewLogger $viewLogger, string $key): bool
+    public function has($key)
     {
-        return
-            isset($viewLogger->cookies[$key])
-            ?
-                true
-            :
-                (isset($_COOKIE[$key]));
-    }
-
-
-    /**
-     * @param ViewLogger $viewLogger
-     * @return array
-     */
-    public static function getAll(ViewLogger $viewLogger): array
-    {
-        if (!is_array($_COOKIE)) {
-            $_COOKIE = [];
-        } else {
-            foreach ($_COOKIE as $k => $v) {
-                if (!Cookie::isset($viewLogger, $k)) {
-                    Cookie::set($viewLogger, new Cookie($k, $v));
-                }
-            }
-        }
-        return $viewLogger->cookies;
+        return isset($this->$key);
     }
 
     /**
-     * @param ViewLogger $viewLogger
      * @param string $key
+     * @return mixed|void
+     * @throws NAWPNotFoundExceptionInterface
      */
-    public static function remove(ViewLogger &$viewLogger, string $key): void
+    public function get($key)
     {
-        if ($viewLogger->requestType !== "SOCKET") {
-            self::removeHttpCookie($key);
+        if (!$this->has($key)) {
+            throw new NAWPNotFoundExceptionInterface();
         }
-        unset($viewLogger->cookies[$key]);
-        return;
-    }
-
-    /**
-     * @param ViewLogger $viewLogger
-     */
-    public static function destroy(ViewLogger &$viewLogger): void
-    {
-        foreach (Cookie::getAll($viewLogger) as $k => $v) {
-            if (strlen(strval($k)) > 0) {
-                Cookie::remove($viewLogger, $k);
-            }
-        }
-        return;
     }
 }

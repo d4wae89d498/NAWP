@@ -71,7 +71,7 @@ class PacketAdapter
         if ($viewLogger->requestType === "SOCKET") {
             $hashedId = $_POST["originalClientVar"];
         } else {
-            $hashedId = $viewLogger->getSession()->id();
+            $hashedId = $viewLogger->sessionInstance->id();
             $this->cache->set("pa".$hashedId, serialize($_SERVER));
         }
         return $hashedId;
