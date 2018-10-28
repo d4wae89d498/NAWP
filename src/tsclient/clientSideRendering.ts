@@ -7,11 +7,11 @@ import * as morphdom from "morphdom";
  */
 export class ClientSideRendering {
     public static MAX_TPL_DEEP = 99;
-    public noRedir: NoRedirection;
-    public static noRedir;
-    public constructor(noRedir: NoRedirection) {
-        this.noRedir = noRedir;
-        ClientSideRendering.noRedir = noRedir;
+    public noRedirection: NoRedirection;
+    public static noRedirection: NoRedirection;
+    public constructor(noRedirection: NoRedirection) {
+        this.noRedirection = noRedirection;
+        ClientSideRendering.noRedirection = noRedirection;
     }
     /**
      * Will reshow the twig previously hidden
@@ -84,6 +84,7 @@ export class ClientSideRendering {
     /**
      * Convert id to type
      * @param {string} id
+     * @param {boolean} idOnly
      * @returns {string}
      * @constructor
      */
@@ -92,16 +93,14 @@ export class ClientSideRendering {
         if (idOnly) {
             return generatedID;
         }
-        const foundIndex = window["baseTemplates"].findIndex(function(element) {
+        return window["baseTemplates"].findIndex(function(element) {
             return element.generatedID === generatedID;
         });
-        return foundIndex;
     }
 
     /**
      * Will generate a new type id using a template id/type
      * @param {string} type
-     * @param {number} minus
      * @returns {string}
      */
     public static getMaxType(type: string): string {
@@ -122,8 +121,8 @@ export class ClientSideRendering {
      * Will read current value of <meta data-url="..." content="READING HERE"> tag
      */
     public static getCurrentUrl(): string {
-        let p: any;
-        return (p = document.head.querySelector("[name~=data-url][content]")).content;
+        const p: any = document.head.querySelector("[name~=data-url][content]");
+        return p.content;
     }
 
     /**
@@ -146,7 +145,7 @@ export class ClientSideRendering {
                         (Object.keys(states[tplKey]["references"])).length > 0 )  {
                         states[tplKey]["html_elements"] = [];
                         for (let referenceKey in states[tplKey]["references"]) {
-                            if (typeof renderedArray[states[tplKey]["references"][referenceKey]] === "undefined") {
+                            if (typeof states[tplKey]["references"] !== "undefined" && states[tplKey]["references"].hasOwnProperty(referenceKey)) {
                                 renderedArray[states[tplKey]["references"][referenceKey]] = "BONJOUR";
                                 let statesArray: object = {};
                                 statesArray[states[tplKey]["references"][referenceKey]] = states[states[tplKey]["references"][referenceKey]];
@@ -182,7 +181,7 @@ export class ClientSideRendering {
                                 }
                             }
                         }
-                        ClientSideRendering.noRedir.init();
+                        ClientSideRendering.noRedirection.init(states);
                     }
                 }
             }

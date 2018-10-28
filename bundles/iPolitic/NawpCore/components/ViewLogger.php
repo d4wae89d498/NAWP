@@ -2,6 +2,7 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * ViewLogger will store all the data given to the template class
@@ -17,6 +18,11 @@ class ViewLogger
     public const HTML_STATES_PREFIX = "html_elements";
     public const DEFAULT_REQUEST_TYPE = "GET";
     /**
+     * All the custom template methods, and their associated tags
+     * @var mixed
+     */
+    public static $templatesFields = ["twig" => null];
+    /**
      * @var array|null
      */
     public $array = [];
@@ -28,26 +34,48 @@ class ViewLogger
      * @var string
      */
     public $requestType = "";
-
+    /**
+     * @var array
+     */
     public $cookies = [];
-
     /**
      * @var bool
      */
     public $areCookieEnabled = false;
+    /**
+     * @var bool
+     */
     public $cookieEnabledLocked = false;
+    /**
+     * @var Kernel
+     */
     public $kernel;
-    public $sessionInstance = null;
+    /**
+     * Array that contains all the templates
+     * @var mixed
+     */
+    public $templatesData = [];
+    /**
+     * @var ServerRequestInterface
+     */
+    public $request;
+    /**
+     * @var null|Session
+     */
+    private $sessionInstance = null;
+
     /**
      * ViewLogger constructor.
      * @param Kernel $kernel
+     * @param ServerRequestInterface $request
      * @param null $array
      * @param Packet|null $packet
      * @param string $requestType
      */
-    public function __construct(Kernel &$kernel, $array = null, $packet = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
+    public function __construct(Kernel &$kernel, ServerRequestInterface &$request, $array = null, $packet = null, string $requestType = self::DEFAULT_REQUEST_TYPE)
     {
         $this->kernel = $kernel;
+        $this->request = $request;
         $this->requestType = $requestType;
         if ($array !== null) {
             $this->array = $array;
@@ -84,17 +112,6 @@ class ViewLogger
         }
         return $this->$name;
     }
-
-    /**
-     * Array that contains all the templates
-     * @var mixed
-     */
-    public $templatesData = [];
-    /**
-     * All the custom template methods, and their associated tags
-     * @var mixed
-     */
-    public static $templatesFields = ["twig" => null];
 
     /**
      * Will assign a template, using a template instance, or a template data array

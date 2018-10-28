@@ -1,6 +1,5 @@
-import LoginForm from "./elements/loginForm";
-
 const $ = window["$"];
+import LoginForm from "./elements/loginForm";
 import {SocketClient} from "./socketClient";
 
 /**
@@ -9,6 +8,7 @@ import {SocketClient} from "./socketClient";
 export class NoRedirection {
     public SocketClient: SocketClient;
     public pages: object;
+    public states: object;
     public constructor() {
         this.pages = [
             new LoginForm(),
@@ -17,7 +17,8 @@ export class NoRedirection {
         this.init();
     }
 
-    public init(): void {
+    public init(states: object = {}): void {
+        this.states = states;
         this.applyForm();
     }
 
@@ -37,16 +38,20 @@ export class NoRedirection {
                 let templates: object = window["templates"];
                 let shortTemplate = {};
                 for (let template in templates) {
-                    shortTemplate[template] = templates[template];
-                    if (typeof shortTemplate[template]["twig"] !== "undefined") {
-                        delete shortTemplate[template]["twig"];
+                    if (templates.hasOwnProperty(template)) {
+                        shortTemplate[template] = templates[template];
+                        if (typeof shortTemplate[template]["twig"] !== "undefined") {
+                            delete shortTemplate[template]["twig"];
+                        }
                     }
                 }
                 this.SocketClient.socket.emit("packet", {data: formData, url: "/admin/login", clientVar: window["clientVar"], templates: shortTemplate, cookies: document.cookie, http_referer: window.location.href});
             });
 
         for (let page in this.pages) {
-            this.pages[page].refreshTick();
+            if (this.pages.hasOwnProperty(page)) {
+                this.pages[page].refreshTick();
+            }
         }
         return;
     }

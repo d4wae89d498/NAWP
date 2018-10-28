@@ -45,7 +45,7 @@ class Packet implements \ArrayAccess, ContainerInterface
      */
     public function __construct(Kernel &$kernel, ServerRequestInterface &$request, array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false)
     {
-        $this->request &= $request;
+        $this->request = $request;
         $this->packetAdapter = new PacketAdapter($kernel->packetAdapterCache);
         $nData = [];
         if (gettype($data) === "array") {

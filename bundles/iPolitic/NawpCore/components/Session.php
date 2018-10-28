@@ -30,12 +30,6 @@ class Session
      */
     public $sessionExpireDate;
     /**
-     * The session array
-     * @var array
-     */
-    public static $session = [];
-
-    /**
      * Session duration before expiration
      */
     public const sessionSecondsDuration = 45 * 60; // 45 min
@@ -64,9 +58,11 @@ class Session
      */
     public function firstPopulate() : void
     {
-        if ($this->viewLogger->kernel->sessionCache->has($this->id())) {
+        if ($this->isLoggedIn()) {
             $cachedValue = $this->viewLogger->kernel->sessionCache->get($this->id());
             $this->data = unserialize($cachedValue);
+        } else {
+            $this->logIn();
         }
     }
 
@@ -76,18 +72,19 @@ class Session
      */
     public function id(): string
     {
-        return
-            (isset($_GET["UID"])
-                ?
-                $_GET["UID"]
+        $uid = (isset($_GET["UID"])
+            ?
+            $_GET["UID"]
+            :
+            (
+            Cookie::isset($this->viewLogger, "UID") ?
+                Cookie::get($this->viewLogger, "UID")
                 :
-                (
-                    Cookie::isset($this->viewLogger, "UID") ?
-                        Cookie::get($this->viewLogger, "UID")
-                    :
-                        Utils::generateUID()
-                )
-            );
+                Utils::generateUID()
+            )
+        );
+        $uid = empty(strval($uid)) ? Utils::generateUID() : $uid;
+        return $uid;
     }
 
     /**

@@ -84,14 +84,13 @@ class Cookie
      */
     public static function isAllowedCookie(string $cookieName): bool
     {
-        $a = in_array(
+       return in_array(
             $cookieName,
             array_merge(
                 [Cookie::DEFAULT_TEST_COOKIE_STR],
                 explode(",", $_ENV["COOKIE_WHITELIST"])
             )
         );
-        return $a;
     }
 
     /**
@@ -178,6 +177,25 @@ class Cookie
                 (isset($_COOKIE[$key]));
     }
 
+
+    /**
+     * @param ViewLogger $viewLogger
+     * @return array
+     */
+    public static function getAll(ViewLogger $viewLogger): array
+    {
+        if (!is_array($_COOKIE)) {
+            $_COOKIE = [];
+        } else {
+            foreach ($_COOKIE as $k => $v) {
+                if (!Cookie::isset($viewLogger, $k)) {
+                    Cookie::set($viewLogger, new Cookie($k, $v));
+                }
+            }
+        }
+        return $viewLogger->cookies;
+    }
+
     /**
      * @param ViewLogger $viewLogger
      * @param string $key
@@ -196,7 +214,11 @@ class Cookie
      */
     public static function destroy(ViewLogger &$viewLogger): void
     {
-        $viewLogger->cookies = [];
+        foreach (Cookie::getAll($viewLogger) as $k => $v) {
+            if (strlen(strval($k)) > 0) {
+                Cookie::remove($viewLogger, $k);
+            }
+        }
         return;
     }
 }

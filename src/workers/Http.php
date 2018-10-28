@@ -14,6 +14,9 @@ use Jasny\HttpMessage\ServerRequest;
 
 class Http
 {
+    /**
+     * @var WebServer
+     */
     public $worker;
 
     /**
@@ -27,21 +30,19 @@ class Http
         $kernel = new Kernel();
 
         $this->worker = new WebServer(
-            "http://0.0.0.0:5616",
+            "http://0.0.0.0:" .$_ENV["HTTP_WORKER_PORT"],
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
-                $response = "";
                 try {
                     \App\iPolitic\NawpCore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
-                    $kernel->handle(
-                        $response,
-                        $request,
-                        isset($_SERVER["REQUEST_METHOD"]) ?
-                        $_SERVER["REQUEST_METHOD"] : "GET",
-                        null,
-                        $kernel->rawTwig
-                    );
+                    $response = (
+                        new \App\iPolitic\NawpCore\components\RequestHandler
+                        (
+                            $kernel,
+                            isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
+                        )
+                    )->handle($request);
                     $connection->send($response);
                 } catch (\Exception $exception) {
                     $connection->send(
@@ -55,8 +56,8 @@ class Http
             }
         );
         $this->worker->name = "http";
-        $this->worker->count = 1;
-        $this->worker->addRoot("127.0.0.1", join(DIRECTORY_SEPARATOR, [__DIR__,"..","..","public"]));
+        $this->worker->count = $_ENV["HTTP_WORKER_CNT"];
+        $this->worker->addRoot($_ENV["DOMAIN_NAME"], join(DIRECTORY_SEPARATOR, [__DIR__,"..","..","public"]));
         Worker::runAll();
     }
 }

@@ -10,9 +10,12 @@ namespace App\iPolitic\NawpCore;
 use App\iPolitic\NawpCore\Collections\ControllerCollection;
 use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
+use App\iPolitic\NawpCore\Components\Exception;
 use App\iPolitic\NawpCore\components\Logger;
 use App\iPolitic\NawpCore\components\Packet;
+use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use App\iPolitic\NawpCore\Components\Utils;
@@ -102,6 +105,8 @@ class Kernel implements LoggerAwareInterface
      * @param array $array
      * @param ViewLogger|null $viewLogger
      * @throws \iPolitic\Solex\RouterException
+     * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function handle(&$response, ServerRequestInterface &$request, string $requestType, $packet = null, $array = [], &$viewLogger = null): void
     {
@@ -122,13 +127,14 @@ class Kernel implements LoggerAwareInterface
         $this->viewCollection = new ViewCollection();
         $this->viewCollection->setLogger($this->logger);
         $this->atlas = $this->getAtlas();
-        $this->packetAdapterCache = new FilesystemCache();
-        $this->sessionCache = new FilesystemCache();
+        $this->packetAdapterCache = new FilesystemCache('',0, $this->cachePath);
+        $this->sessionCache = new FilesystemCache('',0, $this->cachePath);
 
         /**
          * Used for logging views
          */
-        $viewLogger = new Components\ViewLogger($this);
+        $rq = new ServerRequest();
+        $viewLogger = new Components\ViewLogger($this, $rq);
         /**
          * Used for creating controllers instance
          */

@@ -16,6 +16,7 @@ use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
 use App\iPolitic\NawpCore\Components\Session;
 use App\iPolitic\NawpCore\Kernel;
+use Symfony\Component\Cache\Exception\InvalidArgumentException;
 
 /**
  * Class Admin
@@ -85,7 +86,7 @@ class Admin extends Controller implements ControllerInterface
                 $_GET["UID"] = $uid;
                 $viewLogger->getSession()->set("user_id", 5);
                 //$loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, $url, $args, $viewLogger->requestType);
+                PacketAdapter::redirectTo($httpResponse, $viewLogger, $args, $viewLogger->requestType);
                 return true;
             }
         }
@@ -129,6 +130,7 @@ class Admin extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
@@ -153,7 +155,7 @@ class Admin extends Controller implements ControllerInterface
                             $this->logger,
                             [
                             "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                            "message" => $loginMessage . " SESSION : " . print_r(Session::getAll($viewLogger), true),
+                            "message" => $loginMessage . " SESSION : " . print_r($viewLogger->getSession()->getAll(), true),
                             "rand" => rand(0, 9)
                         ]
                         )),
@@ -182,7 +184,8 @@ class Admin extends Controller implements ControllerInterface
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
             if (!$viewLogger->getSession()->isset("user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, "/admin/login", $args, $viewLogger->requestType);
+                $_SERVER["REQUEST_URI"] = "/admin/login";
+                PacketAdapter::redirectTo($httpResponse, $viewLogger,  $args, $viewLogger->requestType);
                 // We release the request
                 return true;
             }

@@ -7,7 +7,6 @@
  */
 namespace App\iPolitic\NawpCore\Components;
 
-use App\iPolitic\NawpCore\Kernel;
 use Psr\SimpleCache\CacheInterface;
 use Workerman\Protocols\Http;
 
@@ -21,7 +20,6 @@ class PacketAdapter
      * @var CacheInterface
      */
     public $cache;
-
     /**
      * PacketAdapter constructor.
      * @param CacheInterface $cache
@@ -36,26 +34,24 @@ class PacketAdapter
      *  Will redirect the http or the socket response
      * @param string $response
      * @param ViewLogger $viewLogger
-     * @param string $url
      * @param array $args
      * @param string $requestType
      * @throws \iPolitic\Solex\RouterException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public static function redirectTo(
         string &$response,
         ViewLogger &$viewLogger,
-        string $url,
         array $args = [],
         string $requestType = ViewLogger::DEFAULT_REQUEST_TYPE
     ): void {
         if (strtolower($requestType) !== "socket") {
-            Http::header("Location: " . $url);
+            Http::header("Location: " . ($viewLogger->request->getServerParams()["REQUEST_URI"]));
         } else {
-            $_SERVER["REQUEST_URI"] = $url;
             $viewLogger->kernel->handle(
                 $response,
-                isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : ViewLogger::DEFAULT_REQUEST_TYPE,
-                $_SERVER["REQUEST_URI"],
+                $request,
+                $viewLogger->requestType,
                 null,
                 $args,
                 $viewLogger
@@ -76,8 +72,8 @@ class PacketAdapter
             $hashedId = $_POST["originalClientVar"];
         } else {
             $hashedId = $viewLogger->getSession()->id();
+            $this->cache->set("pa".$hashedId, serialize($_SERVER));
         }
-        $this->cache->set($hashedId, serialize($_SERVER));
         return $hashedId;
     }
 
@@ -89,7 +85,7 @@ class PacketAdapter
      */
     public function get(string $id): array
     {
-        return unserialize($this->cache->get($id));
+        return unserialize($this->cache->get("pa".$id));
     }
 
     public static function populateGet(): void

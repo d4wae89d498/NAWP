@@ -13,14 +13,21 @@ use Workerman\ {Worker};
 
 class SocketIO
 {
+    /**
+     * @var Worker
+     */
     public $worker;
+
+    /**
+     * SocketIO constructor.
+     */
     public function __construct()
     {
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
 
         $kernel = new Kernel();
         //Worker::$eventLoopClass = '\Workerman\Events\Ev';
-        $io = new \PHPSocketIO\SocketIO(8070);
+        $io = new \PHPSocketIO\SocketIO($_ENV["SOCKETIO_WORKER_PORT"]);
 
         $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {
             $socket->on("packet", function (array $data) use (&$kernel, $socket) {
@@ -29,34 +36,11 @@ class SocketIO
                     /**
                      * @var $socket \PHPSocketIO\Socket
                      */
-                    $response = "";
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
                     $packet = (new Packet($kernel, $request, $data, true))
                         ->useAdaptor()
                         ->toArray();
-
-                    $kernel->handle(
-                        $response,
-                        $request,
-                        "SOCKET",
-                        $packet,
-                        $kernel->rawTwig
-                    );
-                    if (is_array($response)) {
-                        $newResponse = [];
-                        foreach ($response as $k => $v) {
-                            if (is_array($v)) {
-                                foreach ($v as $u => $w) {
-                                    if (is_array($w)) {
-                                        foreach ($w as $a => $b) {
-                                            $newResponse[$k][$u][$a] = $b;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        $response = $newResponse;
-                    }
+                    $response = (new \App\iPolitic\NawpCore\components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
                     $socket->emit("packetout", $response);
                     return;
                 } catch (Exception $ex) {
@@ -68,6 +52,10 @@ class SocketIO
                 }
             });
         });
+        $this->worker = $io->worker;
+        $this->worker->name = "socketio";
+        $this->worker->count = $_ENV["SOCKETIO_WORKER_CNT"];
+
         Worker::runAll();
     }
 }

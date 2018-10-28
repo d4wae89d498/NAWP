@@ -17,6 +17,7 @@ use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -52,14 +53,18 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      * @param string $requestType
      * @param mixed $packet
      * @param array $array
-     * @param $viewLogger|null ViewLogger
+     * @param ViewLogger|null $viewLogger
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function handle(Kernel &$kernel, &$response, ServerRequestInterface &$request, $requestType, $packet = null, $array = [], $viewLogger = null): void
+    public function handle(Kernel &$kernel, string &$response, ServerRequestInterface &$request, $requestType, $packet = null, $array = [], $viewLogger = null): void
     {
         $response = "";
-        $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $array, $packet, $requestType);
+        $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $request, $array, $packet, $requestType);
+        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1) ) {
+            Cookie::destroy($viewLogger);
+        }
         // redirecting to the same page with needed UID param if none where passed to $_SERVER REQUEST URI
         if (!Cookie::areCookieEnabled($viewLogger)) {
             if (isset($request->getServerParams()["HTTP_REFERER"])) {
@@ -67,31 +72,31 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 $parsedHttpUri = $params = Utils::parseUrlParams($request->getServerParams()["HTTP_REFERER"]);
                 if (isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"])) {
                     $params["UID"] = $parsedHttpReferer["UID"];
+                    $_SERVER["REQUEST_URI"] = Utils::buildUrlParams($request->getServerParams()["REQUEST_URI"], $params);
                     if (!stristr($request->getServerParams()["REQUEST_URI"], "logout")) {
                         PacketAdapter::redirectTo(
                             $response,
                             $viewLogger,
-                            Utils::buildUrlParams($request->getServerParams()["REQUEST_URI"], $params),
                             $array
                         );
+                        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1) ) {
+                            Cookie::destroy($viewLogger);
+                        }
                         return;
                     }
                 }
             }
         }
-        // removing not allowed cookies
-        if ($requestType !== "SOCKET") {
-            // removing for disallowed cookie
-            foreach (Cookie::getHttpCookies() as $k => $v) {
-                if (!Cookie::isAllowedCookie($k)) {
-                    Cookie::remove($viewLogger, $k);
-                } else {
-                    Cookie::set($viewLogger, new Cookie($k, $v), true);
-                }
+        // removing for disallowed cookie
+        foreach (Cookie::getAll($viewLogger) as $k => $v) {
+            if (!Cookie::isAllowedCookie($k)) {
+                Cookie::remove($viewLogger, $k);
+            } else {
+                Cookie::set($viewLogger, new Cookie($k, $v), true);
             }
         }
-        $controllerMethodsCalled = [];
 
+        $controllerMethodsCalled = [];
         // for each controller methods ordered by priority
         foreach ($this->getOrderedByPriority($request) as $controllerMethod) {
             //var_dump($controllerMehod);
@@ -133,7 +138,28 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             $serverGenerated = $viewLogger->renderedTemplates;
             $response = json_encode($serverGenerated);
         }
-        $this->logger->info("[".$requestType."] - '".$request->getServerParams()["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'");
+        $toLog = "";
+        if (isset($_ENV["LOG_REQUEST"]) && (((int) $_ENV["LOG_REQUEST"]) === 1) ) {
+           $toLog .= "[".$requestType."] - '".$request->getServerParams()["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'" . PHP_EOL;
+        }
+        if (isset($_ENV["LOG_POST"]) && (((int) $_ENV["LOG_POST"]) === 1) ) {
+            $toLog .= " * post -> " . json_encode($_POST) . PHP_EOL;
+        }
+        if (isset($_ENV["LOG_GET"]) && (((int) $_ENV["LOG_GET"]) === 1) ) {
+            $toLog .= " * get -> " . json_encode($_POST) . PHP_EOL;
+        }
+        if (isset($_ENV["LOG_COOKIE"]) && (((int) $_ENV["LOG_COOKIE"]) === 1) ) {
+            $toLog .= " * cookies -> : " . json_encode(Cookie::getAll($viewLogger)) . PHP_EOL;
+        }
+        if (isset($_ENV["LOG_SESSION"]) && (((int) $_ENV["LOG_SESSION"]) === 1) ) {
+            $toLog .= " * session -> : " . json_encode($viewLogger->getSession()->getAll()) . PHP_EOL;
+        }
+        if (!empty($toLog)) {
+            $this->logger->info($toLog);
+        }
+        if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1) ) {
+            Cookie::destroy($viewLogger);
+        }
         return;
     }
 
