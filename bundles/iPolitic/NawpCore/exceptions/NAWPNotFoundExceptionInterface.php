@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -17,5 +17,4 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class NAWPNotFoundExceptionInterface extends Exception implements NotFoundExceptionInterface
 {
-
 }

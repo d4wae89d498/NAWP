@@ -8,11 +8,9 @@
 
 use App\iPolitic\NawpCore\Kernel;
 use App\iPolitic\NawpCore\Components\Exception;
-use App\iPolitic\NawpCore\Components\Utils;
 use Workerman\Worker;
 use Workerman\WebServer;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-
+use Jasny\HttpMessage\ServerRequest;
 
 class Http
 {
@@ -34,21 +32,13 @@ class Http
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
                 $response = "";
                 try {
-
-                    $request = \App\iPolitic\NawpCore\components\ServerRequest::fromGlobals
-                    (
-                        $_SERVER,
-                        $_GET,
-                        $_POST,
-                        $_COOKIE,
-                        $_FILES
-                    );
-                    var_dump($request);
+                    \App\iPolitic\NawpCore\Components\PacketAdapter::populateGet();
+                    $request = (new ServerRequest())->withGlobalEnvironment(true);
                     $kernel->handle(
                         $response,
+                        $request,
                         isset($_SERVER["REQUEST_METHOD"]) ?
                         $_SERVER["REQUEST_METHOD"] : "GET",
-                        $_SERVER["REQUEST_URI"],
                         null,
                         $kernel->rawTwig
                     );

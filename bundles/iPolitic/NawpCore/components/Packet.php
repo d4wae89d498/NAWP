@@ -10,6 +10,7 @@ namespace App\iPolitic\NawpCore\components;
 use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
 use App\iPolitic\NawpCore\Kernel;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * The packet Class
@@ -29,17 +30,22 @@ class Packet implements \ArrayAccess, ContainerInterface
      * @var array
      */
     private $container = ["data" => [], "url" => "", "clientVar" => "", "templates" => [], "cookies" => [], "http_referer" => null, "original_client_var"];
-
+    /**
+     * @var ServerRequestInterface
+     */
+    public $request;
     /**
      * Packet constructor.
      * @param Kernel $kernel
+     * @param ServerRequestInterface $request
      * @param array $data
      * @param bool $decryptClientVar
      * @throws \Exception
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function __construct(Kernel &$kernel, array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false)
+    public function __construct(Kernel &$kernel, ServerRequestInterface &$request, array $data = self::DEFAULT_OBJ, bool $decryptClientVar = false)
     {
+        $this->request &= $request;
         $this->packetAdapter = new PacketAdapter($kernel->packetAdapterCache);
         $nData = [];
         if (gettype($data) === "array") {
@@ -132,22 +138,17 @@ class Packet implements \ArrayAccess, ContainerInterface
                 unset($this->container["data"][$key]);
             }
         }
-
         // file name that contains needed sessions data
         unset($this->container["data"]["clientVar"]);
         $this->container["data"]["originalClientVar"] = $this->container["original_client_var"];
         $_POST = $this->container["data"];
-
         // setting php globals
         $_SERVER["REQUEST_URI"] = $this->container["url"];
         $_SERVER["HTTP_REFERER"] = $this->container["http_referer"];
-
-        $_GET = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
-        var_dump($_POST);
+        PacketAdapter::populateGet();
         $GLOBALS["_POST"] = $_POST;
         $GLOBALS["_GET"] = $_GET;
         $GLOBALS["_SERVER"] = $_SERVER;
-
         return $this;
     }
 
@@ -171,6 +172,6 @@ class Packet implements \ArrayAccess, ContainerInterface
      */
     public function has($id)
     {
-        return isset ($this->container[$id]);
+        return isset($this->container[$id]);
     }
 }

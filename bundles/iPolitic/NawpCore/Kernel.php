@@ -12,6 +12,7 @@ use App\iPolitic\NawpCore\Collections\ViewCollection;
 use App\iPolitic\NawpCore\Components\Collection;
 use App\iPolitic\NawpCore\components\Logger;
 use App\iPolitic\NawpCore\components\Packet;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use App\iPolitic\NawpCore\Components\Utils;
@@ -96,15 +97,15 @@ class Kernel implements LoggerAwareInterface
      *  Will handle a request
      * @param string $response
      * @param string $requestType
-     * @param string $requestArgs
+     * @param ServerRequestInterface $request
      * @param Packet|null $packet
      * @param array $array
      * @param ViewLogger|null $viewLogger
      * @throws \iPolitic\Solex\RouterException
      */
-    public function handle(&$response, string $requestType, $requestArgs, $packet = null, $array = [], &$viewLogger = null): void
+    public function handle(&$response, ServerRequestInterface &$request, string $requestType, $packet = null, $array = [], &$viewLogger = null): void
     {
-        $this->controllerCollection->handle($this, $response, $requestType, $requestArgs, $packet, $array, $viewLogger);
+        $this->controllerCollection->handle($this, $response, $request, $requestType, $packet, $array, $viewLogger);
     }
 
     /**

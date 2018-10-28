@@ -8,7 +8,7 @@
 
 use App\iPolitic\NawpCore\Kernel;
 use App\iPolitic\NawpCore\Components\Packet;
-use App\iPolitic\NawpCore\Components\Utils;
+use Jasny\HttpMessage\ServerRequest;
 use Workerman\ {Worker};
 
 class SocketIO
@@ -30,22 +30,15 @@ class SocketIO
                      * @var $socket \PHPSocketIO\Socket
                      */
                     $response = "";
-                    $packet = (new Packet($kernel, $data, true))
+                    $request = (new ServerRequest())->withGlobalEnvironment(true);
+                    $packet = (new Packet($kernel, $request, $data, true))
                         ->useAdaptor()
                         ->toArray();
-                    $request = \App\iPolitic\NawpCore\components\ServerRequest::fromGlobals
-                    (
-                        $_SERVER,
-                        $_GET,
-                        $_POST,
-                        $_COOKIE,
-                        $_FILES
-                    );
-                    var_dump($request);
+
                     $kernel->handle(
                         $response,
+                        $request,
                         "SOCKET",
-                        $_SERVER["REQUEST_URI"],
                         $packet,
                         $kernel->rawTwig
                     );
@@ -75,7 +68,6 @@ class SocketIO
                 }
             });
         });
-
         Worker::runAll();
     }
 }

@@ -8,7 +8,7 @@
 namespace App\iPolitic\NawpCore\Collections;
 
 use App\iPolitic\NawpCore\components\Cookie;
-use App\iPolitic\NawpCore\components\Packet;
+use App\iPolitic\NawpCore\components\RequestHandler;
 use App\iPolitic\NawpCore\Kernel;
 use iPolitic\Solex\Router;
 use App\iPolitic\NawpCore\Components\Collection;
@@ -17,6 +17,7 @@ use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
@@ -47,31 +48,30 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      * Controller collection ->  handle() didn't returned TRU
      * @param Kernel $kernel
      * @param string $response
+     * @param ServerRequestInterface $request
      * @param string $requestType
-     * @param string $requestArgs
      * @param mixed $packet
      * @param array $array
      * @param $viewLogger|null ViewLogger
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function handle(Kernel &$kernel, &$response, $requestType, $requestArgs, $packet = null, $array = [], $viewLogger = null): void
+    public function handle(Kernel &$kernel, &$response, ServerRequestInterface &$request, $requestType, $packet = null, $array = [], $viewLogger = null): void
     {
-        $_GET = $GLOBALS["_GET"] = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
         $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $array, $packet, $requestType);
         // redirecting to the same page with needed UID param if none where passed to $_SERVER REQUEST URI
         if (!Cookie::areCookieEnabled($viewLogger)) {
-            if (isset($_SERVER["HTTP_REFERER"])) {
-                $parsedHttpReferer = Utils::parseUrlParams($_SERVER["HTTP_REFERER"]);
-                $parsedHttpUri = $params = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
+            if (isset($request->getServerParams()["HTTP_REFERER"])) {
+                $parsedHttpReferer = Utils::parseUrlParams($request->getServerParams()["HTTP_REFERER"]);
+                $parsedHttpUri = $params = Utils::parseUrlParams($request->getServerParams()["HTTP_REFERER"]);
                 if (isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"])) {
                     $params["UID"] = $parsedHttpReferer["UID"];
-                    if (!stristr($_SERVER["REQUEST_URI"], "logout")) {
+                    if (!stristr($request->getServerParams()["REQUEST_URI"], "logout")) {
                         PacketAdapter::redirectTo(
                             $response,
                             $viewLogger,
-                            Utils::buildUrlParams($_SERVER["REQUEST_URI"], $params),
+                            Utils::buildUrlParams($request->getServerParams()["REQUEST_URI"], $params),
                             $array
                         );
                         return;
@@ -93,7 +93,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
         $controllerMethodsCalled = [];
 
         // for each controller methods ordered by priority
-        foreach ($this->getOrderedByPriority() as $controllerMethod) {
+        foreach ($this->getOrderedByPriority($request) as $controllerMethod) {
             //var_dump($controllerMehod);
             // we force a match if wildcard used
             if ($controllerMethod["router"][1] === "*") {
@@ -108,9 +108,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 ]);
                 $routerResponse = $dynamicRouter->match(
                     $requestType,
-                    is_array($requestArgs) && isset($requestArgs['url']) ?
-                        $requestArgs['url'] :
-                            (is_string($requestArgs) ? $requestArgs : "")
+                    $request->getServerParams()["REQUEST_URI"]
                 );
             }
             // execute controller method if router matched or wildecas used
@@ -123,7 +121,8 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 array_push(
                     $controllerMethodsCalled,
                     ($arr = explode("\\", $controller->name))[count($arr) - 1]
-                    . "::". $controllerMethod["method"]);
+                    . "::". $controllerMethod["method"]
+                );
                 if ($controller->call($viewLogger, $response, $controllerMethod["method"], $routerResponse)) {
                     // nothing special to do right now
                     break;
@@ -134,15 +133,16 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             $serverGenerated = $viewLogger->renderedTemplates;
             $response = json_encode($serverGenerated);
         }
-        $this->logger->info("[".$requestType."] - '".$_SERVER["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'");
+        $this->logger->info("[".$requestType."] - '".$request->getServerParams()["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'");
         return;
     }
 
     /**
      * Will the current controller array orded by their priority
+     * @param ServerRequestInterface $request
      * @return array
      */
-    public function getOrderedByPriority(): array
+    public function getOrderedByPriority(ServerRequestInterface &$request): array
     {
         $queue = [];
         /**
@@ -155,8 +155,8 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                     //  echo "method : " . $u["method"] . PHP_EOL;
                     $rqType = $methods[$k]["router"][0];
                     if (
-                        (($_SERVER["REQUEST_URI"] === "*") || ($rqType === "*")) ||
-                        ($_SERVER["REQUEST_URI"] === $rqType)
+                        (($request->getServerParams()["REQUEST_URI"] === "*") || ($rqType === "*")) ||
+                        ($request->getServerParams()["REQUEST_URI"] === $rqType)
                     ) {
                         $methods[$k]["controller"] = $v->name;
                         array_push($queue, $methods[$k]);

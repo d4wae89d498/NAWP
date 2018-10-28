@@ -2,6 +2,7 @@
 namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
+
 /**
  * ViewLogger will store all the data given to the template class
  *

@@ -91,4 +91,10 @@ class PacketAdapter
     {
         return unserialize($this->cache->get($id));
     }
+
+    public static function populateGet(): void
+    {
+        $_GET = $GLOBALS["_GET"] = Utils::parseUrlParams($_SERVER["REQUEST_URI"]);
+        return;
+    }
 }

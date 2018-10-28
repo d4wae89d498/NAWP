@@ -4,6 +4,7 @@ namespace App\iPolitic\NawpCore\Components;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
+
 /**
  * Class ArrayObject
  * @package App\iPolitic\NawpCore
@@ -42,7 +43,8 @@ class Collection extends \ArrayObject implements ContainerInterface
      * @return mixed
      * @throws NotFoundExceptionInterface
      */
-    public function get($id) {
+    public function get($id)
+    {
         $array = $this->getArrayCopy();
         if (!isset($array[$id])) {
             throw new NAWPNotFoundExceptionInterface();

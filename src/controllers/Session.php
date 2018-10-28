@@ -127,7 +127,7 @@ class Session extends Controller implements ControllerInterface
      */
     public function notFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-       // $httpResponse .= " ERROR 404";
+        // $httpResponse .= " ERROR 404";
         return true;
     }
 
@@ -140,7 +140,7 @@ class Session extends Controller implements ControllerInterface
      */
     public function socketNotFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
-       // $httpResponse .= " ERROR 404";
+        // $httpResponse .= " ERROR 404";
         return true;
     }
 }
