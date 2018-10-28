@@ -42,6 +42,7 @@ class Collection extends \ArrayObject implements ContainerInterface
      * @param string $id
      * @return mixed
      * @throws NotFoundExceptionInterface
+     * @throws NAWPNotFoundExceptionInterface
      */
     public function get($id)
     {
@@ -52,6 +53,10 @@ class Collection extends \ArrayObject implements ContainerInterface
         return $array[$id];
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public function has($id) : bool
     {
         return isset($array[$id]);
