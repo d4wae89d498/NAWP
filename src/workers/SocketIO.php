@@ -33,6 +33,15 @@ class SocketIO
                     $packet = (new Packet($kernel, $data, true))
                         ->useAdaptor()
                         ->toArray();
+                    $request = \App\iPolitic\NawpCore\components\ServerRequest::fromGlobals
+                    (
+                        $_SERVER,
+                        $_GET,
+                        $_POST,
+                        $_COOKIE,
+                        $_FILES
+                    );
+                    var_dump($request);
                     $kernel->handle(
                         $response,
                         "SOCKET",

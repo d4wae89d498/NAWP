@@ -34,6 +34,16 @@ class Http
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
                 $response = "";
                 try {
+
+                    $request = \App\iPolitic\NawpCore\components\ServerRequest::fromGlobals
+                    (
+                        $_SERVER,
+                        $_GET,
+                        $_POST,
+                        $_COOKIE,
+                        $_FILES
+                    );
+                    var_dump($request);
                     $kernel->handle(
                         $response,
                         isset($_SERVER["REQUEST_METHOD"]) ?
