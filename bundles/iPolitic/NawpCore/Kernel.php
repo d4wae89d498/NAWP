@@ -25,6 +25,7 @@ use Symfony\Component\Dotenv\Dotenv;
 
 class Kernel implements LoggerAwareInterface
 {
+    public const MAX_INC_DEEP = 10;
     public const CACHE_FOLDER_NAME = "cache";
     /**
      * @var LoggerInterface
@@ -65,6 +66,7 @@ class Kernel implements LoggerAwareInterface
     public function __construct()
     {
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "vendor", "autoload.php"]);
+        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "bundles"]));
         Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"]));
         $dotEnv = new Dotenv();
         $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
@@ -74,16 +76,20 @@ class Kernel implements LoggerAwareInterface
     /**
      * Wil recursivly require_once all files in the given directory
      * @param string $directory
+     * @param int $deep
      */
-    public static function loadDir(string $directory): void
+    public static function loadDir(string $directory, int $deep = 0 ): void
     {
+        if ($deep > self::MAX_INC_DEEP) {
+            return;
+        }
         if (is_dir($directory)) {
             $scan = scandir($directory);
             unset($scan[0], $scan[1]); //unset . and ..
             if (!file_exists($directory."/.noInclude")) {
                 foreach ($scan as $file) {
                 if (is_dir($directory."/".$file)) {
-                    self::loadDir($directory."/".$file);
+                    self::loadDir($directory."/".$file, $deep + 1);
                 } else {
                         if (strpos($file, '.php') !== false) {
                             require_once($directory."/".$file);

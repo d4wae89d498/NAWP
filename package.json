@@ -29,7 +29,7 @@
     "generate-models": "php ./vendor/atlas/cli/bin/atlas-skeleton.php ./.atlas-config.php && npm run cs-fix",
     "pre-cs-fix": "ts-node configs/precsfix.ts",
     "cs-fix": "npm run pre-cs-fix && php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix ./bundles && php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix ./src",
-    "test": "php ./vendor/phpunit/phpunit/phpunit --bootstrap vendor/autoload.php tests/"
+    "test": "php ./vendor/phpunit/phpunit/phpunit"
   },
   "devDependencies": {
     "@types/node": "^10.12.0",
