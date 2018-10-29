@@ -10,14 +10,34 @@
     <mapping directory="$PROJECT_DIR$/vendor/atlas/query" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/atlas/table" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/doctrine/annotations" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/doctrine/instantiator" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/doctrine/lexer" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/ipolitic/solex" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/jasny/http-message" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/jasny/php-functions" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/myclabs/deep-copy" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/paragonie/random_compat" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/phpspec/prophecy" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/phpunit/php-timer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/phpunit/php-token-stream" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/phpunit/phpunit-mock-objects" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/psr/cache" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/container" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/http-factory" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/http-message" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/http-server-handler" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/http-server-middleware" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/psr/log" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/psr/simple-cache" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/diff" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/exporter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/global-state" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/object-enumerator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/object-reflector" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/sebastian/recursion-context" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/symfony/cache" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/symfony/console" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/symfony/contracts" vcs="Git" />
@@ -33,5 +53,11 @@
     <mapping directory="$PROJECT_DIR$/vendor/symfony/process" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/symfony/stopwatch" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/vendor/symfony/var-exporter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/twig/twig" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/webmozart/assert" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/workerman/channel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/workerman/phpsocket.io" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/workerman/workerman" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/zendframework/zend-diactoros" vcs="Git" />
   </component>
 </project>
