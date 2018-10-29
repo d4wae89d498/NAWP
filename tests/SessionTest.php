@@ -16,9 +16,9 @@ final class SessionTest extends \PHPUnit\Framework\TestCase
      */
     public function testThatSessionStorageIsWorking(): void
     {
+        $kernel = new \App\iPolitic\NawpCore\Kernel();
         $test_uid = \App\iPolitic\NawpCore\Components\Utils::generateUID();
         $test_str = "patate";
-        $kernel = new \App\iPolitic\NawpCore\Kernel();
         $_COOKIE["UID"] =  $test_uid;
         $request = (new \Jasny\HttpMessage\ServerRequest())->withGlobalEnvironment(true);
         $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger($kernel, $request);
