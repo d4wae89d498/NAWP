@@ -19,7 +19,7 @@ const destFolder = "public/";
 const srcFolder = "src/";
 // Compile LESS files from /less into /css
 gulp.task('less', function() {
-    return gulp.src(srcFolder + 'less/sb-admin-2.less')
+    return gulp.src(srcFolder + 'Less/sb-admin-2.less')
         .pipe(less())
         .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest(destFolder + 'css'))
