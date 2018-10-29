@@ -47,7 +47,8 @@
         "jasny/http-message": "dev-master"
     },
     "require-dev": {
-      "phpunit/phpunit": "7"
+      "phpunit/phpunit": "7",
+        "jaschilz/php-coverage-badger": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

@@ -15,6 +15,7 @@ public/*.hot-update.json    # not webpack watch cache files
 public/*.hot-update.js      # not webpack watch cache files
 public/js/*.js              # not webpack-generated javascript
 public/css/*.css            # no css files
+tests/clover.xml            # no clover xml file
 
 #3 | Packages managements division |_____________________________
 
