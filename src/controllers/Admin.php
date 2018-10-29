@@ -8,7 +8,7 @@
 namespace App\Controllers;
 
 use App\DataSources\User\User;
-use App\iPolitic\NawpCore\components\Cookie;
+use App\iPolitic\NawpCore\Components\Cookie;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;

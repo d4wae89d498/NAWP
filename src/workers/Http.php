@@ -40,7 +40,7 @@ class Http
                     \App\iPolitic\NawpCore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
                     $response = (
-                        new \App\iPolitic\NawpCore\components\RequestHandler(
+                        new \App\iPolitic\NawpCore\Components\RequestHandler(
                             $kernel,
                             isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                         )

@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * The packet Class
  * Class Packet
- * @package App\iPolitic\NawpCore\components
+ * @package App\iPolitic\NawpCore\Components
  */
 class Packet implements \ArrayAccess, ContainerInterface
 {

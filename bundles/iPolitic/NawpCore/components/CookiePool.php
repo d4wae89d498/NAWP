@@ -6,7 +6,7 @@
  * Time: 7:53 PM
  */
 
-namespace App\iPolitic\NawpCore\components;
+namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -14,7 +14,7 @@ use Workerman\Protocols\Http;
 
 /**
  * Class CookiePool
- * @package App\iPolitic\NawpCore\components
+ * @package App\iPolitic\NawpCore\Components
  */
 class CookiePool implements ContainerInterface
 {

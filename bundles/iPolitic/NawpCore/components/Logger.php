@@ -12,7 +12,7 @@ use Psr\Log\LogLevel;
 
 /**
  * Class Logger
- * @package App\iPolitic\NawpCore\components
+ * @package App\iPolitic\NawpCore\Components
  */
 class Logger implements LoggerInterface
 {

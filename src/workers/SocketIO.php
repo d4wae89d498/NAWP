@@ -39,7 +39,7 @@ class SocketIO
                     $packet = (new Packet($kernel, $request, $data, true))
                         ->useAdaptor()
                         ->toArray();
-                    $response = (new \App\iPolitic\NawpCore\components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
+                    $response = (new \App\iPolitic\NawpCore\Components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
                     $socket->emit("packetout", $response);
                     return;
                 } catch (Exception $ex) {
