@@ -28,7 +28,6 @@ class Http
      */
     public function __construct()
     {
-        // needed lines for startup
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
         $kernel = new Kernel();
         Worker::$eventLoopClass = $_ENV["EVENT_LOOP_CLASS"];
