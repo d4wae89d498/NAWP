@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/MarcFaussurier/NAWP.svg?branch=master)](https://travis-ci.com/MarcFaussurier/NAWP)
+
 ## **IPOLITIC/NAWP** 
 ###### A simple but powerful future-proof and high performance network oriented framework. It uses combo of both modern typescript and php to deliver amazing performances. 
 
@@ -28,6 +30,7 @@ use `yarn` or `npm run` following one of these following commands :
 - `watch-server` : Will watch for changes in php files and restart the server when needed.
 - `watch `: Will watch for both client and server changes, and will asynchronously rebuild the needed app parts or restart the server.
 - `lint` : Will analyse your client source code using tslint.
+- `test` : Will run tests.
 
 ## Framework features
 
