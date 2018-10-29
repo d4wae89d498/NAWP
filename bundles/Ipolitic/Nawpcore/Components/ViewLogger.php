@@ -230,4 +230,26 @@ class ViewLogger
         <?php
         });
     }
+
+
+    public function renderPage(array $header, array $content, array $footer) : string
+    {
+        $headerElem = array_keys($header)[0];
+        $contentElem = array_keys($content)[0];
+        $footerElem = array_keys($footer)[0];
+        $httpResponse = " <!DOCTYPE html>
+        <html lang=\"en\">" .
+            new $headerElem($this, $this->kernel->logger, $header[$headerElem]) .
+            "<body>" .
+            new $contentElem(
+
+                $this,
+                $this->kernel->logger,
+                $content[$contentElem]
+            ) .
+            new $footerElem($this, $this->kernel->logger, $footer[$footerElem]) . "
+            </body>
+        </html>";
+        return $httpResponse;
+    }
 }

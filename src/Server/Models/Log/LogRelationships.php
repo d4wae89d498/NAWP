@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Datasources\Log;
+namespace App\Server\Models\Log;
 
 use App\Datasources\User\User;
 use Atlas\Mapper\MapperRelationships;

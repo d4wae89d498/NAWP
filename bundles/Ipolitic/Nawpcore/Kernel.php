@@ -77,7 +77,7 @@ class Kernel implements LoggerAwareInterface
     public function __construct()
     {
         // means path/to/project/root/ using defined constants
-        $prefix = join(DIRECTORY_SEPARATOR,self::ROOT_PATH) . DIRECTORY_SEPARATOR;
+        $prefix = join(DIRECTORY_SEPARATOR, self::ROOT_PATH) . DIRECTORY_SEPARATOR;
         // include all project files
         foreach (self::FRAMEWORK_FOLDERS as $v) {
             Kernel::loadDir($prefix . join(DIRECTORY_SEPARATOR, $v));
@@ -95,7 +95,7 @@ class Kernel implements LoggerAwareInterface
      * @param string $directory
      * @param int $deep
      */
-    public static function loadDir(string $directory, int $deep = 0 ): void
+    public static function loadDir(string $directory, int $deep = 0): void
     {
         if ($deep > self::MAX_INC_DEEP) {
             return;
@@ -105,9 +105,9 @@ class Kernel implements LoggerAwareInterface
             unset($scan[0], $scan[1]); //unset . and ..
             if (!file_exists($directory."/.noInclude")) {
                 foreach ($scan as $file) {
-                if (is_dir($directory."/".$file)) {
-                    self::loadDir($directory."/".$file, $deep + 1);
-                } else {
+                    if (is_dir($directory."/".$file)) {
+                        self::loadDir($directory."/".$file, $deep + 1);
+                    } else {
                         if (strpos($file, '.php') !== false) {
                             require_once($directory."/".$file);
                         }

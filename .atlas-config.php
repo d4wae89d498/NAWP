@@ -24,5 +24,5 @@ return [
         $_ENV["SQL_PWD"],
     ],
     'namespace' => 'App\\Server\\Models',
-    'directory' => join(DIRECTORY_SEPARATOR, ['.', 'src','server', 'models'])
+    'directory' => join(DIRECTORY_SEPARATOR, ['.', 'src','Server', 'Models'])
 ];

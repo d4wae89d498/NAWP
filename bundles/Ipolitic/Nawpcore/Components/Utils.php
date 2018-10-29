@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace App\Ipolitic\Nawpcore\Components;
 
+use App\Ipolitic\Nawpcore\Exceptions\Exception;
+
 /**
  * All nawp utils.
  *

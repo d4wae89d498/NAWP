@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Datasources\Content;
+namespace App\Server\Models\Content;
 
 use App\Datasources\Categorie\Categorie;
 use App\Datasources\User\User;

@@ -1,6 +1,6 @@
 const $ = window["$"];
 import LoginForm from "./Elements/loginForm";
-import {SocketClient} from "./socketClient";
+import {SocketClient} from "./SocketClient";
 
 /**
  * The noRedirection class

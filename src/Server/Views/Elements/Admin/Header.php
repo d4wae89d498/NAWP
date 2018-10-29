@@ -5,9 +5,8 @@
  * Date: 7/31/2018
  * Time: 9:03 PM
  */
-namespace App\Views\Elements\Admin;
+namespace App\Server\Views\Elements\Admin;
 
-use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
 use App\Ipolitic\Nawpcore\Components\View;
 
@@ -18,7 +17,7 @@ class Header extends View implements TwigInterface
             // main css goes here
             0 => "/vendor/bootstrap/css/bootstrap.min.css",
             1 => "/vendor/metisMenu/metisMenu.min.css",
-            2 => "/css/sb-admin-2.css",
+            2 => "/css/SbAdmin2.css",
             3 => "/vendor/font-awesome/css/font-awesome.min.css",
         ],
         "js" => [

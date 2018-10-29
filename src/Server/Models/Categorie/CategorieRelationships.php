@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Datasources\Categorie;
+namespace App\Server\Models\Categorie;
 
 use App\Datasources\User\User;
 use Atlas\Mapper\MapperRelationships;

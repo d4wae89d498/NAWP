@@ -5,13 +5,10 @@
  * Date: 8/20/2018
  * Time: 1:37 PM
  */
-namespace App\Views\Elements\Admin;
+namespace App\Server\Views\Elements\Admin;
 
-use App\DataSources\User\User;
 use App\Ipolitic\Nawpcore\Components\View;
-use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
-use App\Ipolitic\Nawpcore\Kernel;
 
 class Login extends View implements TwigInterface
 {

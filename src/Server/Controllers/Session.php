@@ -7,12 +7,9 @@
  */
 namespace App\Controllers;
 
-use App\Ipolitic\Nawpcore\Components\View;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Components\Controller;
 use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
-use  App\Ipolitic\Nawpcore\Components\Session as CSession;
-use App\Ipolitic\Nawpcore\Components\PacketAdapter;
 
 /**
  * Class Sample
@@ -75,35 +72,35 @@ class Session extends Controller implements ControllerInterface
     public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
         $httpResponse = "<!DOCTYPE html><html lang=\"en\">" .
-            new \App\Views\Elements\Header(
+            new \App\Server\Views\Elements\Header(
                 $viewLogger,
                 $this->logger,
                 ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"],
                     "cookies" => base64_encode(json_encode($viewLogger->cookies))]
             ) .
             "<body>" .
-            new \App\Views\Pages\Page(
+            new \App\Server\Views\Pages\Page(
 
                 $viewLogger,
                 $this->logger,
                 [
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                     "html_elements" => [
-                        new \App\Views\Elements\Menu(
+                        new \App\Server\Views\Elements\Menu(
                             $viewLogger,
                             $this->logger,
                             [
 
                             ]
                         ),
-                        new \App\Views\Elements\Carousel(
+                        new \App\Server\Views\Elements\Carousel(
                             $viewLogger,
                             $this->logger,
                             [
 
                             ]
                         ),
-                        new \App\Views\Elements\Marketing(
+                        new \App\Server\Views\Elements\Marketing(
                             $viewLogger,
                             $this->logger,
                             [
@@ -113,7 +110,7 @@ class Session extends Controller implements ControllerInterface
                     ],
                 ]
             ) .
-            new \App\Views\Elements\Footer($viewLogger, $this->logger, [])
+            new \App\Server\Views\Elements\Footer($viewLogger, $this->logger, [])
             .
             "</body></html>";
         return true;

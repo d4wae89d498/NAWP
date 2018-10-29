@@ -16,10 +16,10 @@ const banner = ['/*!\n',
 ].join('');
 
 const destFolder = "public/";
-const srcFolder = "src/";
+const srcFolder = "src/Client/";
 // Compile LESS files from /less into /css
 gulp.task('less', function() {
-    return gulp.src(srcFolder + 'Less/sb-admin-2.less')
+    return gulp.src(srcFolder + 'Less/SbAdmin2.less')
         .pipe(less())
         .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest(destFolder + 'css'))
@@ -30,7 +30,7 @@ gulp.task('less', function() {
 
 // Minify compiled CSS
 gulp.task('minify-css', ['less'], function() {
-    return gulp.src(destFolder + 'css/sb-admin-2.css')
+    return gulp.src(destFolder + 'css/SbAdmin2.css')
         .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(destFolder + 'css'))

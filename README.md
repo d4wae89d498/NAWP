@@ -27,6 +27,8 @@ Use `yarn` or `npm run` to run one of the following commands :
 
 - `start` : Will start all the server workers.
 - `test` : Will run tests.
+- `cs-fix` : Will fix coding style of all php source files.
+- `generate-models` : Will read your database (using .env data and atlas) to generate all your models 
 - `build-dev`: Will build the client side typescript app in the public/ folder.
 - `build-prod` : Will build the client side typescript app in production mode.
 - `watch-client`: Will watch for changes in client-side files and rebuild needed app parts when needed.

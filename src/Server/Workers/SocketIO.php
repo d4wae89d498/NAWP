@@ -9,7 +9,7 @@
 use App\Ipolitic\Nawpcore\Kernel;
 use App\Ipolitic\Nawpcore\Components\Packet;
 use Jasny\HttpMessage\ServerRequest;
-use Workerman\ {Worker};
+use Workerman\Worker;
 
 class SocketIO
 {
@@ -23,7 +23,7 @@ class SocketIO
      */
     public function __construct()
     {
-        require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
+        require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "vendor", "autoload.php"]);
         $kernel = new Kernel();
         Worker::$eventLoopClass = $_ENV["EVENT_LOOP_CLASS"];
         $io = new \PHPSocketIO\SocketIO($_ENV["SOCKETIO_WORKER_PORT"]);

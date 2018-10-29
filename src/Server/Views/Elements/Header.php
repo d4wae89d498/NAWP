@@ -5,7 +5,7 @@
  * Date: 7/31/2018
  * Time: 9:03 PM
  */
-namespace App\Views\Elements;
+namespace App\Server\Views\Elements;
 
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;

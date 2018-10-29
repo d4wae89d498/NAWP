@@ -1,6 +1,6 @@
 const $ = window["$"];
 import {twig} from "twig";
-import {NoRedirection} from "./noRedicrection";
+import {NoRedirection} from "./NoRedicrection";
 import * as morphdom from "morphdom";
 /*
  * The client side rendering class

@@ -28,7 +28,7 @@ async function proceedDir(dirPath: string, deep: number = 0): Promise<any> {
 async function main() {
     const pathToRoot: string = path.join(__dirname, "..");
     const dirsToScan: string[] = [
-        path.join(pathToRoot, "src"),
+        path.join(path.join(pathToRoot, "src"), "Server"),
         path.join(pathToRoot, "bundles")
     ];
 

@@ -1,7 +1,7 @@
 import * as io from "socket.io-client";
 const $ = window["$"];
-import {ClientSideRendering} from "./clientSideRendering";
-import {NoRedirection} from "./noRedicrection";
+import {ClientSideRendering} from "./ClientSideRendering";
+import {NoRedirection} from "./NoRedicrection";
 export class SocketClient {
     /*
      * Instance of current socket

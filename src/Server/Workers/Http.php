@@ -24,11 +24,11 @@ class Http
 
     /**
      * Http constructor.
-     * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function __construct()
     {
-        require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "vendor", "autoload.php"]);
+        require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..","vendor", "autoload.php"]);
         $kernel = new Kernel();
         Worker::$eventLoopClass = $_ENV["EVENT_LOOP_CLASS"];
         $this->worker = new WebServer(
@@ -58,12 +58,12 @@ class Http
         );
         $this->worker->name = "http";
         $this->worker->count = $_ENV["HTTP_WORKER_CNT"];
-        $this->worker->addRoot($_ENV["DOMAIN_NAME"], join(DIRECTORY_SEPARATOR, [__DIR__,"..","..","public"]));
+        $this->worker->addRoot($_ENV["DOMAIN_NAME"], join(DIRECTORY_SEPARATOR, [__DIR__,"..","..","..","public"]));
         Worker::runAll();
     }
 }
 try {
     new Http();
-} catch (\Exception $e) {
+} catch (\Psr\SimpleCache\InvalidArgumentException $ex) {
     echo 'Caught worker startup exception: ',  $e->getMessage(), PHP_EOL;
 }

@@ -5,11 +5,10 @@
  * Date: 7/21/2018
  * Time: 1:06 AM
  */
-namespace App\Views\Pages;
+namespace App\Server\Views\Pages;
 
 use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
 use App\Ipolitic\Nawpcore\Components\View;
-use App\Views\Elements as Elements;
 
 class Page extends View implements TwigInterface
 {

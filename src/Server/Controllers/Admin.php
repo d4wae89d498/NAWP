@@ -5,9 +5,9 @@
  * Date: 8/6/2018
  * Time: 1:09 PM
  */
-namespace App\Controllers;
+namespace App\Server\Controllers;
 
-use App\DataSources\User\User;
+use App\Server\Models\User\User;
 use App\Ipolitic\Nawpcore\Components\Cookie;
 use App\Ipolitic\Nawpcore\Components\PacketAdapter;
 use App\Ipolitic\Nawpcore\Components\Utils;
@@ -87,37 +87,28 @@ class Admin extends Controller implements ControllerInterface
                 return true;
             }
         }
-        $loginMessage = $viewLogger->sessionInstance->id() . " || " . print_r($_POST, true);
-        $httpResponse .= " <!DOCTYPE html>
-        <html lang=\"en\">" .
-            new \App\Views\Elements\Admin\Header($viewLogger, $this->logger, [
+        $httpResponse = $viewLogger->renderPage
+        (
+            ["\App\Server\Views\Elements\Admin\Header" => [
                     "page" => "Login",
                     "title" => "TEST".rand(0, 99),
                     "url" => $_SERVER["REQUEST_URI"],
-                    "cookies" => base64_encode(json_encode($viewLogger->cookies)),
-                ]) .
-            "<body>" .
-            new \App\Views\Pages\Admin\Page(
-
-                    $viewLogger,
-                    $this->logger,
-                    [
-                        "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
-                        "html_elements" => [
-                            (
-                                new \App\Views\Elements\Admin\Login($viewLogger, $this->logger, [
-                                "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                                "message" => $loginMessage,
-                                "rand" => rand(0, 9),
-                                "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
-                                "cookiestr" => print_r($viewLogger->cookies, true)
-                            ])),
-                        ],
-                    ]
-                ) .
-                new \App\Views\Elements\Admin\Footer($viewLogger, $this->logger, []) . "
-            </body>
-        </html>";
+                    "cookies" => base64_encode(json_encode($viewLogger->cookies)),]],
+            ["\App\Server\Views\Pages\Admin\Page" =>  [
+                "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                "html_elements" => [
+                    (
+                    new \App\Server\Views\Elements\Admin\Login($viewLogger, $this->logger, [
+                        "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                        "message" => $viewLogger->sessionInstance->id() . " || " . print_r($_POST, true),
+                        "rand" => rand(0, 9),
+                        "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
+                        "cookiestr" => print_r($viewLogger->cookies, true)
+                    ])),
+                ],
+            ]],
+            ["\App\Server\Views\Elements\Admin\Footer" => []]
+        );
         return true;
     }
 
@@ -133,13 +124,13 @@ class Admin extends Controller implements ControllerInterface
     {
         $loginMessage = "SUCCESS";
         $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
-            new \App\Views\Elements\Admin\Header(
+            new \App\Server\Views\Elements\Admin\Header(
                 $viewLogger,
                 $this->logger,
                 ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
             ) .
             "<body>" .
-            new \App\Views\Pages\Admin\Page(
+            new \App\Server\Views\Pages\Admin\Page(
 
                 $viewLogger,
                 $this->logger,
@@ -147,7 +138,7 @@ class Admin extends Controller implements ControllerInterface
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                     "html_elements" => [
                         (
-                        new \App\Views\Elements\Admin\Login(
+                        new \App\Server\Views\Elements\Admin\Login(
                             $viewLogger,
                             $this->logger,
                             [
@@ -159,7 +150,7 @@ class Admin extends Controller implements ControllerInterface
                     ],
                 ]
             ) .
-            new \App\Views\Elements\Admin\Footer($viewLogger, $this->logger, [])
+            new \App\Server\Views\Elements\Admin\Footer($viewLogger, $this->logger, [])
             .
             "</body></html>";
         return true;

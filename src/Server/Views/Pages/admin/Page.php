@@ -5,11 +5,10 @@
  * Date: 7/21/2018
  * Time: 1:06 AM
  */
-namespace App\Views\Pages\Admin;
+namespace App\Server\Views\Pages\Admin;
 
 use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
 use App\Ipolitic\Nawpcore\Components\View;
-use App\Views\Elements\Admin as Elements;
 
 class Page extends View implements TwigInterface
 {

@@ -5,7 +5,7 @@
  * Date: 7/31/2018
  * Time: 9:03 PM
  */
-namespace App\Views\Elements\Admin;
+namespace App\Server\Views\Elements\Admin;
 
 use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
 use App\Ipolitic\Nawpcore\Components\View;
