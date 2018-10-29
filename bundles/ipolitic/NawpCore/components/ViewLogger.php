@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
-use App\iPolitic\NawpCore\Kernel;
+use App\Ipolitic\Nawpcore\Kernel;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**

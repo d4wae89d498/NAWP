@@ -8,10 +8,10 @@
 namespace App\Views\Elements\Admin;
 
 use App\DataSources\User\User;
-use App\iPolitic\NawpCore\Components\View;
-use App\iPolitic\NawpCore\Components\ViewLogger;
-use App\iPolitic\NawpCore\Interfaces\TwigInterface;
-use App\iPolitic\NawpCore\Kernel;
+use App\Ipolitic\Nawpcore\Components\View;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
+use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
+use App\Ipolitic\Nawpcore\Kernel;
 
 class Login extends View implements TwigInterface
 {

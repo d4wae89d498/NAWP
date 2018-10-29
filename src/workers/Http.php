@@ -6,8 +6,8 @@
  * Time: 7:55 PM
  */
 
-use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Exceptions\Exception;
+use App\Ipolitic\Nawpcore\Kernel;
+use App\Ipolitic\Nawpcore\Exceptions\Exception;
 use Workerman\Worker;
 use Workerman\WebServer;
 use Jasny\HttpMessage\ServerRequest;
@@ -36,10 +36,10 @@ class Http
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
                 try {
-                    \App\iPolitic\NawpCore\Components\PacketAdapter::populateGet();
+                    \App\Ipolitic\Nawpcore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
                     $response = (
-                        new \App\iPolitic\NawpCore\Components\RequestHandler(
+                        new \App\Ipolitic\Nawpcore\Components\RequestHandler(
                             $kernel,
                             isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                         )

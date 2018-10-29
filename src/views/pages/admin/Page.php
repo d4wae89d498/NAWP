@@ -7,8 +7,8 @@
  */
 namespace App\Views\Pages\Admin;
 
-use App\iPolitic\NawpCore\Interfaces\TwigInterface;
-use App\iPolitic\NawpCore\Components\View;
+use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
+use App\Ipolitic\Nawpcore\Components\View;
 use App\Views\Elements\Admin as Elements;
 
 class Page extends View implements TwigInterface

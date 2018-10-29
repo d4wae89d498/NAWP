@@ -16,17 +16,17 @@ final class SessionTest extends \PHPUnit\Framework\TestCase
      */
     public function testThatSessionStorageIsWorking(): void
     {
-        \App\iPolitic\NawpCore\Kernel::$PHPUNIT_MODE = true;
-        $kernel = new \App\iPolitic\NawpCore\Kernel();
-        $test_uid = \App\iPolitic\NawpCore\Components\Utils::generateUID();
+        \App\Ipolitic\Nawpcore\Kernel::$PHPUNIT_MODE = true;
+        $kernel = new \App\Ipolitic\Nawpcore\Kernel();
+        $test_uid = \App\Ipolitic\Nawpcore\Components\Utils::generateUID();
         $test_str = "patate";
         $_COOKIE["UID"] =  $test_uid;
         $request = (new \Jasny\HttpMessage\ServerRequest())->withGlobalEnvironment(true);
-        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger($kernel, $request);
+        $viewLogger = new \App\Ipolitic\Nawpcore\Components\ViewLogger($kernel, $request);
         $viewLogger->sessionInstance->destroy();
         $viewLogger->sessionInstance->set($test_str, $test_str);
         $_COOKIE["UID"] =  $test_uid;
-        $viewLogger = new \App\iPolitic\NawpCore\Components\ViewLogger($kernel, $request);
+        $viewLogger = new \App\Ipolitic\Nawpcore\Components\ViewLogger($kernel, $request);
         $this->assertTrue($viewLogger->sessionInstance->has($test_str));
     }
 }

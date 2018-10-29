@@ -7,9 +7,9 @@
  */
 namespace App\Views\Elements;
 
-use App\iPolitic\NawpCore\Components\ViewLogger;
-use App\iPolitic\NawpCore\Interfaces\TwigInterface;
-use App\iPolitic\NawpCore\Components\View;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
+use App\Ipolitic\Nawpcore\Interfaces\TwigInterface;
+use App\Ipolitic\Nawpcore\Components\View;
 
 class Header extends View implements TwigInterface
 {

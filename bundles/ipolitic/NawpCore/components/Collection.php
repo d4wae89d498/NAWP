@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
 
 /**
  * Class ArrayObject
- * @package App\iPolitic\NawpCore
+ * @package App\Ipolitic\Nawpcore
  */
 class Collection extends \ArrayObject implements ContainerInterface
 {

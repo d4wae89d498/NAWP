@@ -5,7 +5,7 @@
  * Date: 9/1/2018
  * Time: 12:06 PM
  */
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
 use Psr\SimpleCache\CacheInterface;
 use Workerman\Protocols\Http;

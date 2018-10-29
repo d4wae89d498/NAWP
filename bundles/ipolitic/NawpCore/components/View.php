@@ -5,7 +5,7 @@
  * Date: 7/21/2018
  * Time: 1:41 AM
  */
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -40,7 +40,7 @@ abstract class View implements LoggerAwareInterface
     /**
      * Template constructor.
      * Will generate a new template id and add generated html and states to $e
-     * @param \App\iPolitic\NawpCore\Components\ViewLogger $templateLogger
+     * @param \App\Ipolitic\Nawpcore\Components\ViewLogger $templateLogger
      * @param LoggerInterface $logger
      * @param array $params
      */

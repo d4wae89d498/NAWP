@@ -6,8 +6,8 @@
  * Time: 7:55 PM
  */
 
-use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\Packet;
+use App\Ipolitic\Nawpcore\Kernel;
+use App\Ipolitic\Nawpcore\Components\Packet;
 use Jasny\HttpMessage\ServerRequest;
 use Workerman\ {Worker};
 
@@ -39,7 +39,7 @@ class SocketIO
                     $packet = (new Packet($kernel, $request, $data, true))
                         ->useAdaptor()
                         ->toArray();
-                    $response = (new \App\iPolitic\NawpCore\Components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
+                    $response = (new \App\Ipolitic\Nawpcore\Components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
                     $socket->emit("packetout", $response);
                     return;
                 } catch (Exception $ex) {

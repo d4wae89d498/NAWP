@@ -6,9 +6,9 @@
  * Time: 2:06 PM
  */
 
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
-use App\iPolitic\NawpCore\Kernel;
+use App\Ipolitic\Nawpcore\Kernel;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

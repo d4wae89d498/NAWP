@@ -5,15 +5,15 @@
  * Date: 8/20/2018
  * Time: 5:24 PM
  */
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
-use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
  * Class Session
  * Provide php native session replacement
- * @package App\iPolitic\NawpCore\Components
+ * @package App\Ipolitic\Nawpcore\Components
  */
 class Session implements ContainerInterface
 {

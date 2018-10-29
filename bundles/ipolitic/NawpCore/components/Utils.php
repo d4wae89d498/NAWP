@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
 /**
  * All nawp utils.

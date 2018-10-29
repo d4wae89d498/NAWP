@@ -8,12 +8,12 @@
 namespace App\Controllers;
 
 use App\DataSources\User\User;
-use App\iPolitic\NawpCore\Components\Cookie;
-use App\iPolitic\NawpCore\Components\PacketAdapter;
-use App\iPolitic\NawpCore\Components\Utils;
-use App\iPolitic\NawpCore\Components\ViewLogger;
-use App\iPolitic\NawpCore\Components\Controller;
-use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
+use App\Ipolitic\Nawpcore\Components\Cookie;
+use App\Ipolitic\Nawpcore\Components\PacketAdapter;
+use App\Ipolitic\Nawpcore\Components\Utils;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
+use App\Ipolitic\Nawpcore\Components\Controller;
+use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
 
 /**
  * Class Admin

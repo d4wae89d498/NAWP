@@ -5,25 +5,25 @@
  * Date: 8/5/2018
  * Time: 7:46 PM
  */
-namespace App\iPolitic\NawpCore\Collections;
+namespace App\Ipolitic\Nawpcore\Collections;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use iPolitic\Solex\Router;
-use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\Cookie;
-use App\iPolitic\NawpCore\Components\Collection;
-use App\iPolitic\NawpCore\Components\Controller;
-use App\iPolitic\NawpCore\Components\PacketAdapter;
-use App\iPolitic\NawpCore\Components\Utils;
-use App\iPolitic\NawpCore\Components\ViewLogger;
-use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
+use App\Ipolitic\Nawpcore\Kernel;
+use App\Ipolitic\Nawpcore\Components\Cookie;
+use App\Ipolitic\Nawpcore\Components\Collection;
+use App\Ipolitic\Nawpcore\Components\Controller;
+use App\Ipolitic\Nawpcore\Components\PacketAdapter;
+use App\Ipolitic\Nawpcore\Components\Utils;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
+use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
 
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
- * @package App\iPolitic\NawpCore
+ * @package App\Ipolitic\Nawpcore
  */
 class ControllerCollection extends Collection implements LoggerAwareInterface
 {

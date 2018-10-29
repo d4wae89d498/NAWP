@@ -5,7 +5,7 @@
  * Date: 8/5/2018
  * Time: 7:46 PM
  */
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
 use Atlas\Orm\Atlas;
 use Psr\Log\LoggerAwareInterface;

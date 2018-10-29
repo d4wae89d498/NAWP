@@ -6,16 +6,16 @@
  * Time: 7:46 PM
  */
 
-namespace App\iPolitic\NawpCore\Collections;
+namespace App\Ipolitic\Nawpcore\Collections;
 
-use App\iPolitic\NawpCore\Components\{Collection};
+use App\Ipolitic\Nawpcore\Components\{Collection};
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Class ControllerCollection
  * Provide storage and match for a controller list
- * @package App\iPolitic\NawpCore
+ * @package App\Ipolitic\Nawpcore
  */
 class ViewCollection extends Collection implements LoggerAwareInterface
 {

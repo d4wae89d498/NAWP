@@ -5,14 +5,14 @@
  * Date: 9/30/2018
  * Time: 12:10 PM
  */
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
  * Class Logger
- * @package App\iPolitic\NawpCore\Components
+ * @package App\Ipolitic\Nawpcore\Components
  */
 class Logger implements LoggerInterface
 {

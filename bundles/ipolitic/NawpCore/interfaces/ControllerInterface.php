@@ -5,11 +5,11 @@
  * Date: 8/9/2018
  * Time: 1:02 PM
  */
-namespace App\iPolitic\NawpCore\Interfaces;
+namespace App\Ipolitic\Nawpcore\Interfaces;
 
 /**
  * Interface ControllerInterface
- * @package App\iPolitic\NawpCore\Interfaces
+ * @package App\Ipolitic\Nawpcore\Interfaces
  */
 interface ControllerInterface
 {

@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace App\iPolitic\NawpCore\Interfaces;
+namespace App\Ipolitic\Nawpcore\Interfaces;
 
 /**
  * Base short summary.

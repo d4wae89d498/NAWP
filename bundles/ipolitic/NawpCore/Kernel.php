@@ -5,19 +5,19 @@
  * Date: 8/5/2018
  * Time: 7:47 PM
  */
-namespace App\iPolitic\NawpCore;
+namespace App\Ipolitic\Nawpcore;
 
-use App\iPolitic\NawpCore\Collections\ControllerCollection;
-use App\iPolitic\NawpCore\Collections\ViewCollection;
-use App\iPolitic\NawpCore\Components\Collection;
-use App\iPolitic\NawpCore\Components\Logger;
-use App\iPolitic\NawpCore\Components\Packet;
+use App\Ipolitic\Nawpcore\Collections\ControllerCollection;
+use App\Ipolitic\Nawpcore\Collections\ViewCollection;
+use App\Ipolitic\Nawpcore\Components\Collection;
+use App\Ipolitic\Nawpcore\Components\Logger;
+use App\Ipolitic\Nawpcore\Components\Packet;
 use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
-use App\iPolitic\NawpCore\Components\Utils;
-use App\iPolitic\NawpCore\Components\ViewLogger;
+use App\Ipolitic\Nawpcore\Components\Utils;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use Atlas\Orm\Atlas;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;

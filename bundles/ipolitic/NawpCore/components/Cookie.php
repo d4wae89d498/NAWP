@@ -5,14 +5,14 @@
  * Date: 10/13/2018
  * Time: 12:22 PM
  */
-namespace App\iPolitic\NawpCore\Components;
+namespace App\Ipolitic\Nawpcore\Components;
 
-use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
  * Class Cookie
- * @package App\iPolitic\NawpCore\Components
+ * @package App\Ipolitic\Nawpcore\Components
  */
 class Cookie implements ContainerInterface
 {

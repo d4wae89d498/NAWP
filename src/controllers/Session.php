@@ -7,12 +7,12 @@
  */
 namespace App\Controllers;
 
-use App\iPolitic\NawpCore\Components\View;
-use App\iPolitic\NawpCore\Components\ViewLogger;
-use App\iPolitic\NawpCore\Components\Controller;
-use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use  App\iPolitic\NawpCore\Components\Session as CSession;
-use App\iPolitic\NawpCore\Components\PacketAdapter;
+use App\Ipolitic\Nawpcore\Components\View;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
+use App\Ipolitic\Nawpcore\Components\Controller;
+use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
+use  App\Ipolitic\Nawpcore\Components\Session as CSession;
+use App\Ipolitic\Nawpcore\Components\PacketAdapter;
 
 /**
  * Class Sample
