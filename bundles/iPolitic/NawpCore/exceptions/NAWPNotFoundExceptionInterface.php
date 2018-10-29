@@ -6,9 +6,8 @@
  * Time: 7:28 PM
  */
 
-namespace App\iPolitic\NawpCore\exceptions;
+namespace App\iPolitic\NawpCore\Exceptions;
 
-use App\iPolitic\NawpCore\Components\Exception;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**

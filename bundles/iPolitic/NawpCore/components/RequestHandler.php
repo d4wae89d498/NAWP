@@ -6,10 +6,9 @@
  * Time: 2:06 PM
  */
 
-namespace App\iPolitic\NawpCore\components;
+namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
-use Jasny\HttpMessage\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,7 +37,9 @@ class RequestHandler
      * May call other collaborating code to generate the response.
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function handle(ServerRequestInterface $request): string
     {
@@ -51,8 +52,6 @@ class RequestHandler
             $this->packet,
             $this->kernel->rawTwig
         );
-        //$psrResponse->getBody()->write($response);
-        // var_dump($psrResponse);
         return $response;
     }
 }

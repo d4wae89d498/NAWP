@@ -5,7 +5,7 @@
  * Date: 9/30/2018
  * Time: 12:10 PM
  */
-namespace App\iPolitic\NawpCore\components;
+namespace App\iPolitic\NawpCore\Components;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;

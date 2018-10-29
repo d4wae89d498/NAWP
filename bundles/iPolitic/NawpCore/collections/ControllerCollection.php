@@ -7,20 +7,18 @@
  */
 namespace App\iPolitic\NawpCore\Collections;
 
-use App\iPolitic\NawpCore\components\Cookie;
-use App\iPolitic\NawpCore\components\RequestHandler;
-use App\iPolitic\NawpCore\Kernel;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use iPolitic\Solex\Router;
+use App\iPolitic\NawpCore\Kernel;
+use App\iPolitic\NawpCore\Components\Cookie;
 use App\iPolitic\NawpCore\Components\Collection;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Components\PacketAdapter;
 use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class ControllerCollection

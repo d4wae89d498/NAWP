@@ -6,7 +6,7 @@
  * Time: 1:51 PM
  */
 
-namespace App\iPolitic\NawpCore\Components;
+namespace App\iPolitic\NawpCore\Exceptions;
 
 class Exception extends \Exception
 {

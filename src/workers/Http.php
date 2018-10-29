@@ -7,7 +7,7 @@
  */
 
 use App\iPolitic\NawpCore\Kernel;
-use App\iPolitic\NawpCore\Components\Exception;
+use App\iPolitic\NawpCore\Exceptions\Exception;
 use Workerman\Worker;
 use Workerman\WebServer;
 use Jasny\HttpMessage\ServerRequest;

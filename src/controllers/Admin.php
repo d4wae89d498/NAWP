@@ -14,9 +14,6 @@ use App\iPolitic\NawpCore\Components\Utils;
 use App\iPolitic\NawpCore\Components\ViewLogger;
 use App\iPolitic\NawpCore\Components\Controller;
 use App\iPolitic\NawpCore\Interfaces\ControllerInterface;
-use App\iPolitic\NawpCore\Components\Session;
-use App\iPolitic\NawpCore\Kernel;
-use Symfony\Component\Cache\Exception\InvalidArgumentException;
 
 /**
  * Class Admin

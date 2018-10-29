@@ -3,7 +3,6 @@ namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\Kernel;
 use Psr\Http\Message\ServerRequestInterface;
-use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
 
 /**
  * ViewLogger will store all the data given to the template class

@@ -5,7 +5,7 @@
  * Date: 9/6/2018
  * Time: 2:00 PM
  */
-namespace App\iPolitic\NawpCore\components;
+namespace App\iPolitic\NawpCore\Components;
 
 use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
 use App\iPolitic\NawpCore\Kernel;

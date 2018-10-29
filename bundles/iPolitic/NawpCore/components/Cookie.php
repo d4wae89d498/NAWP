@@ -7,7 +7,7 @@
  */
 namespace App\iPolitic\NawpCore\components;
 
-use App\iPolitic\NawpCore\exceptions\NAWPNotFoundExceptionInterface;
+use App\iPolitic\NawpCore\Exceptions\NAWPNotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
