@@ -5,7 +5,7 @@ php:
 - 7.2
 
 script:
-- php ./vendor/phpunit/phpunit/phpunit --bootstrap ./tests/bootstrap.php
+- php ./vendor/phpunit/phpunit/phpunit --bootstrap tests/bootstrap.php
 
 install:
 - composer install

@@ -1,4 +1,4 @@
-import { NoRedirection } from "./tsclient/noRedicrection";
-import { init } from "./tsclient/sbAdmin";
+import { NoRedirection } from "./TSclient/noRedicrection";
+import { init } from "./TSclient/sbAdmin";
 init();
 const noRedirectionInstance: NoRedirection = new NoRedirection();

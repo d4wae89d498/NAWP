@@ -18,7 +18,7 @@
   "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "install": "bower install",
-    "start": "php src/workers/Http.php src/workers/SocketIO.php",
+    "start": "php src/Workers/Http.php src/Workers/SocketIO.php",
     "pre-build": "gulp",
     "build-dev": "npm run pre-build && webpack -d --config=configs/webpack/dev.ts",
     "build-prod": "npm run pre-build && webpack -p --config=configs/webpack/prod.ts",
@@ -29,7 +29,7 @@
     "generate-models": "php ./vendor/atlas/cli/bin/atlas-skeleton.php ./.atlas-config.php && npm run cs-fix",
     "pre-cs-fix": "ts-node configs/precsfix.ts",
     "cs-fix": "npm run pre-cs-fix && php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix ./bundles && php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix ./src",
-    "test": "php ./vendor/phpunit/phpunit/phpunit"
+    "test": "php ./vendor/phpunit/phpunit/phpunit --bootstrap tests/bootstrap.php"
   },
   "devDependencies": {
     "@types/node": "^10.12.0",
