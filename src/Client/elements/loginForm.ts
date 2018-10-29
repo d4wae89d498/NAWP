@@ -1,5 +1,5 @@
 const $ = window["$"];
-import {IElement} from "./../noRedicrection";
+import {IElement} from "../noRedicrection";
 
 export default class LoginForm implements IElement {
     /**

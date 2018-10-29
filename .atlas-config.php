@@ -23,6 +23,6 @@ return [
         $_ENV["SQL_USER"],
         $_ENV["SQL_PWD"],
     ],
-    'namespace' => 'App\\Datasources',
-    'directory' => './src/datasources'
+    'namespace' => 'App\\Server\\Models',
+    'directory' => join(DIRECTORY_SEPARATOR, ['.', 'src','server', 'models'])
 ];

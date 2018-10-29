@@ -27,6 +27,12 @@ class Kernel implements LoggerAwareInterface
 {
     public const MAX_INC_DEEP = 10;
     public const CACHE_FOLDER_NAME = "cache";
+    public const ROOT_PATH = [__DIR__, "..", "..", ".."];
+    public const FRAMEWORK_FOLDERS = [
+        ["bundles"],
+        ["src"],
+    ];
+    public const ENV_PATH = ["configs", ".env"];
     /**
      * @var bool
      */
@@ -65,16 +71,22 @@ class Kernel implements LoggerAwareInterface
     public $rawTwig = [];
 
     /**
-     * Kernel constructor.
+     * Kernel constructor
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function __construct()
     {
-        if (!self::$PHPUNIT_MODE) {
-            Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "bundles"]));
-            Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"]));
+        // means path/to/project/root/ using defined constants
+        $prefix = join(DIRECTORY_SEPARATOR,self::ROOT_PATH) . DIRECTORY_SEPARATOR;
+        // include all project files
+        foreach (self::FRAMEWORK_FOLDERS as $v) {
+            Kernel::loadDir($prefix . join(DIRECTORY_SEPARATOR, $v));
+            Kernel::loadDir($prefix . join(DIRECTORY_SEPARATOR, $v));
         }
         $dotEnv = new Dotenv();
-        $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
+        // load .env file
+        $dotEnv->load($prefix . join(DIRECTORY_SEPARATOR, self::ENV_PATH));
+        // populate kernel collections and member variables
         $this->init();
     }
 

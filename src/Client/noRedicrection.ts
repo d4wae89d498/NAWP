@@ -1,5 +1,5 @@
 const $ = window["$"];
-import LoginForm from "./elements/loginForm";
+import LoginForm from "./elements2/loginForm";
 import {SocketClient} from "./socketClient";
 
 /**
