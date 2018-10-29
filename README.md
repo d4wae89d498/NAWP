@@ -1,4 +1,10 @@
+
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/MarcFaussurier/NAWP/graphs/commit-activity)
 [![Build Status](https://travis-ci.com/MarcFaussurier/NAWP.svg?branch=master)](https://travis-ci.com/MarcFaussurier/NAWP)
+[![Code Coverage](./tests/clover.svg)](https://github.com/MarcFaussurier/NAWP)
+[![GitHub release](https://img.shields.io/github/release/Naereen/StrapDown.js.svg)](https://GitHub.com/MarcFaussurier/NAWP/releases/)
+[![HitCount](http://hits.dwyl.io/MarcFaussurier/badges.svg)](http://hits.dwyl.io/MarcFaussurier/badges)
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/MarcFaussurier)
 
 ## **IPOLITIC/NAWP** 
 ###### A simple but powerful future-proof and high performance network oriented framework. It uses combo of both modern typescript and php to deliver amazing performances. 
@@ -9,28 +15,26 @@ Now you have to create a `configs/.env` file using the `configs/.env.dist` one a
 
 If the project is already using a database, you'll have to attach it using SQL Server Management Studio or SQL Operations Studio. Else you'll have to design your database and generate your models with Atlas.
 
-Demo project database file is available as `config/nawpcore-mssql-database.sql` .
+Demo project database file is available as `config/nawpcore-mssql-database.sql` . It is currently in MSSQL format but feel free to convert it using tools around such as MySQL workbench.
 
 ## Minimum requirements 
 - PHP >= 7.2.0 
 - NodeJS  >= 10.0.0 
 - Supported os : Windows || MacOS || Linux 
-- Database engine : Microsoft SQL Server 2017 *
-
-_* : (you might be able to switch to a different database engine if you succeed in converting the current mssql databases to somewhat else, logic itself is already abstracted using atlas)_
 
 ## Project commands 
 
-use `yarn` or `npm run` following one of these following commands :
+All commands built as `npm` scripts.  
+Use `yarn` or `npm run` to run one of the following commands :
 
 - `start` : Will start all the server workers.
+- `test` : Will run tests.
 - `build-dev`: Will build the client side typescript app in the public/ folder.
 - `build-prod` : Will build the client side typescript app in production mode.
 - `watch-client`: Will watch for changes in client-side files and rebuild needed app parts when needed.
 - `watch-server` : Will watch for changes in php files and restart the server when needed.
 - `watch `: Will watch for both client and server changes, and will asynchronously rebuild the needed app parts or restart the server.
 - `lint` : Will analyse your client source code using tslint.
-- `test` : Will run tests.
 
 ## Framework features
 
@@ -63,13 +67,13 @@ use `yarn` or `npm run` following one of these following commands :
 - `jquery` 3.3.1 _For dom manipulation but with our own javascript states system for perfs. gains._
 - `webpack` 4.17.1 _Fast modules and source code web packing_ 
 - `typescript` 3.0.1 _Enjoy the best of the javascript powers_
-- `atlas` 2.x-dev _Models, Models generation and nothing else_
+- `atlas` 3.x-dev _Models, Models generation and nothing else_
 - `node-sass` 4.9.3 _.scss files are supported ;)_
 - `socket.io-client` 1.3 _Talk to the php server with this client socektio implementation._ 
 - `nodemon` 1.18.4 _Enjoy server refresh on sourcecode changes !_ 
-- `iPolitic/phpsocket.io` dev-master _LIsten for inc. socket.io packets_ 
-- `iPolitic/Workerman` dev-master _Our own fork of workerman_
-- `iPolitic/Bike` dev-master _Our own router, forked from Bike_
+- `iPolitic/Workerman` dev-master _Our own fork of workerman (php async engine)_
+- `iPolitic/phpsocket.io` dev-master _Our own fork of phpsocketio (php socket.io server)_ 
+- `iPolitic/Bike` dev-master _Our own fork of Bike (php router)_
 
 ## Project architecture 
 
