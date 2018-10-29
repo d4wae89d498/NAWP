@@ -5,7 +5,7 @@ php:
 - 7.2
 
 script:
-- phpunit --bootstrap vendor/autoload.php tests/
+- php ./vendor/phpunit/phpunit/phpunit --bootstrap vendor/autoload.php tests/
 
 before_install:
 - composer install
