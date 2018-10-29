@@ -1,4 +1,12 @@
 <?php declare(strict_types=1);
+
+include_once "bootstrap.php";
+
+use App\Ipolitic\Nawpcore\Kernel;
+use App\Ipolitic\Nawpcore\Components\Utils;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
+use Jasny\HttpMessage\ServerRequest;
+use PHPUnit\Framework\TestCase;
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -6,7 +14,7 @@
  * Time: 8:30 PM
  */
 
-final class SessionTest extends \PHPUnit\Framework\TestCase
+final class SessionTest extends TestCase
 {
 
     /**
@@ -16,17 +24,17 @@ final class SessionTest extends \PHPUnit\Framework\TestCase
      */
     public function testThatSessionStorageIsWorking(): void
     {
-        \App\Ipolitic\Nawpcore\Kernel::$PHPUNIT_MODE = true;
-        $kernel = new \App\Ipolitic\Nawpcore\Kernel();
-        $test_uid = \App\Ipolitic\Nawpcore\Components\Utils::generateUID();
+        Kernel::$PHPUNIT_MODE = true;
+        $kernel = new Kernel();
+        $test_uid = Utils::generateUID();
         $test_str = "patate";
         $_COOKIE["UID"] =  $test_uid;
-        $request = (new \Jasny\HttpMessage\ServerRequest())->withGlobalEnvironment(true);
-        $viewLogger = new \App\Ipolitic\Nawpcore\Components\ViewLogger($kernel, $request);
+        $request = (new ServerRequest())->withGlobalEnvironment(true);
+        $viewLogger = new ViewLogger($kernel, $request);
         $viewLogger->sessionInstance->destroy();
         $viewLogger->sessionInstance->set($test_str, $test_str);
         $_COOKIE["UID"] =  $test_uid;
-        $viewLogger = new \App\Ipolitic\Nawpcore\Components\ViewLogger($kernel, $request);
+        $viewLogger = new ViewLogger($kernel, $request);
         $this->assertTrue($viewLogger->sessionInstance->has($test_str));
     }
 }

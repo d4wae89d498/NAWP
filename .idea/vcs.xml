@@ -2,5 +2,36 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/cli" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/info" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/mapper" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/orm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/pdo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/query" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/atlas/table" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/doctrine/annotations" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/doctrine/lexer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/ipolitic/solex" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/jasny/php-functions" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/paragonie/random_compat" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/cache" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/log" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/psr/simple-cache" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/cache" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/console" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/contracts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/dotenv" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/event-dispatcher" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/filesystem" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/finder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/options-resolver" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/polyfill-php70" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/polyfill-php72" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/process" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/stopwatch" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/symfony/var-exporter" vcs="Git" />
   </component>
 </project>
