@@ -65,12 +65,15 @@ class Kernel implements LoggerAwareInterface
      */
     public function __construct()
     {
-        require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "vendor", "autoload.php"]);
-        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "bundles"]));
-        Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"]));
-        $dotEnv = new Dotenv();
-        $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
-        $this->init();
+        if (!include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "vendor", "autoload.php"])) {
+            echo "COMPOSER ERROR" . PHP_EOL;
+        } else {
+            Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "bundles"]));
+            Kernel::loadDir(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "src"]));
+            $dotEnv = new Dotenv();
+            $dotEnv->load(join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "configs", ".env"]));
+            $this->init();
+        }
     }
 
     /**
