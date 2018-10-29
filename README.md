@@ -13,9 +13,7 @@ To install the project, simply run `composer install` for installing server PHP 
 
 Now you have to create a `configs/.env` file using the `configs/.env.dist` one as sample so that the software is able to use your settings.
 
-If the project is already using a database, you'll have to attach it using SQL Server Management Studio or SQL Operations Studio. Else you'll have to design your database and generate your models with Atlas.
-
-Demo project database file is available as `config/nawpcore-mssql-database.sql` . It is currently in MSSQL format but feel free to convert it using tools around such as MySQL workbench.
+Demo project database file is available as `config/nawpcore-mssql-database.sql` . It is currently in MSSQL format but feel free to convert it using a tool like MySQL workbench.
 
 ## Minimum requirements 
 - PHP >= 7.2.0 
