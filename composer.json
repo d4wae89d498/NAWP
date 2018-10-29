@@ -15,15 +15,15 @@
     },
     "repositories": [
         {
-            "type": "github",
+            "type": "git",
             "url": "https://github.com/iPolitic/phpsocket.io"
         },
         {
-            "type": "github",
+            "type": "git",
             "url": "https://github.com/iPolitic/Workerman"
         },
         {
-            "type": "github",
+            "type": "git",
             "url": "https://github.com/iPolitic/Solex"
         }
     ],
