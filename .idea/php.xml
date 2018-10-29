@@ -76,5 +76,4 @@
       <path value="$PROJECT_DIR$/vendor/jasny/http-message" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
 </project>
