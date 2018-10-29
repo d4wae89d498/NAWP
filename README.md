@@ -2,7 +2,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/MarcFaussurier/NAWP/graphs/commit-activity)
 [![Build Status](https://travis-ci.com/MarcFaussurier/NAWP.svg?branch=master)](https://travis-ci.com/MarcFaussurier/NAWP)
 [![Code Coverage](./tests/clover.svg)](https://github.com/MarcFaussurier/NAWP)
-[![GitHub release](https://img.shields.io/github/release/Naereen/StrapDown.js.svg)](https://GitHub.com/MarcFaussurier/NAWP/releases/)
+[![GitHub release](https://img.shields.io/github/tag/MarcFaussurier/NAWP.svg)](https://GitHub.com/MarcFaussurier/NAWP/releases/)
 [![HitCount](http://hits.dwyl.io/MarcFaussurier/badges.svg)](http://hits.dwyl.io/MarcFaussurier/badges)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/MarcFaussurier)
 
