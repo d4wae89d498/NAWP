@@ -52,5 +52,10 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": { "App\\": ["src/", "bundles/"] }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php ./configs/postbuild.php"
+        ]
     }
 }
