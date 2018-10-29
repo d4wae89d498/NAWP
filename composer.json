@@ -1,6 +1,6 @@
 {
     "name": "ipolitic/nawp",
-    "homepage": "http://github.com/MarcFaussurier/NawpCore",
+    "homepage": "https://github.com/MarcFaussurier/NAWP",
     "version": "0.1",
     "authors": [
         {
@@ -15,16 +15,16 @@
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url": "http://github.com/iPolitic/phpsocket.io"
+            "type": "github",
+            "url": "https://github.com/iPolitic/phpsocket.io"
         },
         {
-            "type": "vcs",
-            "url": "http://github.com/iPolitic/Workerman"
+            "type": "github",
+            "url": "https://github.com/iPolitic/Workerman"
         },
         {
-            "type": "vcs",
-            "url": "http://github.com/iPolitic/Solex"
+            "type": "github",
+            "url": "https://github.com/iPolitic/Solex"
         }
     ],
     "require": {
