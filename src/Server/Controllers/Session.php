@@ -10,6 +10,7 @@ namespace App\Controllers;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Components\Controller;
 use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Sample
@@ -51,12 +52,12 @@ class Session extends Controller implements ControllerInterface
 
     /**
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param array $args
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function sessionsMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function sessionsMiddleware(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         $viewLogger->sessionInstance->set("TEST", "Pomme");
         return false;
@@ -65,13 +66,13 @@ class Session extends Controller implements ControllerInterface
     /**
      * display the homepage
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param array $args
      * @return bool
      */
-    public function home(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function home(ViewLogger &$viewLogger, ResponseInterface &$response,  array $args = []): bool
     {
-        $httpResponse = "<!DOCTYPE html><html lang=\"en\">" .
+        $response->getBody()->write("<!DOCTYPE html><html lang=\"en\">" .
             new \App\Server\Views\Elements\Header(
                 $viewLogger,
                 $this->logger,
@@ -112,7 +113,7 @@ class Session extends Controller implements ControllerInterface
             ) .
             new \App\Server\Views\Elements\Footer($viewLogger, $this->logger, [])
             .
-            "</body></html>";
+            "</body></html>");
         return true;
     }
 
@@ -122,7 +123,7 @@ class Session extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      */
-    public function notFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function notFound(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         // $httpResponse .= " ERROR 404";
         return true;
@@ -131,11 +132,11 @@ class Session extends Controller implements ControllerInterface
     /**
      * return a socket 404 packet
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param array $args
      * @return bool
      */
-    public function socketNotFound(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function socketNotFound(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         // $httpResponse .= " ERROR 404";
         return true;

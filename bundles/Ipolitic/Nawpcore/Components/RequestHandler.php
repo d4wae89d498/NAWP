@@ -9,6 +9,8 @@
 namespace App\Ipolitic\Nawpcore\Components;
 
 use App\Ipolitic\Nawpcore\Kernel;
+use Jasny\HttpMessage\Response;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,13 +43,14 @@ class RequestHandler
      * @throws \Exception
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function handle(ServerRequestInterface $request): string
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         //$psrResponse = (new Response())->withGlobalEnvironment(true);
-        $response = "";
+        $response = (new Response());
+
         $this->kernel->handle(
-            $response,
             $request,
+            $response,
             $this->requestType,
             $this->packet,
             $this->kernel->rawTwig

@@ -25,26 +25,55 @@
         {
             "type": "git",
             "url": "https://github.com/iPolitic/Solex"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MarcFaussurier/dispatcher"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MarcFaussurier/http-factory"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/MarcFaussurier/access-log"
         }
     ],
     "require": {
         "php": ">= 7.2.0",
-        "twig/twig": "^2.5",
-        "workerman/workerman": "dev-master",
-        "ipolitic/solex": "dev-master",
-        "workerman/phpsocket.io": "dev-master",
-        "symfony/dotenv": "^4.2@dev",
         "ext-json": "*",
         "ext-openssl": "*",
-        "atlas/orm": "3.x-dev",
-        "atlas/cli": "2.x-dev",
-        "friendsofphp/php-cs-fixer": "^2.14@dev",
-        "zendframework/zend-diactoros": "^2.0@dev",
-        "symfony/cache": "^4.2@dev",
+        "psr/log": "^1.0@dev",
         "psr/container": "^1.0@dev",
         "psr/http-server-middleware": "^1.0@dev",
         "psr/http-server-handler": "^1.0@dev",
-        "jasny/http-message": "dev-master"
+        "workerman/workerman": "dev-master",
+        "workerman/phpsocket.io": "dev-master",
+        "ipolitic/solex": "dev-master",
+        "atlas/orm": "3.x-dev",
+        "atlas/cli": "2.x-dev",
+        "twig/twig": "^2.5",
+        "symfony/dotenv": "^4.2@dev",
+        "symfony/cache": "^4.2@dev",
+        "friendsofphp/php-cs-fixer": "^2.14@dev",
+        "jasny/http-message": "dev-master",
+        "bulldog/http-factory": "dev-master",
+        "ellipse/dispatcher": "dev-master",
+        "middlewares/error-handler": "dev-master",
+        "middlewares/response-time": "dev-master",
+        "middlewares/trailing-slash": "dev-master",
+        "middlewares/uuid": "dev-master",
+        "middlewares/robots": "dev-master",
+        "middlewares/encoder": "dev-master",
+        "middlewares/minifier": "dev-master",
+        "middlewares/method-override": "dev-master",
+        "middlewares/client-ip": "dev-master",
+        "middlewares/firewall": "dev-master",
+        "middlewares/cache": "dev-master",
+        "middlewares/negotiation" : "dev-master",
+        "middlewares/debugbar" : "dev-master",
+        "middlewares/payload": "dev-master",
+        "middlewares/access-log": "dev-master"
     },
     "require-dev": {
       "phpunit/phpunit": "7",

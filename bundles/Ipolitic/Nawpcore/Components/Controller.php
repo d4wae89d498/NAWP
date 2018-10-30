@@ -8,6 +8,7 @@
 namespace App\Ipolitic\Nawpcore\Components;
 
 use Atlas\Orm\Atlas;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
@@ -47,13 +48,13 @@ class Controller implements LoggerAwareInterface
      * Will call a controller method
      *
      * @param ViewLogger $viewLogger
-     * @param string $response
+     * @param ResponseInterface $response
      * @param string $method
      * @param array $args
      * @return bool
      *
      */
-    public function call(ViewLogger &$viewLogger, string &$response, string $method, $args = []): bool
+    public function call(ViewLogger &$viewLogger, ResponseInterface &$response, string $method, $args = []): bool
     {
         //var_dump("IN CALLL" . $method);
         if (method_exists($this, $method)) {

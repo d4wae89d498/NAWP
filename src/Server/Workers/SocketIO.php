@@ -20,6 +20,7 @@ class SocketIO
 
     /**
      * SocketIO constructor.
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function __construct()
     {
@@ -40,7 +41,8 @@ class SocketIO
                         ->useAdaptor()
                         ->toArray();
                     $response = (new \App\Ipolitic\Nawpcore\Components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
-                    $socket->emit("packetout", $response);
+                   // var_dump((string) $response->getBody());
+                    $socket->emit("packetout", (string) $response->getBody());
                     return;
                 } catch (Exception $ex) {
                     while (@ob_end_flush());

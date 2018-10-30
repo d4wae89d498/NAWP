@@ -2,6 +2,7 @@
 namespace App\Ipolitic\Nawpcore\Components;
 
 use App\Ipolitic\Nawpcore\Kernel;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Workerman\Protocols\Http;
 
@@ -233,23 +234,23 @@ class ViewLogger
     }
 
     /**
-     * @param $viewLogger
-     * @param $element
-     * @return array
+     * @param string $className
+     * @param arra $states
+     * @return View
      */
-    public function resurciveHtmlElementsInstancier($className, $element)
+    public function resurciveHtmlElementsInstancier($className, $states) : View
     {
         $output = [];
-        $cnt = 0;
-        foreach ($element as $k => $v) {
+        foreach ($states as $k => $v) {
             $output[$k] = $v;
         }
-        if (isset($element["html_elements"])) {
-            foreach($element["html_elements"] as $className => $states)
+        $cnt = 0;
+        if (isset($states["html_elements"])) {
+            foreach($states["html_elements"] as $subClassName => $subClassStates)
             {
-                $tmpClassName = $className;
-                $tmpStates = $states;
-                unset($output["html_elements"][$className]);
+                $tmpClassName = $subClassName;
+                $tmpStates = $subClassStates;
+                unset($output["html_elements"][$subClassName]);
                 $output["html_elements"][$cnt++] = $this->resurciveHtmlElementsInstancier($tmpClassName, $tmpStates);
             }
         }
@@ -280,20 +281,20 @@ class ViewLogger
 
     /**
      *  Will redirect the http or the socket response
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param string $url
      * @param array $args
      * @throws \iPolitic\Solex\RouterException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function redirectTo(string &$httpResponse, string $url, array $args): void {
+    public function redirectTo(ResponseInterface &$response, string $url, array $args): void {
         $_SERVER["REQUEST_URI"] = $url;
         if (strtolower($this->requestType) !== "socket") {
             Http::header("Location: " . ($this->request->getServerParams()["REQUEST_URI"]));
         } else {
             $this->kernel->handle(
-                $httpResponse,
                 $this->request,
+                $response,
                 $this->requestType,
                 null,
                 $args,

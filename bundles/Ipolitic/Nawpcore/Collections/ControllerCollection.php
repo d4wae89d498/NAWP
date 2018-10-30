@@ -7,6 +7,8 @@
  */
 namespace App\Ipolitic\Nawpcore\Collections;
 
+use Jasny\HttpMessage\Stream;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -46,8 +48,8 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      * Will run all controllers and reassign $response while the
      * Controller collection ->  handle() didn't returned TRU
      * @param Kernel $kernel
-     * @param string $response
      * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
      * @param string $requestType
      * @param mixed $packet
      * @param array $array
@@ -56,9 +58,8 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      * @throws \Exception
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function handle(Kernel &$kernel, string &$response, ServerRequestInterface &$request, $requestType, $packet = null, $array = [], $viewLogger = null): void
+    public function handle(Kernel &$kernel, ServerRequestInterface &$request, ResponseInterface &$response, $requestType, $packet = null, $array = [], $viewLogger = null): void
     {
-        $response = "";
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $request, $array, $packet, $requestType);
         if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
             $viewLogger->cookiePoolInstance->destroy();
@@ -70,11 +71,11 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 $parsedHttpUri = $params = Utils::parseUrlParams($request->getServerParams()["HTTP_REFERER"]);
                 if (isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"])) {
                     $params["UID"] = $parsedHttpReferer["UID"];
-                    $_SERVER["REQUEST_URI"] = Utils::buildUrlParams($request->getServerParams()["REQUEST_URI"], $params);
                     if (!stristr($request->getServerParams()["REQUEST_URI"], "logout")) {
-                        PacketAdapter::redirectTo(
+                        $viewLogger->redirectTo
+                        (
                             $response,
-                            $viewLogger,
+                            Utils::buildUrlParams($request->getServerParams()["REQUEST_URI"], $params),
                             $array
                         );
                         if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
@@ -97,7 +98,6 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
         $controllerMethodsCalled = [];
         // for each controller methods ordered by priority
         foreach ($this->getOrderedByPriority($request) as $controllerMethod) {
-            //var_dump($controllerMehod);
             // we force a match if wildcard used
             if ($controllerMethod["router"][1] === "*") {
                 $routerResponse = [""];
@@ -134,7 +134,10 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
         }
         if ($packet !== null) {
             $serverGenerated = $viewLogger->renderedTemplates;
-            $response = json_encode($serverGenerated);
+            $newBody = new Stream();
+            $newBody->write(json_encode($serverGenerated));
+            $response = $response->withBody($newBody);
+            var_dump((string) $response->getBody());
         }
         $toLog = "";
         if (isset($_ENV["LOG_REQUEST"]) && (((int) $_ENV["LOG_REQUEST"]) === 1)) {

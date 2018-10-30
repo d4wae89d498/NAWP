@@ -23,6 +23,7 @@ export class SocketClient {
             }
             this.socket = io("http://127.0.0.1:8070");
             this.socket.on("packetout", function(data) {
+                console.log(data);
                 data = JSON.parse(data);
                 window["csr"] = ClientSideRendering;
                 if (data instanceof Object) {

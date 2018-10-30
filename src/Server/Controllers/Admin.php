@@ -13,6 +13,7 @@ use App\Ipolitic\Nawpcore\Components\Utils;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Components\Controller;
 use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Admin
@@ -49,14 +50,14 @@ class Admin extends Controller implements ControllerInterface
     /**
      * Bind the login page of the admin backend
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param array $args
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function login(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function login(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         $loginMessage = "default";
         $atlas = $viewLogger->kernel->atlas;
@@ -85,7 +86,7 @@ class Admin extends Controller implements ControllerInterface
             }
         }
 
-        $httpResponse = $viewLogger->render
+        $response->getBody()->write($viewLogger->render
         (   ["\App\Server\Views\Elements\Admin\Header" => [
                 "page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]],
             ["\App\Server\Views\Pages\Admin\Page" =>  [
@@ -99,21 +100,21 @@ class Admin extends Controller implements ControllerInterface
                     ],
                 ]],
             ["\App\Server\Views\Elements\Admin\Footer" => []]
-        );
+        ));
         return true;
     }
 
     /**
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param array $args
      * @return bool
      * @throws \Exception
      */
-    public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function adminHome(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         $loginMessage = "SUCCESS";
-        $httpResponse .= "<!DOCTYPE html><html lang=\"en\">" .
+        $response->getBody()->write("<!DOCTYPE html><html lang=\"en\">" .
             new \App\Server\Views\Elements\Admin\Header(
                 $viewLogger,
                 $this->logger,
@@ -142,27 +143,27 @@ class Admin extends Controller implements ControllerInterface
             ) .
             new \App\Server\Views\Elements\Admin\Footer($viewLogger, $this->logger, [])
             .
-            "</body></html>";
+            "</body></html>");
         return true;
     }
 
     /**
      * The admin middleware function, manage common features of all /admin* matches
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $response
      * @param array $args
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function adminMiddleware(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
+    public function adminMiddleware(ViewLogger &$viewLogger,  ResponseInterface &$response, array $args = []): bool
     {
-        if (stristr($_SERVER["REQUEST_URI"], "/admin")) {
+        if (stristr($viewLogger->request->getServerParams()["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
-            if (!$viewLogger->sessionInstance->has("user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
+            if (!$viewLogger->sessionInstance->has("user_id") && !stristr($viewLogger->request->getServerParams()["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
-                $viewLogger->redirectTo($httpResponse, "/admin/login", $args);
+                $viewLogger->redirectTo($response, "/admin/login", $args);
                 // We release the request
                 return true;
             }

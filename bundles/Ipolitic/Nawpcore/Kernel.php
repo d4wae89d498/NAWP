@@ -13,6 +13,7 @@ use App\Ipolitic\Nawpcore\Components\Collection;
 use App\Ipolitic\Nawpcore\Components\Logger;
 use App\Ipolitic\Nawpcore\Components\Packet;
 use Jasny\HttpMessage\ServerRequest;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
@@ -129,9 +130,9 @@ class Kernel implements LoggerAwareInterface
      * @throws \Exception
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function handle(&$response, ServerRequestInterface &$request, string $requestType, $packet = null, $array = [], &$viewLogger = null): void
+    public function handle(ServerRequestInterface &$request, ResponseInterface &$response, string $requestType, $packet = null, $array = [], &$viewLogger = null): void
     {
-        $this->controllerCollection->handle($this, $response, $request, $requestType, $packet, $array, $viewLogger);
+        $this->controllerCollection->handle($this, $request, $response, $requestType, $packet, $array, $viewLogger);
     }
 
     /**

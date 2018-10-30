@@ -44,7 +44,7 @@ class Http
                             isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                         )
                     )->handle($request);
-                    $connection->send($response);
+                    $connection->send($response->getBody());
                 } catch (\Exception $exception) {
                     $connection->send(
                         isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
