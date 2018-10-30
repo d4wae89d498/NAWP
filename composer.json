@@ -15,55 +15,103 @@
     },
     "repositories": [
         {
-            "type": "github",
-            "url": "https://github.com/iPolitic/phpsocket.io.git"
+            "type": "package",
+            "package": {
+                "name": "workerman/phpsocket.io",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/iPolitic/phpsocket.io.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         },
         {
-            "type": "github",
-            "url": "https://github.com/iPolitic/Workerman.git"
+            "type": "package",
+            "package": {
+                "name": "workerman/workerman",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/iPolitic/Workerman.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         },
         {
-            "type": "github",
-            "url": "https://github.com/iPolitic/Solex.git"
+            "type": "package",
+            "package": {
+                "name": "ipolitic/solex",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/iPolitic/Solex.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         },
         {
-            "type": "github",
-            "url": "https://github.com/MarcFaussurier/dispatcher.git"
+            "type": "package",
+            "package": {
+              "name": "ellipse/http-factory",
+              "version": "dev-master",
+              "source": {
+                  "url": "https://github.com/MarcFaussurier/dispatcher.git",
+                  "type": "git",
+                  "reference": "master"
+              }
+            }
         },
         {
-            "type": "github",
-            "url": "https://github.com/MarcFaussurier/http-factory.git"
+            "type": "package",
+            "package": {
+                "name": "bulldog/http-factory",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/MarcFaussurier/http-factory.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         },
         {
-            "type": "github",
-            "url": "https://github.com/MarcFaussurier/phpdebugbar.git"
+            "type": "package",
+            "package": {
+                "name": "php-middleware/php-debug-bar",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/MarcFaussurier/phpdebugbar.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         }
     ],
     "require": {
         "php": ">= 7.2.0",
         "ext-json": "*",
         "ext-openssl": "*",
-        "psr/log": "^1.0@dev",
-        "psr/container": "^1.0@dev",
-        "psr/http-server-middleware": "^1.0@dev",
-        "psr/http-server-handler": "^1.0@dev",
-        "workerman/workerman": "dev-master@dev",
-        "workerman/phpsocket.io": "dev-master@dev",
-        "ipolitic/solex": "dev-master@dev",
-        "bulldog/http-factory": "dev-master@dev",
-        "ellipse/dispatcher": "dev-master@dev",
-        "atlas/orm": "3.x-dev@dev",
-        "atlas/cli": "2.x-dev@dev",
+        "psr/log": "^1.0",
+        "psr/container": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "workerman/workerman": "dev-master",
+        "workerman/phpsocket.io": "dev-master",
+        "ipolitic/solex": "dev-master",
+        "bulldog/http-factory": "dev-master",
+        "ellipse/dispatcher": "dev-master",
+        "atlas/orm": "3.x-dev",
+        "atlas/cli": "2.x-dev",
         "twig/twig": "^2.5",
-        "symfony/dotenv": "^4.2-dev@dev",
-        "symfony/cache": "^4.2-dev@dev",
+        "symfony/dotenv": "^4.2-dev",
+        "symfony/cache": "^4.2-dev",
         "friendsofphp/php-cs-fixer": "^2.14-dev",
-        "jasny/http-message": "dev-master@dev",
-        "php-middleware/php-debug-bar": "dev-master@dev"
+        "jasny/http-message": "dev-master",
+        "php-middleware/php-debug-bar": "dev-master"
     },
     "require-dev": {
       "phpunit/phpunit": "7",
-        "jaschilz/php-coverage-badger": "dev-master@dev"
+        "jaschilz/php-coverage-badger": "dev-master"
     },
     "autoload": {
         "psr-4": { "App\\": ["src/", "bundles/"] }
