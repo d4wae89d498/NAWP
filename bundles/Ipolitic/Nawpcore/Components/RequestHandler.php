@@ -41,10 +41,9 @@ class RequestHandler implements RequestHandlerInterface
      * @param string $requestType
      * @param null $packet
      */
-    public function __construct(Kernel &$kernel, ResponseInterface &$response, string $requestType, $packet = null)
+    public function __construct(Kernel &$kernel, string $requestType, $packet = null)
     {
         $this->kernel = $kernel;
-        $this->response = $response;
         $this->requestType = $requestType;
         Kernel::$currentPacket = $packet;
         Kernel::$currentRequestType = $requestType;
@@ -56,10 +55,20 @@ class RequestHandler implements RequestHandlerInterface
      * May call other collaborating code to generate the response.
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->response;
+        $response = new Response();
+        Kernel::$kernel->handle(
+            $request,
+            $response,
+            Kernel::$currentRequestType,
+            Kernel::$currentPacket,
+            Kernel::$kernel->rawTwig
+        );
+        return $response;
     }
 }

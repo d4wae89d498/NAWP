@@ -15,28 +15,28 @@
     },
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/iPolitic/phpsocket.io"
+            "type": "github",
+            "url": "https://github.com/iPolitic/phpsocket.io.git"
         },
         {
-            "type": "git",
-            "url": "https://github.com/iPolitic/Workerman"
+            "type": "github",
+            "url": "https://github.com/iPolitic/Workerman.git"
         },
         {
-            "type": "git",
-            "url": "https://github.com/iPolitic/Solex"
+            "type": "github",
+            "url": "https://github.com/iPolitic/Solex.git"
         },
         {
-            "type": "git",
-            "url": "https://github.com/MarcFaussurier/dispatcher"
+            "type": "github",
+            "url": "https://github.com/MarcFaussurier/dispatcher.git"
         },
         {
-            "type": "git",
-            "url": "https://github.com/MarcFaussurier/http-factory"
+            "type": "github",
+            "url": "https://github.com/MarcFaussurier/http-factory.git"
         },
         {
-            "type": "git",
-            "url": "https://github.com/MarcFaussurier/access-log"
+            "type": "github",
+            "url": "https://github.com/MarcFaussurier/phpdebugbar.git"
         }
     ],
     "require": {
@@ -47,39 +47,24 @@
         "psr/container": "^1.0@dev",
         "psr/http-server-middleware": "^1.0@dev",
         "psr/http-server-handler": "^1.0@dev",
-        "workerman/workerman": "dev-master",
-        "workerman/phpsocket.io": "dev-master",
-        "ipolitic/solex": "dev-master",
-        "atlas/orm": "3.x-dev",
-        "atlas/cli": "2.x-dev",
+        "workerman/workerman": "dev-master@dev",
+        "workerman/phpsocket.io": "dev-master@dev",
+        "ipolitic/solex": "dev-master@dev",
+        "bulldog/http-factory": "dev-master@dev",
+        "ellipse/dispatcher": "dev-master@dev",
+        "atlas/orm": "3.x-dev@dev",
+        "atlas/cli": "2.x-dev@dev",
         "twig/twig": "^2.5",
-        "symfony/dotenv": "^4.2@dev",
-        "symfony/cache": "^4.2@dev",
-        "friendsofphp/php-cs-fixer": "^2.14@dev",
-        "jasny/http-message": "dev-master",
-        "bulldog/http-factory": "dev-master",
-        "ellipse/dispatcher": "dev-master",
-        "middlewares/error-handler": "dev-master",
-        "middlewares/response-time": "dev-master",
-        "middlewares/trailing-slash": "dev-master",
-        "middlewares/uuid": "dev-master",
-        "middlewares/robots": "dev-master",
-        "middlewares/encoder": "dev-master",
-        "middlewares/minifier": "dev-master",
-        "middlewares/method-override": "dev-master",
-        "middlewares/client-ip": "dev-master",
-        "middlewares/firewall": "dev-master",
-        "middlewares/cache": "dev-master",
-        "middlewares/negotiation" : "dev-master",
-        "middlewares/debugbar" : "dev-master",
-        "middlewares/payload": "dev-master",
-        "middlewares/access-log": "dev-master"
+        "symfony/dotenv": "^4.2-dev@dev",
+        "symfony/cache": "^4.2-dev@dev",
+        "friendsofphp/php-cs-fixer": "^2.14-dev",
+        "jasny/http-message": "dev-master@dev",
+        "php-middleware/php-debug-bar": "dev-master@dev"
     },
     "require-dev": {
       "phpunit/phpunit": "7",
-        "jaschilz/php-coverage-badger": "dev-master"
+        "jaschilz/php-coverage-badger": "dev-master@dev"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": { "App\\": ["src/", "bundles/"] }
     },
@@ -90,5 +75,6 @@
         "post-update-cmd": [
             "php ./configs/postbuild.php"
         ]
-    }
+    },
+    "minimum-stability": "dev"
 }
