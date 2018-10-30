@@ -13,24 +13,41 @@ use Jasny\HttpMessage\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class RequestHandler
+class RequestHandler implements RequestHandlerInterface
 {
+    /**
+     * @var Kernel
+     */
     public $kernel;
+    /**
+     * @var ResponseInterface
+     */
+    public $response;
+    /**
+     * @var string
+     */
     public $requestType = "GET";
+    /**
+     * @var null|Packet
+     */
     public $packet = null;
 
     /**
      * RequestHandler constructor.
      * @param Kernel $kernel
+     * @param ResponseInterface $response
      * @param string $requestType
      * @param null $packet
      */
-    public function __construct(Kernel &$kernel, string $requestType, $packet = null)
+    public function __construct(Kernel &$kernel, ResponseInterface &$response, string $requestType, $packet = null)
     {
         $this->kernel = $kernel;
+        $this->response = $response;
         $this->requestType = $requestType;
-        $this->packet = $packet;
+        Kernel::$currentPacket = $packet;
+        Kernel::$currentRequestType = $requestType;
     }
 
     /**
@@ -39,22 +56,10 @@ class RequestHandler
      * May call other collaborating code to generate the response.
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        //$psrResponse = (new Response())->withGlobalEnvironment(true);
-        $response = (new Response());
-
-        $this->kernel->handle(
-            $request,
-            $response,
-            $this->requestType,
-            $this->packet,
-            $this->kernel->rawTwig
-        );
-        return $response;
+        return $this->response;
     }
 }

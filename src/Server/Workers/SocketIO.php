@@ -40,9 +40,17 @@ class SocketIO
                     $packet = (new Packet($kernel, $request, $data, true))
                         ->useAdaptor()
                         ->toArray();
-                    $response = (new \App\Ipolitic\Nawpcore\Components\RequestHandler($kernel, "SOCKET", $packet))->handle($request);
-                   // var_dump((string) $response->getBody());
-                    $socket->emit("packetout", (string) $response->getBody());
+                    $response = new \Jasny\HttpMessage\Response();
+                    $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
+                        $kernel,
+                        $response,
+                        "SOCKET",
+                        $packet
+                    );
+                    $dispatcher = new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy());
+                    $requestHandler->response = $dispatcher->handle($request);
+                    // var_dump((string) $response->getBody());
+                    $socket->emit("packetout", (string) $requestHandler->response->getBody());
                     return;
                 } catch (Exception $ex) {
                     while (@ob_end_flush());

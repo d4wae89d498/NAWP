@@ -8,10 +8,12 @@
 namespace App\Ipolitic\Nawpcore;
 
 use App\Ipolitic\Nawpcore\Collections\ControllerCollection;
+use App\Ipolitic\Nawpcore\Collections\MiddlewareCollection;
 use App\Ipolitic\Nawpcore\Collections\ViewCollection;
 use App\Ipolitic\Nawpcore\Components\Collection;
 use App\Ipolitic\Nawpcore\Components\Logger;
 use App\Ipolitic\Nawpcore\Components\Packet;
+use App\Server\RequestFlow;
 use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,6 +37,18 @@ class Kernel implements LoggerAwareInterface
     ];
     public const ENV_PATH = ["configs", ".env"];
     /**
+     * @var Kernel
+     */
+    public static $kernel;
+    /**
+     * @var string
+     */
+    public static $currentRequestType = "";
+    /**
+     * @var array
+     */
+    public static $currentPacket = [];
+    /**
      * @var bool
      */
     public static $PHPUNIT_MODE = false;
@@ -54,6 +68,10 @@ class Kernel implements LoggerAwareInterface
      * @var ViewCollection $viewCollection
      */
     public $viewCollection;
+    /**
+     * @var MiddlewareCollection
+     */
+    public $middlewareCollection;
     /**
      * @var Atlas
      */
@@ -89,6 +107,7 @@ class Kernel implements LoggerAwareInterface
         $dotEnv->load($prefix . join(DIRECTORY_SEPARATOR, self::ENV_PATH));
         // populate kernel collections and member variables
         $this->init();
+        self::$kernel = $this;
     }
 
     /**
@@ -143,14 +162,16 @@ class Kernel implements LoggerAwareInterface
         $this->setLogger(new Logger());
         // set memory to 4go
         ini_set('memory_limit', '2048M');
-        $this->cachePath = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
-        $this->controllerCollection = new ControllerCollection();
-        $this->controllerCollection->setLogger($this->logger);
-        $this->viewCollection = new ViewCollection();
-        $this->viewCollection->setLogger($this->logger);
-        $this->atlas = $this->getAtlas();
-        $this->packetAdapterCache = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"]));
-        $this->sessionCache = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"]));
+        $this->cachePath                = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
+        $this->controllerCollection     = new ControllerCollection();
+        $this->middlewareCollection     = new MiddlewareCollection();
+        $this->viewCollection           = new ViewCollection();
+        $this->controllerCollection     ->setLogger($this->logger);
+        $this->viewCollection           ->setLogger($this->logger);
+        $this->middlewareCollection     ->setLogger($this->logger);
+        $this->atlas                    = $this->getAtlas();
+        $this->packetAdapterCache       = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"]));
+        $this->sessionCache             = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"]));
 
         /**
          * Used for logging views
@@ -165,6 +186,12 @@ class Kernel implements LoggerAwareInterface
         $this->fillCollectionWithComponents($this->viewCollection, $params, 'views');
         $params = [&$atlasInstance, $this->logger];
         $this->fillCollectionWithComponents($this->controllerCollection, $params, 'controllers');
+        $params = [];
+        $this->fillCollectionWithComponents($this->middlewareCollection, $params, 'middlewares');
+        foreach ((new RequestFlow())->process($this) as $k => $v) {
+            $this->middlewareCollection->append($v);
+        }
+        var_dump($this->middlewareCollection);
         foreach ($this->viewCollection as $k => $v) {
             $this->rawTwig[$k] = Utils::HideTwigIn(Utils::ocb(function () use ($v) {
                 $v->twig();
@@ -180,8 +207,9 @@ class Kernel implements LoggerAwareInterface
      */
     public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName = ""): void
     {
-        // foreach controllers
-        array_map(
+        // foreach components
+        array_map
+        (
             function ($component) use (&$collection) {
                 /**
                  * @var mixed $component the component instance that will be added to the collection
@@ -189,33 +217,33 @@ class Kernel implements LoggerAwareInterface
                 $collection->append($component);
             },
             (
-            // remove null values
-            array_filter(
-                // convert declared class name to controller instance if match, or null value
-                array_map(
-                    function (string $className) use ($componentName, &$arguments) {
-                        // if a valid $className was given, we continue
-                        if (stristr($className, "\\" . ucfirst($componentName) . "\\") !== false) {
-                            // if the $arguments array is not empty, we simply instantiate $componentName
-                            if (count($arguments) == 0) {
-                                $obj = new $componentName;
+                // remove null values
+                array_filter(
+                    // convert declared class name to controller instance if match, or null value
+                    array_map(
+                        function (string $className) use ($componentName, &$arguments) {
+                            // if a valid $className was given, we continue
+                            if (stristr($className, "\\" . ucfirst($componentName) . "\\") !== false) {
+                                // if the $arguments array is not empty, we simply instantiate $componentName
+                                if (count($arguments) == 0) {
+                                    $obj = new $className;
+                                }
+                                // else we call $className constructor using given $arguments and Reflection class
+                                else {
+                                    $r = new \ReflectionClass($className);
+                                    $obj = $r->newInstanceArgs($arguments);
+                                }
+                                return $obj;
                             }
-                            // else we call $className constructor using given $arguments and Reflection class
+                            // else we stop with a null that will be filtered later
                             else {
-                                $r = new \ReflectionClass($className);
-                                $obj = $r->newInstanceArgs($arguments);
+                                return null;
                             }
-                            return $obj;
-                        }
-                        // else we stop with a null that will be filtered later
-                        else {
-                            return null;
-                        }
-                    },
-                    // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
-                    \get_declared_classes()
+                        },
+                        // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
+                        \get_declared_classes()
+                    )
                 )
-            )
             )
         );
     }

@@ -12,13 +12,13 @@ use App\Ipolitic\Nawpcore\Kernel;
 
 class RequestFlow
 {
-    public static function process(Kernel $kernel): array
+    public static function process(Kernel &$kernel): array
     {
+        echo "REQUEST FLOW CALLED" . PHP_EOL;
         /**
          * These middlewares will be executed at each request
          */
         return [
-
             //Handle errors
             (new \Middlewares\ErrorHandler()),
             //Log the request
