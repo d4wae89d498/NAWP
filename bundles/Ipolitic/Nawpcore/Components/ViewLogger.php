@@ -3,6 +3,7 @@ namespace App\Ipolitic\Nawpcore\Components;
 
 use App\Ipolitic\Nawpcore\Kernel;
 use Psr\Http\Message\ServerRequestInterface;
+use Workerman\Protocols\Http;
 
 /**
  * ViewLogger will store all the data given to the template class
@@ -231,25 +232,73 @@ class ViewLogger
         });
     }
 
-
-    public function renderPage(array $header, array $content, array $footer) : string
+    /**
+     * @param $viewLogger
+     * @param $element
+     * @return array
+     */
+    public function resurciveHtmlElementsInstancier($className, $element)
     {
-        $headerElem = array_keys($header)[0];
-        $contentElem = array_keys($content)[0];
-        $footerElem = array_keys($footer)[0];
-        $httpResponse = " <!DOCTYPE html>
-        <html lang=\"en\">" .
-            new $headerElem($this, $this->kernel->logger, $header[$headerElem]) .
-            "<body>" .
-            new $contentElem(
+        $output = [];
+        $cnt = 0;
+        foreach ($element as $k => $v) {
+            $output[$k] = $v;
+        }
+        if (isset($element["html_elements"])) {
+            foreach($element["html_elements"] as $className => $states)
+            {
+                $tmpClassName = $className;
+                $tmpStates = $states;
+                unset($output["html_elements"][$className]);
+                $output["html_elements"][$cnt++] = $this->resurciveHtmlElementsInstancier($tmpClassName, $tmpStates);
+            }
+        }
+        return new $className($this, $this->kernel->logger, $output);
+    }
 
-                $this,
-                $this->kernel->logger,
-                $content[$contentElem]
-            ) .
-            new $footerElem($this, $this->kernel->logger, $footer[$footerElem]) . "
-            </body>
-        </html>";
-        return $httpResponse;
+    /**
+     * Will render a page using given informations
+     * @param mixed ...$elements
+     * @return string
+     */
+    public function render(... $elements) : string
+    {
+        $output = "<!DOCTYPE html><html lang=\"en\">";
+        $cnt = 0;
+        foreach ($elements as $elementData)
+        {
+            $className = array_keys($elementData)[0];
+            $states = $elementData[$className];
+            $output .= ($this->resurciveHtmlElementsInstancier($className, $states))->render();
+            if ($cnt++ === 0) {
+                $output .= "<body>";
+            }
+        }
+        $output .= "</body></html>";
+        return $output;
+    }
+
+    /**
+     *  Will redirect the http or the socket response
+     * @param string $httpResponse
+     * @param string $url
+     * @param array $args
+     * @throws \iPolitic\Solex\RouterException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function redirectTo(string &$httpResponse, string $url, array $args): void {
+        $_SERVER["REQUEST_URI"] = $url;
+        if (strtolower($this->requestType) !== "socket") {
+            Http::header("Location: " . ($this->request->getServerParams()["REQUEST_URI"]));
+        } else {
+            $this->kernel->handle(
+                $httpResponse,
+                $this->request,
+                $this->requestType,
+                null,
+                $args,
+                $viewLogger
+            );
+        }
     }
 }

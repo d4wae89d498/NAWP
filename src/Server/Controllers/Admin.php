@@ -9,7 +9,6 @@ namespace App\Server\Controllers;
 
 use App\Server\Models\User\User;
 use App\Ipolitic\Nawpcore\Components\Cookie;
-use App\Ipolitic\Nawpcore\Components\PacketAdapter;
 use App\Ipolitic\Nawpcore\Components\Utils;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Components\Controller;
@@ -73,40 +72,32 @@ class Admin extends Controller implements ControllerInterface
                 $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
             } else {
                 $this->logger->alert("LOGIN SUCCESS");
-                $uid = Utils::generateUID(9);
+                $_GET["UID"] = $uid = Utils::generateUID(9);
                 $url = "/admin";
                 if ($viewLogger->cookiePoolInstance->areCookieEnabled()) {
                     $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
                 } else {
                     $url = Utils::buildUrlParams($url, ["UID" => $uid]);
                 }
-                $_GET["UID"] = $uid;
                 $viewLogger->sessionInstance->set("user_id", 5);
-                //$loginMessage = $loginMessage . $url . " UID : " . Session::id($viewLogger);
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, $args, $viewLogger->requestType);
+                $viewLogger->redirectTo($httpResponse, $url, $args);
                 return true;
             }
         }
-        $httpResponse = $viewLogger->renderPage
-        (
-            ["\App\Server\Views\Elements\Admin\Header" => [
-                    "page" => "Login",
-                    "title" => "TEST".rand(0, 99),
-                    "url" => $_SERVER["REQUEST_URI"],
-                    "cookies" => base64_encode(json_encode($viewLogger->cookies)),]],
+
+        $httpResponse = $viewLogger->render
+        (   ["\App\Server\Views\Elements\Admin\Header" => [
+                "page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]],
             ["\App\Server\Views\Pages\Admin\Page" =>  [
-                "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
-                "html_elements" => [
-                    (
-                    new \App\Server\Views\Elements\Admin\Login($viewLogger, $this->logger, [
-                        "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message" => $viewLogger->sessionInstance->id() . " || " . print_r($_POST, true),
-                        "rand" => rand(0, 9),
-                        "cookie_on" => $viewLogger->areCookieEnabled ? "true" : "false",
-                        "cookiestr" => print_r($viewLogger->cookies, true)
-                    ])),
-                ],
-            ]],
+                    "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                    "html_elements" => [
+                        "\App\Server\Views\Elements\Admin\Login" => [
+                            "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                            "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
+                            "rand" => rand(0, 9)
+                        ],
+                    ],
+                ]],
             ["\App\Server\Views\Elements\Admin\Footer" => []]
         );
         return true;
@@ -118,7 +109,6 @@ class Admin extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      * @throws \Exception
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function adminHome(ViewLogger &$viewLogger, string &$httpResponse, array $args = []): bool
     {
@@ -172,8 +162,7 @@ class Admin extends Controller implements ControllerInterface
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated
             if (!$viewLogger->sessionInstance->has("user_id") && !stristr($_SERVER["REQUEST_URI"], "/login")) {
                 // We redirect him to the login page
-                $_SERVER["REQUEST_URI"] = "/admin/login";
-                PacketAdapter::redirectTo($httpResponse, $viewLogger, $args, $viewLogger->requestType);
+                $viewLogger->redirectTo($httpResponse, "/admin/login", $args);
                 // We release the request
                 return true;
             }

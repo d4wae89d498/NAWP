@@ -48,7 +48,7 @@ abstract class View implements LoggerAwareInterface
     {
         $this->setLogger($logger);
         //we  reassign the template logger
-        $this->templateLogger = &$templateLogger;
+        $this->templateLogger = $templateLogger;
         $id = $this->generatedID = $this->templateLogger->generateTemplateID($this);
         // if the given $params array is non empty, we set all $states elements using $params key and values
         if (count($params) > 0) {
@@ -116,14 +116,9 @@ abstract class View implements LoggerAwareInterface
     }
 
     /**
-     * Magic function called when a template is rendered to string
-     * i.e : in <?=new Template()?> format
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
-    public function __toString(): string
+    public function render(): string
     {
         $twig = $this->get("twig");
         $str = 'giventwig';
@@ -141,6 +136,16 @@ abstract class View implements LoggerAwareInterface
             return $ex->getMessage();
         }
         return $html;
+    }
+
+    /**
+     * Magic function called when a template is rendered to string
+     * i.e : in <?=new Template()?> format
+     * @return string
+     */
+    public function __toString(): string
+    {
+      return $this->render();
     }
 
     /**

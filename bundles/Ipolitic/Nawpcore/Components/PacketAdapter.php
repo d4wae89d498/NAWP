@@ -29,36 +29,6 @@ class PacketAdapter
         $this->cache = $cache;
     }
 
-
-    /**
-     *  Will redirect the http or the socket response
-     * @param string $response
-     * @param ViewLogger $viewLogger
-     * @param array $args
-     * @param string $requestType
-     * @throws \iPolitic\Solex\RouterException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public static function redirectTo(
-        string &$response,
-        ViewLogger &$viewLogger,
-        array $args = [],
-        string $requestType = ViewLogger::DEFAULT_REQUEST_TYPE
-    ): void {
-        if (strtolower($requestType) !== "socket") {
-            Http::header("Location: " . ($viewLogger->request->getServerParams()["REQUEST_URI"]));
-        } else {
-            $viewLogger->kernel->handle(
-                $response,
-                $request,
-                $viewLogger->requestType,
-                null,
-                $args,
-                $viewLogger
-            );
-        }
-    }
-
     /**
      * Will cache a packetAdapter file and return an ID
      * @param ViewLogger $viewLogger
