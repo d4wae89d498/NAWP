@@ -17,25 +17,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class Controller  extends Middleware implements MiddlewareInterface
+class Controller extends Middleware implements MiddlewareInterface
 {
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     * @throws \iPolitic\Solex\RouterException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $handler->handle($request);
-        Kernel::$kernel->handle(
-            $request,
-            $response,
-            Kernel::$currentRequestType,
-            Kernel::$currentPacket,
-            Kernel::$kernel->rawTwig
-        );
-        return $response;
+        return $handler->handle($request);
     }
 }

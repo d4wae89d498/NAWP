@@ -43,7 +43,6 @@ class SocketIO
                     $response = new \Jasny\HttpMessage\Response();
                     $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
                         $kernel,
-                        $response,
                         "SOCKET",
                         $packet
                     );

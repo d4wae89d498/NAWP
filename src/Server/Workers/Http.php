@@ -38,16 +38,13 @@ class Http
                 try {
                     \App\Ipolitic\Nawpcore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
-                    $response = new \Jasny\HttpMessage\Response();
-                    $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
-                        $kernel,
-                        $response,
-                        isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
+                    $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler
+                    ($kernel,
+                    isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                     );
-                    var_dump($kernel->middlewareCollection->getArrayCopy());
-                    $dispatcher = new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy());
-                    $requestHandler->response = $dispatcher->handle($request);
-                    $connection->send($requestHandler->response->getBody());
+                    $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
+                    $response = $dispatcher->handle($request);
+                    $connection->send($response->getBody());
                 } catch (\Exception $exception) {
                     $connection->send(
                         isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?

@@ -9,16 +9,26 @@
 namespace App\Server;
 
 use App\Ipolitic\Nawpcore\Kernel;
+use Bulldog\HttpFactory\FactoryBuilder;
+use DebugBar\StandardDebugBar;
+use PhpMiddleware\PhpDebugBar\PhpDebugBarMiddleware;
 
 class RequestFlow
 {
     public static function process(Kernel &$kernel): array
     {
+        $psr17ResponseFactory = (FactoryBuilder::get("jasny"))->responseFactory();
+        $psr17StreamFactory = (FactoryBuilder::get("jasny"))->streamFactory();
+
+        $debugbar = new StandardDebugBar();
+        $debugbarRenderer = $debugbar->getJavascriptRenderer();
+        $middleware = new PhpDebugBarMiddleware($debugbarRenderer, $psr17ResponseFactory, $psr17StreamFactory);
+
         echo "REQUEST FLOW CALLED" . PHP_EOL;
         /**
          * These middlewares will be executed at each request
          */
-        return [
+        return [/*
             //Handle errors
             (new \Middlewares\ErrorHandler()),
             //Log the request
@@ -52,9 +62,9 @@ class RequestFlow
             //Negotiate the content-type
             new \Middlewares\ContentType(),
             //Negotiate the language
-            new \Middlewares\ContentLanguage(['gl', 'es', 'en']),
+            new \Middlewares\ContentLanguage(['gl', 'es', 'en']),*/
             //Add the php debugbar
-            new \Middlewares\Debugbar(),
+            $middleware,
         ];
     }
 }
