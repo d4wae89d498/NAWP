@@ -3,7 +3,7 @@ namespace App\Ipolitic\Nawpcore\Components;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NotFoundExceptionInterface as NAWPFoundExceptionInterface;
 
 /**
  * Class ArrayObject
@@ -42,13 +42,13 @@ class Collection extends \ArrayObject implements ContainerInterface
      * @param string $id
      * @return mixed
      * @throws NotFoundExceptionInterface
-     * @throws NAWPNotFoundExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function get($id)
     {
         $array = $this->getArrayCopy();
         if (!isset($array[$id])) {
-            throw new NAWPNotFoundExceptionInterface();
+            throw new NAWPFoundExceptionInterface();
         }
         return $array[$id];
     }

@@ -8,12 +8,12 @@
 
 namespace App\Ipolitic\Nawpcore\Exceptions;
 
-use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface as PsrNotFound;
 
 /**
  * Class NAWPNotFoundExceptionInterface
  * @package App\Ipolitic\Nawpcore\exceptions
  */
-class NAWPNotFoundExceptionInterface extends Exception implements NotFoundExceptionInterface
+class NotFoundExceptionInterface extends Exception implements PsrNotFound
 {
 }

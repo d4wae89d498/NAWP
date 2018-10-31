@@ -7,7 +7,7 @@
  */
 namespace App\Ipolitic\Nawpcore\Components;
 
-use App\Ipolitic\Nawpcore\exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\exceptions\NotFoundExceptionInterface;
 use App\Ipolitic\Nawpcore\Kernel;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -155,14 +155,14 @@ class Packet implements \ArrayAccess, ContainerInterface
     /**
      * @param string $id
      * @return mixed
-     * @throws NAWPNotFoundExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function get($id)
     {
         if ($this->has($id)) {
             return $this->container[$id];
         } else {
-            throw new NAWPNotFoundExceptionInterface();
+            throw new NotFoundExceptionInterface();
         }
     }
 

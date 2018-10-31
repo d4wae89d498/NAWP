@@ -7,7 +7,7 @@
  */
 namespace App\Ipolitic\Nawpcore\Components;
 
-use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -88,14 +88,14 @@ class Session implements ContainerInterface
      *  Will return a session value using a visitor token
      * @param string $key
      * @return string
-     * @throws NAWPNotFoundExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function get($key): string
     {
         if ($this->has($key)) {
             return $this->data[$key];
         } else {
-            throw new NAWPNotFoundExceptionInterface();
+            throw new NotFoundExceptionInterface();
         }
     }
 

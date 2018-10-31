@@ -13,18 +13,18 @@ use Bulldog\HttpFactory\FactoryBuilder;
 use DebugBar\StandardDebugBar;
 use PhpMiddleware\PhpDebugBar\PhpDebugBarMiddleware;
 
-class RequestFlow
+class PsrMiddlewares
 {
-    public static function process(Kernel &$kernel): array
+    public static function process(): array
     {
-        $psr17ResponseFactory = (FactoryBuilder::get("jasny"))->responseFactory();
+       /* $psr17ResponseFactory = (FactoryBuilder::get("jasny"))->responseFactory();
         $psr17StreamFactory = (FactoryBuilder::get("jasny"))->streamFactory();
 
         $debugbar = new StandardDebugBar();
         $debugbarRenderer = $debugbar->getJavascriptRenderer();
         $middleware = new PhpDebugBarMiddleware($debugbarRenderer, $psr17ResponseFactory, $psr17StreamFactory);
-
-        echo "REQUEST FLOW CALLED" . PHP_EOL;
+*/
+     //   echo "REQUEST FLOW CALLED" . PHP_EOL;
         /**
          * These middlewares will be executed at each request
          */
@@ -64,7 +64,7 @@ class RequestFlow
             //Negotiate the language
             new \Middlewares\ContentLanguage(['gl', 'es', 'en']),*/
             //Add the php debugbar
-            $middleware,
+//            $middleware,
         ];
     }
 }

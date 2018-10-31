@@ -7,7 +7,7 @@
  */
 namespace App\Ipolitic\Nawpcore\Components;
 
-use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -58,12 +58,12 @@ class Cookie implements ContainerInterface
     /**
      * @param string $key
      * @return mixed|void
-     * @throws NAWPNotFoundExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function get($key)
     {
         if (!$this->has($key)) {
-            throw new NAWPNotFoundExceptionInterface();
+            throw new NotFoundExceptionInterface();
         }
     }
 }

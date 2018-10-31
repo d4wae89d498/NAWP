@@ -8,7 +8,7 @@
 
 namespace App\Ipolitic\Nawpcore\Components;
 
-use App\Ipolitic\Nawpcore\Exceptions\NAWPNotFoundExceptionInterface;
+use App\Ipolitic\Nawpcore\Exceptions\NotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Workerman\Protocols\Http;
 
@@ -131,12 +131,12 @@ class CookiePool implements ContainerInterface
     /**
      * @param string $key
      * @return string
-     * @throws NAWPNotFoundExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function get($key): string
     {
         if (!$this->has($key)) {
-            throw new NAWPNotFoundExceptionInterface();
+            throw new NotFoundExceptionInterface();
         }
         return
             $this->viewLogger->cookies[$key] =

@@ -11,9 +11,12 @@ use App\Ipolitic\Nawpcore\Collections\ControllerCollection;
 use App\Ipolitic\Nawpcore\Collections\MiddlewareCollection;
 use App\Ipolitic\Nawpcore\Collections\ViewCollection;
 use App\Ipolitic\Nawpcore\Components\Collection;
+use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Components\Logger;
 use App\Ipolitic\Nawpcore\Components\Packet;
-use App\Server\RequestFlow;
+use App\Ipolitic\Nawpcore\Factories\CacheFactory;
+use App\Server\PsrFactories;
+use App\Server\PsrMiddlewares;
 use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,6 +55,10 @@ class Kernel implements LoggerAwareInterface
      * @var bool
      */
     public static $PHPUNIT_MODE = false;
+    /**
+     * @var Factory[]
+     */
+    public $factories = [];
     /**
      * @var LoggerInterface
      */
@@ -139,7 +146,6 @@ class Kernel implements LoggerAwareInterface
 
     /**
      *  Will handle a request
-     * @param string $response
      * @param string $requestType
      * @param ServerRequestInterface $request
      * @param Packet|null $packet
@@ -155,11 +161,14 @@ class Kernel implements LoggerAwareInterface
     }
 
     /**
+     * @throws Exceptions\InvalidImplementation
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function init(): void
     {
-        $this->setLogger(new Logger());
+        $this->factories       = new \App\Server\PsrFactories($this);
+
+        $this->setLogger($this->factories->getLoggerFactory()->createLogger());
         // set memory to 4go
         ini_set('memory_limit', '2048M');
         $this->cachePath                = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", self::CACHE_FOLDER_NAME]);
@@ -170,8 +179,10 @@ class Kernel implements LoggerAwareInterface
         $this->viewCollection           ->setLogger($this->logger);
         $this->middlewareCollection     ->setLogger($this->logger);
         $this->atlas                    = $this->getAtlas();
-        $this->packetAdapterCache       = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"]));
-        $this->sessionCache             = new FilesystemCache('', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"]));
+        $this->packetAdapterCache       = (new CacheFactory('Symfony\Component\Cache\Simple\FilesystemCache',
+        ['' , 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"])]))->createCache();
+        $this->sessionCache             = (new CacheFactory('Symfony\Component\Cache\Simple\FilesystemCache',
+        ['', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"])]))->createCache();
 
         /**
          * Used for logging views
@@ -188,10 +199,9 @@ class Kernel implements LoggerAwareInterface
         $this->fillCollectionWithComponents($this->controllerCollection, $params, 'controllers');
         $params = [];
         $this->fillCollectionWithComponents($this->middlewareCollection, $params, 'middlewares');
-        foreach ((new RequestFlow())->process($this) as $k => $v) {
+        foreach ((new PsrMiddlewares())->process($this) as $k => $v) {
             $this->middlewareCollection->append($v);
         }
-        var_dump($this->middlewareCollection);
         foreach ($this->viewCollection as $k => $v) {
             $this->rawTwig[$k] = Utils::HideTwigIn(Utils::ocb(function () use ($v) {
                 $v->twig();

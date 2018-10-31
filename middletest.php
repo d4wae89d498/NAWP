@@ -6,32 +6,25 @@
  * Time: 7:07 PM
  */
 require_once "vendor/autoload.php";
+try {
 
-$requestHandler = new class() implements \Psr\Http\Server\RequestHandlerInterface {
-    public function handle(\Psr\Http\Message\ServerRequestInterface $request): \Psr\Http\Message\ResponseInterface
-    {
-        // TODO: Implement handle() method.
-        $response = new \Jasny\HttpMessage\Response();
-        $stream = new \Jasny\HttpMessage\Stream();
-        $stream->write("HELLO WORLD" . $request->getUri());
-        $response = $response->withBody($stream);
-        return $response;
-    }
-};
+    $kernel         = new \App\Ipolitic\Nawpcore\Kernel();
 
-$middleware = new class() implements \Psr\Http\Server\MiddlewareInterface {
-    public function process(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Server\RequestHandlerInterface $handler): \Psr\Http\Message\ResponseInterface
-    {
-        // TODO: Implement process() method.
-        $request = $request->withUri(new Jasny\HttpMessage\Uri("/test23"));
-        return $handler->handle($request);
-    }
-};
+    var_dump($kernel->factories->getLoggerFactory()->createLogger());
+    var_dump($kernel->factories->getCacheFactory()->createCache());
+    var_dump($kernel->factories->getServerFactory()->createServerRequest("GET", "/"));
+    var_dump($kernel->factories->getResponseFactory()->createResponse());
+    var_dump($kernel->factories->getStreamFactory()->createStream());
+    var_dump($kernel->factories->getUploadedFileFactory()->createUploadedFile(new \Jasny\HttpMessage\Stream()));
+    var_dump($kernel->factories->getRequestFactory()->createRequest("GET", "/"));
 
-$dispatcher = new \Ellipse\Dispatcher($requestHandler, [$middleware]);
 
-$request = (new \Jasny\HttpMessage\ServerRequest());
-$request = $request->withUri(new Jasny\HttpMessage\Uri("aaa"));
-$response = $dispatcher->handle($request);
+    $factorie = $kernel->factories->getRequestHandlerFactory();
+    $factorie->setConstructor(function() use ($factorie, &$kernel){
+        return new $factorie->implementationName($kernel, "GET", null);
+    });
 
-var_dump((string) $response->getBody());
+    var_dump($factorie->createRequestHandler());
+} catch(Exception $ex) {
+    var_dump($ex);
+}
