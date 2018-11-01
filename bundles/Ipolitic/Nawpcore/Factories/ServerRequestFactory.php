@@ -32,7 +32,7 @@ class ServerRequestFactory extends Factory implements ServerRequestFactoryInterf
     {
         $this->params = [$method, $uri, $serverParams];
         $this->setConstructor(function () {
-            $split = str_split( $s = $this->implementationName);
+            $split = explode("\\", $this->implementationName);
             if (isset($split[0]) && ($split[0] === "\\")) {
                 unset($split[0]);
             }
@@ -42,12 +42,17 @@ class ServerRequestFactory extends Factory implements ServerRequestFactoryInterf
                     /**
                      * @var ServerRequest $instance
                      */
-                    $instance = new $s();
+                    $instance = new $this->implementationName();
                     return $instance
                         ->withServerParams($this->params[2])
-                        ->withServerParams(['REQUEST_METHOD' => $this->params[0], "REQUEST_URI" => $this->params[1]]);
+                        ->withServerParams(['REQUEST_METHOD' => $this->params[0], "REQUEST_URI" => $this->params[1]])
+                        ->withGlobalEnvironment(true);
+                case "Zend\Diactoros\ServerRequest" :
+                    return new $this->implementationName($this->params[2], [], $this->params[1], $this->params[0]);
+                case "GuzzleHttp\Psr7\ServerRequest" :
+                    return new $this->implementationName($this->params[0], $this->params[1], [], null, '1.1', $this->params[2]);
                 default :
-                    return new $s();
+                    return new $this->implementationName();
             };
 
         });

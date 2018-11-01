@@ -8,9 +8,8 @@
 
 namespace App\Ipolitic\Nawpcore\Components;
 
+use App\Ipolitic\Nawpcore\Exceptions\Exception;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
-use Psr\SimpleCache\CacheInterface;
-
 
 class Factory
 {
@@ -61,7 +60,7 @@ class Factory
 
             return $instance;
         } catch (\Throwable $exception) {
-            var_dump($exception);
+            Exception::catch($exception);
             throw new InvalidImplementation("Invalid implementation given.");
         }
     }

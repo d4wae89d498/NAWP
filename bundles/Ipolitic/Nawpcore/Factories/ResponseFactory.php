@@ -25,11 +25,21 @@ class ResponseFactory extends Factory implements ResponseFactoryInterface
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
         $this->params = [$code, $reasonPhrase];
-        $this->setAlter(function (ResponseInterface &$instance) : void {
-            if (isset($this->params[1]) && $this->params[1] !== '') {
-                $instance = $instance->withStatus($this->params[1], $this->params[1]);
-            }
-        });
+        if (!strpos($this->implementationName, "GuzzleHttp\Psr7\Response")) {
+            $this->setAlter(function (ResponseInterface &$instance) : void {
+                if (isset($this->params[1]) && $this->params[1] !== '') {
+                    $instance = $instance->withStatus($this->params[1], $this->params[1]);
+                }
+            });
+        } else {
+            $this->setConstructor(function() use ($code){
+                if (strpos($this->implementationName, "Zend\Diactoros\Response")) {
+                    return new $this->implementationName('php://memory',$code, []);
+                } else {
+                    return new $this->implementationName();
+                }
+            });
+        }
         $instance = $this->create();
         if (!$instance instanceof ResponseInterface) {
             throw new InvalidImplementation();
