@@ -40,7 +40,7 @@ class PsrFactories
             "request"        => new RequestFactory(ServerRequest::class),
             "server"         => new ServerRequestFactory(ServerRequest::class),
             "response"       => new ResponseFactory(Response::class),
-            "stream"         => new StreamFactory(Stream::class),
+            "stream"         => new StreamFactory(\GuzzleHttp\Psr7\Stream::class),
             "uploadedFile"   => new UploadedFileFactory(UploadedFile::class),
             "uri"            => new UriFactory(Uri::class),
             "requestHandler" => new RequestHandlerFactory(RequestHandler::class),

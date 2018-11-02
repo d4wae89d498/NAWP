@@ -17,7 +17,6 @@ use App\Ipolitic\Nawpcore\Kernel;
 use App\Ipolitic\Nawpcore\Components\Cookie;
 use App\Ipolitic\Nawpcore\Components\Collection;
 use App\Ipolitic\Nawpcore\Components\Controller;
-use App\Ipolitic\Nawpcore\Components\PacketAdapter;
 use App\Ipolitic\Nawpcore\Components\Utils;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
@@ -136,7 +135,6 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             $newBody = new Stream();
             $newBody->write(json_encode($serverGenerated));
             $response = $response->withBody($newBody);
-            var_dump((string) $response->getBody());
         }
         $toLog = "";
         if (isset($_ENV["LOG_REQUEST"]) && (((int) $_ENV["LOG_REQUEST"]) === 1)) {

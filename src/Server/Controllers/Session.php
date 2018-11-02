@@ -119,7 +119,7 @@ class Session extends Controller implements ControllerInterface
 
     /**
      * @param ViewLogger $viewLogger
-     * @param string $httpResponse
+     * @param ResponseInterface $httpResponse
      * @param array $args
      * @return bool
      */

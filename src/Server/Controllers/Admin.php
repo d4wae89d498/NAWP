@@ -7,6 +7,7 @@
  */
 namespace App\Server\Controllers;
 
+use App\Ipolitic\Nawpcore\Components\SQL;
 use App\Server\Models\User\User;
 use App\Ipolitic\Nawpcore\Components\Cookie;
 use App\Ipolitic\Nawpcore\Components\Utils;
@@ -59,6 +60,7 @@ class Admin extends Controller implements ControllerInterface
      */
     public function login(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
+        $this->logger->info("IN LOGIN");
         $loginMessage = "default";
         $atlas = $viewLogger->kernel->atlas;
         if (isset($_POST["email"]) && isset($_POST["password"])) {
@@ -85,22 +87,23 @@ class Admin extends Controller implements ControllerInterface
                 return true;
             }
         }
-
-        $response->getBody()->write($viewLogger->render(
+        $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
+        $newBody->write($viewLogger->render(
             ["\App\Server\Views\Elements\Admin\Header" => [
                 "page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]],
             ["\App\Server\Views\Pages\Admin\Page" =>  [
-                    "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
-                    "html_elements" => [
-                        "\App\Server\Views\Elements\Admin\Login" => [
-                            "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                            "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
-                            "rand" => rand(0, 9)
-                        ],
+                "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                "html_elements" => [
+                    "\App\Server\Views\Elements\Admin\Login" => [
+                        "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                        "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
+                        "rand" => rand(0, 9)
                     ],
-                ]],
+                ],
+            ]],
             ["\App\Server\Views\Elements\Admin\Footer" => []]
         ));
+        $response = $response->withBody($newBody);
         return true;
     }
 

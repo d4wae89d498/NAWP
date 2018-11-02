@@ -8,13 +8,21 @@
 
 namespace App\Ipolitic\Nawpcore\Components;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
+use App\Ipolitic\Nawpcore\Kernel;
 
+/**
+ * Class Middleware
+ * @package App\Ipolitic\Nawpcore\Components
+ */
 class Middleware
 {
+    public $kernel;
+    /**
+     * Middleware constructor.
+     * @param Kernel $kernel
+     */
+    public function __construct(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 }

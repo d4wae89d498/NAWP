@@ -56,7 +56,7 @@ class Kernel implements LoggerAwareInterface
      */
     public static $PHPUNIT_MODE = false;
     /**
-     * @var Factory[]
+     * @var PsrFactories
      */
     public $factories = [];
     /**
@@ -95,10 +95,10 @@ class Kernel implements LoggerAwareInterface
      * @var array
      */
     public $rawTwig = [];
-
     /**
      * Kernel constructor
      * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws Exceptions\InvalidImplementation
      */
     public function __construct()
     {
@@ -148,6 +148,7 @@ class Kernel implements LoggerAwareInterface
      *  Will handle a request
      * @param string $requestType
      * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
      * @param Packet|null $packet
      * @param array $array
      * @param ViewLogger|null $viewLogger
@@ -166,8 +167,7 @@ class Kernel implements LoggerAwareInterface
      */
     public function init(): void
     {
-        $this->factories       = new \App\Server\PsrFactories($this);
-
+        $this->factories       = new PsrFactories($this);
         $this->setLogger($this->factories->getLoggerFactory()->createLogger());
         // set memory to 4go
         ini_set('memory_limit', '2048M');
@@ -201,7 +201,7 @@ class Kernel implements LoggerAwareInterface
         $this->fillCollectionWithComponents($this->viewCollection, $params, 'views');
         $params = [&$atlasInstance, $this->logger];
         $this->fillCollectionWithComponents($this->controllerCollection, $params, 'controllers');
-        $params = [];
+        $params = [&$this];
         $this->fillCollectionWithComponents($this->middlewareCollection, $params, 'middlewares');
         foreach ((new PsrMiddlewares())->process($this) as $k => $v) {
             $this->middlewareCollection->append($v);

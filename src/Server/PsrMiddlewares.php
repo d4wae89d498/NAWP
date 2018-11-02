@@ -9,21 +9,39 @@
 namespace App\Server;
 
 use App\Ipolitic\Nawpcore\Kernel;
+use App\Server\Middlewares\ProfilerMiddleware;
 use Bulldog\HttpFactory\FactoryBuilder;
 use DebugBar\StandardDebugBar;
+use Fabfuel\Prophiler\Toolbar;
 use PhpMiddleware\PhpDebugBar\PhpDebugBarMiddleware;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Workerman\Protocols\Http;
 
 class PsrMiddlewares
 {
-    public static function process(): array
+    public static function process(Kernel &$kernel): array
     {
-        /* $psr17ResponseFactory = (FactoryBuilder::get("jasny"))->responseFactory();
-         $psr17StreamFactory = (FactoryBuilder::get("jasny"))->streamFactory();
+        $responseFactory = $kernel->factories->getResponseFactory();
+        $streamFactory = $kernel->factories->getStreamFactory();
+        $debugBar = new StandardDebugBar();
+        $debugBarRenderer = $debugBar->getJavascriptRenderer();
+        $debugBarMiddleware = new PhpDebugBarMiddleware($debugBarRenderer, $responseFactory, $streamFactory);
 
-         $debugbar = new StandardDebugBar();
-         $debugbarRenderer = $debugbar->getJavascriptRenderer();
-         $middleware = new PhpDebugBarMiddleware($debugbarRenderer, $psr17ResponseFactory, $psr17StreamFactory);
-*/
+
+        $testMiddleware = new class() implements MiddlewareInterface {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+            {
+                $explodedUri = explode(".", (string) $request->getUri());
+                if ($explodedUri[count($explodedUri) - 1] == "css") {
+                    Http::header("Content-Type: text/css");
+                }
+                // TODO: Implement process() method.
+                return $handler->handle($request);
+            }
+        };
         //   echo "REQUEST FLOW CALLED" . PHP_EOL;
         /**
          * These middlewares will be executed at each request
@@ -59,12 +77,12 @@ class PsrMiddlewares
                 ->ipAttribute('_ip'),
             //Add cache expiration headers
             new \Middlewares\Expires(),
-            //Negotiate the content-type
-            new \Middlewares\ContentType(),
             //Negotiate the language
             new \Middlewares\ContentLanguage(['gl', 'es', 'en']),*/
+            // Negotiate the content-type
+            new \Middlewares\ContentType(),
+            $testMiddleware
             //Add the php debugbar
-//            $middleware,
         ];
     }
 }

@@ -38,8 +38,10 @@ class StreamFactory extends Factory implements StreamFactoryInterface
                      */
                     $instance = stream_for($this->params[0]);
                     return $instance;
-                default:
+                case "Zend\Diactoros\Stream":
                     return new $this->implementationName(... $this->params);
+                default:
+                    return new $this->implementationName();
             }
         });
         $instance = $this->create();

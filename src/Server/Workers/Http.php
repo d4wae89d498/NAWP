@@ -25,6 +25,7 @@ class Http
     /**
      * Http constructor.
      * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -44,7 +45,7 @@ class Http
                     );
                     $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
                     $response = $dispatcher->handle($request);
-                    $connection->send($response->getBody());
+                    $connection->send((string) $response->getBody());
                 } catch (\Exception $exception) {
                     $connection->send(
                         isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
