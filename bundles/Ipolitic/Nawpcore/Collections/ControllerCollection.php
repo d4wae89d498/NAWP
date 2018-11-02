@@ -20,6 +20,7 @@ use App\Ipolitic\Nawpcore\Components\Controller;
 use App\Ipolitic\Nawpcore\Components\Utils;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
+use Workerman\Protocols\Http;
 
 /**
  * Class ControllerCollection
@@ -136,6 +137,11 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
             $newBody->write(json_encode($serverGenerated));
             $response = $response->withBody($newBody);
         }
+
+        if ($requestType !== "SOCKET") {
+            Http::header("Content-Type: text/html; charset=utf-8");
+        }
+
         $toLog = "";
         if (isset($_ENV["LOG_REQUEST"]) && (((int) $_ENV["LOG_REQUEST"]) === 1)) {
             $toLog .= "[".$requestType."] - '".$request->getServerParams()["REQUEST_URI"]."' =-=|> '".join(" -> ", $controllerMethodsCalled)."'" . PHP_EOL;

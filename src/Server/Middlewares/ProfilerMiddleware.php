@@ -19,6 +19,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Workerman\Protocols\Http;
+use Workerman\Protocols\HttpCache;
 
 /**
  * Class ProfilerMiddleware
@@ -35,21 +37,22 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
     {
         $profiler = new Profiler();
         $toolbar = new Toolbar($profiler);
-
         $response = $handler->handle($request);
-        // Allow any HTML content type
-        $contentType = $response->getHeaderLine('Content-Type');
-        if (!preg_match('#^(?:text/html|application/xhtml\+xml)\s*(?:;|$)#', $contentType) || (Kernel::$currentRequestType === "SOCKET")) {
-            $this->kernel->logger->debug('Content-Type of response is not HTML. Skipping Prophiler toolbar generation.');
-            return $response;
+        if ((Kernel::$currentRequestType !== "SOCKET")) {
+            // Allow any HTML content type
+            $contentType = HttpCache::$header["Content-Type"];
+            if (false === strpos($contentType,"text/")) {
+                $this->kernel->logger->debug('Content-Type of response is not HTML. Skipping Prophiler toolbar generation.');
+                return $response;
+            }
+            $toolbar->addDataCollector(new ProfilerRequest($request));
+            $body = $response->getBody();
+            if (!$body->eof() && $body->isSeekable()) {
+                $body->seek(0, SEEK_END);
+            }
+            $body->write($toolbar->render());
+            $response->withBody($body);
         }
-        $toolbar->addDataCollector(new ProfilerRequest($request));
-        $body = $response->getBody();
-        if (!$body->eof() && $body->isSeekable()) {
-            $body->seek(0, SEEK_END);
-        }
-        $body->write($toolbar->render());
-        $response->withBody($body);
         return $response;
     }
 }

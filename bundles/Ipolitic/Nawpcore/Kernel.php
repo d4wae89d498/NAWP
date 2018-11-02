@@ -202,10 +202,10 @@ class Kernel implements LoggerAwareInterface
         $params = [&$atlasInstance, $this->logger];
         $this->fillCollectionWithComponents($this->controllerCollection, $params, 'controllers');
         $params = [&$this];
-        $this->fillCollectionWithComponents($this->middlewareCollection, $params, 'middlewares');
-        foreach ((new PsrMiddlewares())->process($this) as $k => $v) {
+        foreach ((new PsrMiddlewares())->process($this) as $v) {
             $this->middlewareCollection->append($v);
         }
+        $this->fillCollectionWithComponents($this->middlewareCollection, $params, 'middlewares');
         foreach ($this->viewCollection as $k => $v) {
             $this->rawTwig[$k] = Utils::HideTwigIn(Utils::ocb(function () use ($v) {
                 $v->twig();
