@@ -10,7 +10,7 @@ namespace App\Ipolitic\Nawpcore\Exceptions;
 
 class Exception extends \Exception
 {
-    public static function catch(\Exception $e): string
+    public static function catch(\Throwable $e): string
     {
         while (@ob_end_flush()) {
             sleep(0);

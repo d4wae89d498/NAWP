@@ -45,8 +45,7 @@ class ServerRequestFactory extends Factory implements ServerRequestFactoryInterf
                     $instance = new $this->implementationName();
                     return $instance
                         ->withServerParams($this->params[2])
-                        ->withServerParams(['REQUEST_METHOD' => $this->params[0], "REQUEST_URI" => $this->params[1]])
-                        ->withGlobalEnvironment(true);
+                        ->withServerParams(['REQUEST_METHOD' => $this->params[0], "REQUEST_URI" => $this->params[1]]);
                 case "Zend\Diactoros\ServerRequest" :
                     return new $this->implementationName($this->params[2], [], $this->params[1], $this->params[0]);
                 case "GuzzleHttp\Psr7\ServerRequest" :

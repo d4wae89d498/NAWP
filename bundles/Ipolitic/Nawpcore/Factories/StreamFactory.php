@@ -14,6 +14,7 @@ use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
 use GuzzleHttp\Psr7\LazyOpenStream;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
+use function GuzzleHttp\Psr7\stream_for;
 
 class StreamFactory extends Factory implements StreamFactoryInterface
 {
@@ -25,6 +26,23 @@ class StreamFactory extends Factory implements StreamFactoryInterface
     public function createStream(string $content = null): StreamInterface
     {
         $this->params = [$content];
+        $this->setConstructor(function () {
+            $split = explode("\\", $this->implementationName);
+            if (isset($split[0]) && ($split[0] === "\\")) {
+                unset($split[0]);
+            }
+            $implementationBase = join("\\", $split);
+            switch ($implementationBase) {
+                case  "GuzzleHttp\Psr7\Stream" :
+                    /**
+                     * @var StreamInterface $instance
+                     */
+                    $instance = stream_for($this->params[0]);
+                    return $instance;
+                default :
+                    return new $this->implementationName( ... $this->params);
+            }
+        });
         $instance = $this->create();
         if (!$instance instanceof StreamInterface) {
             throw new InvalidImplementation();
@@ -49,7 +67,7 @@ class StreamFactory extends Factory implements StreamFactoryInterface
             }
             $implementationBase = join("\\", $split);
             switch ($implementationBase) {
-                case  "GuzzleHttp\Psr7\stream_for" :
+                case  "GuzzleHttp\Psr7\Stream" :
                     /**
                      * @var StreamInterface $instance
                      */
@@ -57,7 +75,7 @@ class StreamFactory extends Factory implements StreamFactoryInterface
                     return $instance;
                 default :
                     return new $this->implementationName( ... $this->params);
-            };
+            }
         });
         $instance = $this->create();
         if (!$instance instanceof StreamInterface) {
@@ -75,6 +93,23 @@ class StreamFactory extends Factory implements StreamFactoryInterface
     public function createStreamFromResource($resource): StreamInterface
     {
         $this->params = [$resource];
+        $this->setConstructor(function () {
+            $split = explode("\\", $this->implementationName);
+            if (isset($split[0]) && ($split[0] === "\\")) {
+                unset($split[0]);
+            }
+            $implementationBase = join("\\", $split);
+            switch ($implementationBase) {
+                case  "GuzzleHttp\Psr7\Stream" :
+                    /**
+                     * @var StreamInterface $instance
+                     */
+                    $instance = stream_for($this->params[0]);
+                    return $instance;
+                default :
+                    return new $this->implementationName( ... $this->params);
+            }
+        });
         $instance = $this->create();
         if (!$instance instanceof StreamInterface) {
             throw new InvalidImplementation();
