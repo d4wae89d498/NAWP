@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -17,14 +17,14 @@ class PsrMiddlewares
 {
     public static function process(): array
     {
-       /* $psr17ResponseFactory = (FactoryBuilder::get("jasny"))->responseFactory();
-        $psr17StreamFactory = (FactoryBuilder::get("jasny"))->streamFactory();
+        /* $psr17ResponseFactory = (FactoryBuilder::get("jasny"))->responseFactory();
+         $psr17StreamFactory = (FactoryBuilder::get("jasny"))->streamFactory();
 
-        $debugbar = new StandardDebugBar();
-        $debugbarRenderer = $debugbar->getJavascriptRenderer();
-        $middleware = new PhpDebugBarMiddleware($debugbarRenderer, $psr17ResponseFactory, $psr17StreamFactory);
+         $debugbar = new StandardDebugBar();
+         $debugbarRenderer = $debugbar->getJavascriptRenderer();
+         $middleware = new PhpDebugBarMiddleware($debugbarRenderer, $psr17ResponseFactory, $psr17StreamFactory);
 */
-     //   echo "REQUEST FLOW CALLED" . PHP_EOL;
+        //   echo "REQUEST FLOW CALLED" . PHP_EOL;
         /**
          * These middlewares will be executed at each request
          */

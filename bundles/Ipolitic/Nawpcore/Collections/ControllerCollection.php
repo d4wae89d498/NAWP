@@ -72,8 +72,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                 if (isset($parsedHttpReferer["UID"]) && !isset($parsedHttpUri["UID"])) {
                     $params["UID"] = $parsedHttpReferer["UID"];
                     if (!stristr($request->getServerParams()["REQUEST_URI"], "logout")) {
-                        $viewLogger->redirectTo
-                        (
+                        $viewLogger->redirectTo(
                             $response,
                             Utils::buildUrlParams($request->getServerParams()["REQUEST_URI"], $params),
                             $array

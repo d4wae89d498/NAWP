@@ -145,7 +145,7 @@ abstract class View implements LoggerAwareInterface
      */
     public function __toString(): string
     {
-      return $this->render();
+        return $this->render();
     }
 
     /**

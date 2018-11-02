@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Factories;
-
 
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
@@ -20,7 +19,8 @@ class LoggerFactory extends Factory implements LoggerFactoryInterface
      * @return LoggerInterface
      * @throws InvalidImplementation
      */
-    public function createLogger(): LoggerInterface {
+    public function createLogger(): LoggerInterface
+    {
         $instance = $this->create();
         if ($instance instanceof LoggerInterface) {
             return $instance;

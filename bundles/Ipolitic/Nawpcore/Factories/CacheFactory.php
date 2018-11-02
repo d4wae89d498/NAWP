@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -8,11 +8,9 @@
 
 namespace App\Ipolitic\Nawpcore\Factories;
 
-
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
 use Psr\SimpleCache\CacheInterface;
-
 
 class CacheFactory extends Factory
 {
@@ -20,7 +18,8 @@ class CacheFactory extends Factory
      * @return CacheInterface
      * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
      */
-    public function createCache(): CacheInterface {
+    public function createCache(): CacheInterface
+    {
         $instance = $this->create();
         if ($instance instanceof  CacheInterface) {
             return $instance;

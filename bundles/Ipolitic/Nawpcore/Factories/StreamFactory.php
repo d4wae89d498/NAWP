@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Factories;
-
 
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
@@ -33,14 +32,14 @@ class StreamFactory extends Factory implements StreamFactoryInterface
             }
             $implementationBase = join("\\", $split);
             switch ($implementationBase) {
-                case  "GuzzleHttp\Psr7\Stream" :
+                case  "GuzzleHttp\Psr7\Stream":
                     /**
                      * @var StreamInterface $instance
                      */
                     $instance = stream_for($this->params[0]);
                     return $instance;
-                default :
-                    return new $this->implementationName( ... $this->params);
+                default:
+                    return new $this->implementationName(... $this->params);
             }
         });
         $instance = $this->create();
@@ -60,21 +59,21 @@ class StreamFactory extends Factory implements StreamFactoryInterface
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
         $this->params = [fopen($filename, $mode)];
-        $this->setConstructor(function () use($filename, $mode){
+        $this->setConstructor(function () use ($filename, $mode) {
             $split = explode("\\", $this->implementationName);
             if (isset($split[0]) && ($split[0] === "\\")) {
                 unset($split[0]);
             }
             $implementationBase = join("\\", $split);
             switch ($implementationBase) {
-                case  "GuzzleHttp\Psr7\Stream" :
+                case  "GuzzleHttp\Psr7\Stream":
                     /**
                      * @var StreamInterface $instance
                      */
                     $instance = new LazyOpenStream($filename, $mode);
                     return $instance;
-                default :
-                    return new $this->implementationName( ... $this->params);
+                default:
+                    return new $this->implementationName(... $this->params);
             }
         });
         $instance = $this->create();
@@ -100,14 +99,14 @@ class StreamFactory extends Factory implements StreamFactoryInterface
             }
             $implementationBase = join("\\", $split);
             switch ($implementationBase) {
-                case  "GuzzleHttp\Psr7\Stream" :
+                case  "GuzzleHttp\Psr7\Stream":
                     /**
                      * @var StreamInterface $instance
                      */
                     $instance = stream_for($this->params[0]);
                     return $instance;
-                default :
-                    return new $this->implementationName( ... $this->params);
+                default:
+                    return new $this->implementationName(... $this->params);
             }
         });
         $instance = $this->create();

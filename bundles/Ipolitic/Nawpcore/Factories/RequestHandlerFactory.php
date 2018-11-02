@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -20,7 +20,8 @@ class RequestHandlerFactory extends Factory implements RequestHandlerFactoryInte
      * @return RequestHandler
      * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
      */
-    public function createRequestHandler(): RequestHandlerInterface {
+    public function createRequestHandler(): RequestHandlerInterface
+    {
         $instance = $this->create();
         if ($instance instanceof  RequestHandler) {
             return $instance;

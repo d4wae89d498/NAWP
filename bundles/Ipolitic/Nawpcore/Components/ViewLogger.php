@@ -246,8 +246,7 @@ class ViewLogger
         }
         $cnt = 0;
         if (isset($states["html_elements"])) {
-            foreach($states["html_elements"] as $subClassName => $subClassStates)
-            {
+            foreach ($states["html_elements"] as $subClassName => $subClassStates) {
                 $tmpClassName = $subClassName;
                 $tmpStates = $subClassStates;
                 unset($output["html_elements"][$subClassName]);
@@ -266,8 +265,7 @@ class ViewLogger
     {
         $output = "<!DOCTYPE html><html lang=\"en\">";
         $cnt = 0;
-        foreach ($elements as $elementData)
-        {
+        foreach ($elements as $elementData) {
             $className = array_keys($elementData)[0];
             $states = $elementData[$className];
             $output .= ($this->resurciveHtmlElementsInstancier($className, $states))->render();
@@ -287,7 +285,8 @@ class ViewLogger
      * @throws \iPolitic\Solex\RouterException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function redirectTo(ResponseInterface &$response, string $url, array $args): void {
+    public function redirectTo(ResponseInterface &$response, string $url, array $args): void
+    {
         $_SERVER["REQUEST_URI"] = $url;
         if (strtolower($this->requestType) !== "socket") {
             Http::header("Location: " . ($this->request->getServerParams()["REQUEST_URI"]));

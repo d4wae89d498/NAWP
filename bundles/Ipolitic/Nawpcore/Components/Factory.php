@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -43,12 +43,13 @@ class Factory
     /**
      * @throws InvalidImplementation
      */
-    public function create() {
+    public function create()
+    {
         try {
             $instance = null;
             if ($this->constructorCallback === null) {
                 $c = $this->implementationName;
-                $instance = new $c( ... $this->params);
+                $instance = new $c(... $this->params);
             } else {
                 $method = $this->constructorCallback;
                 $instance = $method();
@@ -70,7 +71,8 @@ class Factory
         $this->constructorCallback = $callable;
     }
 
-    public function setAlter($callbable) {
+    public function setAlter($callbable)
+    {
         $this->alterInstanceCallback = $callbable;
     }
 }

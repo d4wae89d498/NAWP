@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Factories;
-
 
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
@@ -38,7 +37,7 @@ class ServerRequestFactory extends Factory implements ServerRequestFactoryInterf
             }
             $implementationBase = join("\\", $split);
             switch ($implementationBase) {
-                case  "Jasny\HttpMessage\ServerRequest" :
+                case  "Jasny\HttpMessage\ServerRequest":
                     /**
                      * @var ServerRequest $instance
                      */
@@ -46,14 +45,13 @@ class ServerRequestFactory extends Factory implements ServerRequestFactoryInterf
                     return $instance
                         ->withServerParams($this->params[2])
                         ->withServerParams(['REQUEST_METHOD' => $this->params[0], "REQUEST_URI" => $this->params[1]]);
-                case "Zend\Diactoros\ServerRequest" :
+                case "Zend\Diactoros\ServerRequest":
                     return new $this->implementationName($this->params[2], [], $this->params[1], $this->params[0]);
-                case "GuzzleHttp\Psr7\ServerRequest" :
+                case "GuzzleHttp\Psr7\ServerRequest":
                     return new $this->implementationName($this->params[0], $this->params[1], [], null, '1.1', $this->params[2]);
-                default :
+                default:
                     return new $this->implementationName();
             };
-
         });
         $instance = $this->create();
         if (!$instance instanceof ServerRequestInterface) {

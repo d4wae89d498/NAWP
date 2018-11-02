@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -33,35 +33,53 @@ class PsrFactories
     public function __construct(Kernel $kernel)
     {
         $this->factories = [
-            "logger"         => new LoggerFactory           (Logger::class),
-            "cache"          => (new CacheFactory           (FilesystemCache::class, [
+            "logger"         => new LoggerFactory(Logger::class),
+            "cache"          => (new CacheFactory(FilesystemCache::class, [
                 '', 0, join(DIRECTORY_SEPARATOR, [$kernel->cachePath, "packetAdapter"]),
             ])),
-            "request"        => new RequestFactory           (ServerRequest::class),
-            "server"         => new ServerRequestFactory     (ServerRequest::class),
-            "response"       => new ResponseFactory          (Response::class),
-            "stream"         => new StreamFactory            (Stream::class),
-            "uploadedFile"   => new UploadedFileFactory      (UploadedFile::class),
-            "uri"            => new UriFactory               (Uri::class),
-            "requestHandler" => new RequestHandlerFactory    (RequestHandler::class),
+            "request"        => new RequestFactory(ServerRequest::class),
+            "server"         => new ServerRequestFactory(ServerRequest::class),
+            "response"       => new ResponseFactory(Response::class),
+            "stream"         => new StreamFactory(Stream::class),
+            "uploadedFile"   => new UploadedFileFactory(UploadedFile::class),
+            "uri"            => new UriFactory(Uri::class),
+            "requestHandler" => new RequestHandlerFactory(RequestHandler::class),
         ];
     }
     public function getLoggerFactory(): LoggerFactory
-    {return $this->factories["logger"];}
+    {
+        return $this->factories["logger"];
+    }
     public function getCacheFactory(): CacheFactory
-    {return $this->factories["cache"];}
+    {
+        return $this->factories["cache"];
+    }
     public function getRequestFactory(): RequestFactory
-    {return $this->factories["request"];}
+    {
+        return $this->factories["request"];
+    }
     public function getServerFactory(): ServerRequestFactory
-    {return $this->factories["server"];}
+    {
+        return $this->factories["server"];
+    }
     public function getResponseFactory(): ResponseFactory
-    {return $this->factories["response"];}
+    {
+        return $this->factories["response"];
+    }
     public function getStreamFactory(): StreamFactory
-    {return $this->factories["stream"];}
+    {
+        return $this->factories["stream"];
+    }
     public function getUploadedFileFactory(): UploadedFileFactory
-    {return $this->factories["uploadedFile"];}
+    {
+        return $this->factories["uploadedFile"];
+    }
     public function getUriFactory(): UriFactory
-    {return $this->factories["uri"];}
+    {
+        return $this->factories["uri"];
+    }
     public function getRequestHandlerFactory(): RequestHandlerFactory
-    {return $this->factories["requestHandler"];}
+    {
+        return $this->factories["requestHandler"];
+    }
 }

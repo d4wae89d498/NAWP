@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Factories;
-
 
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
@@ -25,19 +24,17 @@ class ResponseFactory extends Factory implements ResponseFactoryInterface
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
         $this->params = [$code, $reasonPhrase];
-        $this->setConstructor(function(){
+        $this->setConstructor(function () {
             if (false !== strpos($this->implementationName, "Zend\Diactoros\Response")) {
-                return new $this->implementationName('php://memory',$this->params[0], []);
+                return new $this->implementationName('php://memory', $this->params[0], []);
             }
-            if (false !== strpos($this->implementationName, "GuzzleHttp\Psr7\Response"))
-            {
+            if (false !== strpos($this->implementationName, "GuzzleHttp\Psr7\Response")) {
                 return new $this->implementationName($this->params[0], [], null, "1.1", $this->params[1]);
-            }
-            else {
+            } else {
                 if (false !== strpos($this->implementationName, "Jasny\HttpMessage\Response")) {
                     return new $this->implementationName();
                 } else {
-                    return new $this->implementationName( ... $this->params);
+                    return new $this->implementationName(... $this->params);
                 }
             }
         });

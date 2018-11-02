@@ -70,7 +70,7 @@ class Session extends Controller implements ControllerInterface
      * @param array $args
      * @return bool
      */
-    public function home(ViewLogger &$viewLogger, ResponseInterface &$response,  array $args = []): bool
+    public function home(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         $response->getBody()->write("<!DOCTYPE html><html lang=\"en\">" .
             new \App\Server\Views\Elements\Header(

@@ -86,8 +86,8 @@ class Admin extends Controller implements ControllerInterface
             }
         }
 
-        $response->getBody()->write($viewLogger->render
-        (   ["\App\Server\Views\Elements\Admin\Header" => [
+        $response->getBody()->write($viewLogger->render(
+            ["\App\Server\Views\Elements\Admin\Header" => [
                 "page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]],
             ["\App\Server\Views\Pages\Admin\Page" =>  [
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
@@ -157,7 +157,7 @@ class Admin extends Controller implements ControllerInterface
      * @throws \iPolitic\Solex\RouterException
      * @throws \Exception
      */
-    public function adminMiddleware(ViewLogger &$viewLogger,  ResponseInterface &$response, array $args = []): bool
+    public function adminMiddleware(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
         if (stristr($viewLogger->request->getServerParams()["REQUEST_URI"], "/admin")) {
             // if user requested a page that is not blacklisted (ex: login, register pages), and if user is not authenticated

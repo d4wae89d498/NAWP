@@ -179,10 +179,14 @@ class Kernel implements LoggerAwareInterface
         $this->viewCollection           ->setLogger($this->logger);
         $this->middlewareCollection     ->setLogger($this->logger);
         $this->atlas                    = $this->getAtlas();
-        $this->packetAdapterCache       = (new CacheFactory('Symfony\Component\Cache\Simple\FilesystemCache',
-        ['' , 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"])]))->createCache();
-        $this->sessionCache             = (new CacheFactory('Symfony\Component\Cache\Simple\FilesystemCache',
-        ['', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"])]))->createCache();
+        $this->packetAdapterCache       = (new CacheFactory(
+            'Symfony\Component\Cache\Simple\FilesystemCache',
+        ['' , 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"])]
+        ))->createCache();
+        $this->sessionCache             = (new CacheFactory(
+            'Symfony\Component\Cache\Simple\FilesystemCache',
+        ['', 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "session"])]
+        ))->createCache();
 
         /**
          * Used for logging views
@@ -218,8 +222,7 @@ class Kernel implements LoggerAwareInterface
     public function fillCollectionWithComponents(Collection &$collection, array &$arguments = [], string $componentName = ""): void
     {
         // foreach components
-        array_map
-        (
+        array_map(
             function ($component) use (&$collection) {
                 /**
                  * @var mixed $component the component instance that will be added to the collection

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Factories;
-
 
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation;
@@ -26,18 +25,19 @@ class UploadedFileFactory extends Factory implements UploadedFileFactoryInterfac
      * @return UploadedFileInterface
      * @throws InvalidImplementation
      */
-    public function createUploadedFile(StreamInterface $stream,
+    public function createUploadedFile(
+        StreamInterface $stream,
                                        int $size = null,
                                        int $error = \UPLOAD_ERR_OK,
                                        string $clientFilename = null,
-                                       string $clientMediaType = null): UploadedFileInterface
-    {
+                                       string $clientMediaType = null
+    ): UploadedFileInterface {
         $size = $size === null ? $stream->getSize() : $size;
         $this->params = [$stream, $size, $error, $clientFilename, $clientMediaType];
         $instance = $this->create();
         if (!$instance instanceof UploadedFileInterface) {
             throw new InvalidImplementation();
-        }  else {
+        } else {
             return $instance;
         }
     }

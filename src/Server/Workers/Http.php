@@ -38,8 +38,8 @@ class Http
                 try {
                     \App\Ipolitic\Nawpcore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
-                    $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler
-                    ($kernel,
+                    $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
+                        $kernel,
                     isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                     );
                     $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
