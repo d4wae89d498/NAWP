@@ -7,24 +7,19 @@
  */
 require_once "vendor/autoload.php";
 try {
+    $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, ".atlas-config.php"]);
 
-    $kernel         = new \App\Ipolitic\Nawpcore\Kernel();
+    $kernel = new \App\Ipolitic\Nawpcore\Kernel();
 
-    var_dump($kernel->factories->getLoggerFactory()->createLogger());
-    var_dump($kernel->factories->getCacheFactory()->createCache());
-    var_dump($kernel->factories->getServerFactory()->createServerRequest("GET", "/"));
-    var_dump($kernel->factories->getResponseFactory()->createResponse());
-    var_dump($kernel->factories->getStreamFactory()->createStream());
-    var_dump($kernel->factories->getUploadedFileFactory()->createUploadedFile(new \Jasny\HttpMessage\Stream()));
-    var_dump($kernel->factories->getRequestFactory()->createRequest("GET", "/"));
+    $atlas = new \App\Ipolitic\Nawpcore\Components\Query(
+        $arr['pdo'][0],
+        $arr['pdo'][1],
+        $arr['pdo'][2]
+    );
 
-
-    $factorie = $kernel->factories->getRequestHandlerFactory();
-    $factorie->setConstructor(function() use ($factorie, &$kernel){
-        return new $factorie->implementationName($kernel, "GET", null);
-    });
-
-    var_dump($factorie->createRequestHandler());
-} catch(Exception $ex) {
+    $atlas->select(\App\Server\Models\User\User::class)
+        ->where('email = ', "admin@ipolitic.org")
+        ->fetchRecord();
+} catch(Throwable $ex) {
     var_dump($ex);
 }

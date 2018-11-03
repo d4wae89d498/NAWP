@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * Class ProfilerRequest
  * @package App\Ipolitic\Nawpcore\Components
  */
-class ProfilerRequest implements DataCollectorInterface
+class Requests implements DataCollectorInterface
 {
     protected $request;
     /**
@@ -32,7 +32,7 @@ class ProfilerRequest implements DataCollectorInterface
      */
     public function getTitle() : string
     {
-        return 'Request';
+        return 'Requests';
     }
 
     /**

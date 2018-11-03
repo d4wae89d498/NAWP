@@ -1,4 +1,4 @@
-const $ = window["$"];
+const $: JQueryStatic  = window["$"];
 import {twig} from "twig";
 import {NoRedirection} from "./NoRedicrection";
 import * as morphdom from "morphdom";

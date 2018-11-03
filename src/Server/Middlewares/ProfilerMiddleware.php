@@ -9,17 +9,16 @@
 namespace App\Server\Middlewares;
 
 use App\Ipolitic\Nawpcore\Components\Middleware;
-use App\Ipolitic\Nawpcore\Components\ProfilerRequest;
+use App\Ipolitic\Nawpcore\Components\Queries;
+use App\Ipolitic\Nawpcore\Components\Requests;
 use App\Ipolitic\Nawpcore\Kernel;
+use Fabfuel\Prophiler\Adapter\Psr\Log\Logger;
 use Fabfuel\Prophiler\Profiler;
 use Fabfuel\Prophiler\Toolbar;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-use Workerman\Protocols\Http;
 use Workerman\Protocols\HttpCache;
 
 /**
@@ -37,7 +36,21 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
     {
         $profiler = new Profiler();
         $toolbar = new Toolbar($profiler);
+
+        // SNIPET :: LOG REQUEST
+        $toolbar->addDataCollector(new Requests($request));
+
         $response = $handler->handle($request);
+
+        // SNIPET :: ADD A LOG TO THE PROFILER
+        $benchmark = $toolbar->getProfiler()->start("TEST", ["severity" => "error"], 'Logger');
+        $toolbar->getProfiler()->stop($benchmark);
+
+        // SNIPET :: ADD LOG TO THE DATABASE
+        $queries = new Queries();
+        $queries->append("<pre><code class=\"sql hljs\">select * from \"users\"</code></pre>");
+        $toolbar->addDataCollector($queries);
+
         if ((Kernel::$currentRequestType !== "SOCKET")) {
             // Allow any HTML content type
             $contentType = HttpCache::$header["Content-Type"];
@@ -45,7 +58,6 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
                 $this->kernel->logger->debug('Content-Type of response is not HTML. Skipping Prophiler toolbar generation.');
                 return $response;
             }
-            $toolbar->addDataCollector(new ProfilerRequest($request));
             $body = $response->getBody();
             if (!$body->eof() && $body->isSeekable()) {
                 $body->seek(0, SEEK_END);

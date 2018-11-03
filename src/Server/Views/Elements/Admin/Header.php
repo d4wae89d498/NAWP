@@ -19,10 +19,13 @@ class Header extends View implements TwigInterface
             1 => "/vendor/metisMenu/metisMenu.min.css",
             2 => "/css/SbAdmin2.css",
             3 => "/vendor/font-awesome/css/font-awesome.min.css",
+            4 => "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css",
+            5 => "//highlightjs.org/static/demo/styles/vs2015.css"
         ],
         "js" => [
             0 => "https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js",
             1 => "https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js",
+            2 => "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"
         ],
         "title" => "Ferme de cornaton",
         "page" => "Admin",
@@ -50,6 +53,7 @@ class Header extends View implements TwigInterface
             {% for cssFile in js %}
                 <script src="{{ cssFile }}"></script>
             {% endfor %}
+            <script>hljs.initHighlightingOnLoad();</script>
         </head>
     <?php
     }

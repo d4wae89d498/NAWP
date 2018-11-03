@@ -1,7 +1,8 @@
 export function init() {
-    const $ = window["$"];
+    const $: JQueryStatic  = window["$"];
     $(function() {
-        $("#side-menu").metisMenu();
+        const a: any =  $("#side-menu");
+        a.metisMenu();
     });
 
 // Loads the correct sidebar on window load,
@@ -31,7 +32,7 @@ export function init() {
         //     return this.href == url;
         // }).addClass('active').parent().parent().addClass('in').parent();
         let element = $("ul.nav a").filter(function() {
-            return this.href === url;
+            return $(this).prop("href") === url;
         }).addClass("active").parent();
 
         while (true) {

@@ -7,7 +7,7 @@
  */
 namespace App\Server\Controllers;
 
-use App\Ipolitic\Nawpcore\Components\SQL;
+use App\Ipolitic\Nawpcore\Components\Query;
 use App\Server\Models\User\User;
 use App\Ipolitic\Nawpcore\Components\Cookie;
 use App\Ipolitic\Nawpcore\Components\Utils;

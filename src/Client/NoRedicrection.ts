@@ -1,4 +1,4 @@
-const $ = window["$"];
+const $: JQueryStatic  = window["$"];
 import LoginForm from "./Elements/loginForm";
 import {SocketClient} from "./SocketClient";
 
