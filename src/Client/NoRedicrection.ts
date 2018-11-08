@@ -1,5 +1,5 @@
 const $: JQueryStatic  = window["$"];
-import LoginForm from "./Elements/loginForm";
+import LoginForm from "./Elements/LoginForm";
 import {SocketClient} from "./SocketClient";
 
 /**

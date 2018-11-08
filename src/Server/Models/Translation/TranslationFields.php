@@ -10,9 +10,9 @@ namespace App\Server\Models\Translation;
  * @property mixed $row_id int(10,0) NOT NULL
  * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
- * @property mixed $lang varchar(10) NOT NULL
- * @property mixed $key varchar(500) NOT NULL
- * @property mixed $value nchar(10) NOT NULL
+ * @property mixed $lang varchar(45) NOT NULL
+ * @property mixed $key varchar(255) NOT NULL
+ * @property mixed $value text(65535) NOT NULL
  * @property mixed $author int(10,0) NOT NULL
  */
 trait TranslationFields

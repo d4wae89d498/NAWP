@@ -181,7 +181,7 @@ class Logger implements LoggerInterface
     public static function formatTrace(array $trace, int $minus = 2, bool $max = true): string
     {
         $caller = array_shift($trace);
-        $ret =  ($fn = explode("\\", $caller['file']))[count($fn) - $minus] . ":".$caller['line'];
+        $ret =  ($fn = explode(DIRECTORY_SEPARATOR, $caller['file']))[count($fn) - $minus] . ":".$caller['line'];
         return $max ? ("    {" . $ret."} ") :
             (" ".$ret);
     }

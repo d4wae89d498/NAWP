@@ -12,10 +12,10 @@ use Atlas\Table\Row;
  * @property mixed $row_id int(10,0) NOT NULL
  * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
- * @property mixed $title varchar(255) NOT NULL
- * @property mixed $content varchar(-1) NOT NULL
- * @property mixed $author int(10,0) NOT NULL
- * @property mixed $draft bit NOT NULL
+ * @property mixed $title varchar(255)
+ * @property mixed $content text(65535)
+ * @property mixed $author int(10,0)
+ * @property mixed $draft bit(1)
  * @property mixed $parent int(10,0)
  */
 class ContentRow extends Row
@@ -27,7 +27,7 @@ class ContentRow extends Row
         'title' => null,
         'content' => null,
         'author' => null,
-        'draft' => '1',
+        'draft' => null,
         'parent' => null,
     ];
 }
