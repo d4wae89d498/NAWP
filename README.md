@@ -13,7 +13,8 @@ To install the project, simply run `composer install` for installing server PHP 
 
 Now you have to create a `configs/.env` file using the `configs/.env.dist` one as sample so that the software is able to use your settings.
 
-Demo project database file is available as `config/nawpcore-mssql-database.sql` . It is currently in MSSQL format but feel free to convert it using a tool like MySQL workbench.
+Demo project database file is available as `config/nawpcore-****-database.sql`. Currently available in both MYSQL and MSSQL formats.
+As the database is abstracted using Atlas (PHP LIB) if you want an other database engine, your only have to translate the database creation script.
 
 ## Minimum requirements 
 - PHP >= 7.2.0 
@@ -25,7 +26,8 @@ Demo project database file is available as `config/nawpcore-mssql-database.sql` 
 All commands built as `npm` scripts.  
 Use `yarn` or `npm run` to run one of the following commands :
 
-- `start` : Will start all the server workers.
+- `start-win` : Will start all the server workers (windows mode).
+- `start-unix` : Will start all the server workers (unix mode).
 - `test` : Will run tests.
 - `cs-fix` : Will fix coding style of all php source files.
 - `generate-models` : Will read your database (using .env data and atlas) to generate all your models 
@@ -51,7 +53,7 @@ Use `yarn` or `npm run` to run one of the following commands :
  - **High speed even under 2G or any poor connexion** : _When javascript _is enable_, all form and href tags add redirected to the same url and so controllers but using this time the `SOCKET` request type. This call is performed by socket.io client and so support legacy browsers, and provide nice speed.
  The data provided by the php server is then very small as only data of a component will be given in order to re render twig.js components._ 
  
- - **User and admin friendly ORM db models** : _using atlas and Microsoft SQL SERVER 2017 (and once again with nice performances)_
+ - **User and admin friendly ORM db models** : _using Atlas_
  
  - **Developer friendly controllers** :  _using our own **POLITIC/SOLEX**_ router
  
@@ -62,15 +64,15 @@ Use `yarn` or `npm run` to run one of the following commands :
  - **Extendable architecture** : _Use bundles to share controllers and assets between your projects_
 
 ## We are using the best packages out there
-- `twig` 2.5 _For server-side rendering_
-- `twig.js` 1.12.0 _For client-side rendering_
-- `jquery` 3.3.1 _For dom manipulation but with our own javascript states system for perfs. gains._
-- `webpack` 4.17.1 _Fast modules and source code web packing_ 
-- `typescript` 3.0.1 _Enjoy the best of the javascript powers_
-- `atlas` 3.x-dev _Models, Models generation and nothing else_
-- `node-sass` 4.9.3 _.scss files are supported ;)_
-- `socket.io-client` 1.3 _Talk to the php server with this client socektio implementation._ 
-- `nodemon` 1.18.4 _Enjoy server refresh on sourcecode changes !_ 
-- `iPolitic/Workerman` dev-master _Our own fork of workerman (php async engine)_
-- `iPolitic/phpsocket.io` dev-master _Our own fork of phpsocketio (php socket.io server)_ 
-- `iPolitic/Bike` dev-master _Our own fork of Bike (php router)_
+- `twig`..................._For server-side rendering_
+- `twig.js`................_For client-side rendering_
+- `jquery`................._For dom manipulation but with our own javascript states system for perfs. gains._
+- `webpack`................_Fast modules and source code web packing_
+- `typescript`............._Enjoy the best of the javascript powers_
+- `atlas`.................._Models, Models generation and nothing else_
+- `node-sass`.............._.scss files are supported ;)_
+- `socket.io-client`......._socektio client implementation._
+- `nodemon`................_Enjoy server refresh on sourcecode changes !_
+- `iPolitic/Workerman`....._Our own fork of workerman (php async engine)_
+- `iPolitic/phpsocket.io`.._Our own fork of phpsocketio (php socket.io server)_
+- `iPolitic/Bike`......... _Our own fork of Bike (php router)_

@@ -54,10 +54,10 @@
         "jasny/http-message": "dev-master",
         "zendframework/zend-diactoros": "^2.0@dev",
         "middlewares/negotiation": "dev-master",
-        "fabfuel/prophiler": "dev-master"
+        "fabfuel/prophiler": "dev-master",
+        "phpunit/phpunit": "^7.5@dev"
     },
     "require-dev": {
-      "phpunit/phpunit": "7",
         "jaschilz/php-coverage-badger": "dev-master"
     },
     "autoload": {

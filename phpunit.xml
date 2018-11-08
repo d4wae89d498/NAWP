@@ -10,7 +10,6 @@
         <whitelist>
             <directory suffix=".php">./bundles</directory>
             <directory suffix=".php">./src</directory>
-            <exclude>./vendor</exclude>
         </whitelist>
     </filter>
     <logging>

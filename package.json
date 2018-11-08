@@ -18,7 +18,8 @@
   "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "install": "bower install",
-    "start": "php src/Server/Workers/Http.php src/Server/Workers/SocketIO.php",
+    "start-uniux": "php src/Server/unixStartup.php start",
+    "start-win": "php src/Server/Workers/Http.php src/Server/Workers/SocketIO.php",
     "pre-build": "gulp",
     "build-dev": "npm run pre-build && webpack -d --config=configs/webpack/dev.ts",
     "build-prod": "npm run pre-build && webpack -p --config=configs/webpack/prod.ts",

@@ -60,7 +60,9 @@ class Http
         $this->worker->name = "http";
         $this->worker->count = $_ENV["HTTP_WORKER_CNT"];
         $this->worker->addRoot($_ENV["DOMAIN_NAME"], join(DIRECTORY_SEPARATOR, [__DIR__,"..","..","..","public"]));
-        Worker::runAll();
+        if(!defined("unix")) {
+            Worker::runAll();
+        }
     }
 }
 try {

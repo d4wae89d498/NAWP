@@ -63,8 +63,9 @@ class SocketIO
         $this->worker = $io->worker;
         $this->worker->name = "socketio";
         $this->worker->count = $_ENV["SOCKETIO_WORKER_CNT"];
-
-        Worker::runAll();
+        if(!defined("unix")) {
+            Worker::runAll();
+        }
     }
 }
 try {
