@@ -192,7 +192,12 @@ class Logger implements LoggerInterface
     private function storeInLog(): void
     {
         $cleanStr = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $this->output);
-        file_put_contents(getenv("LOG_FILE_PATH"), $cleanStr, FILE_APPEND | LOCK_EX);
+        $path = join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "logs", getenv("LOG_FILE_PATH")]);
+        if (!is_file($path)) {
+            fwrite($a = fopen($path, "w+"), "");
+            fclose($a);
+        }
+        file_put_contents($path, $cleanStr, FILE_APPEND | LOCK_EX);
         return;
     }
 

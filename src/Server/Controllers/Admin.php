@@ -60,7 +60,6 @@ class Admin extends Controller implements ControllerInterface
      */
     public function login(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
-        $this->logger->info("IN LOGIN");
         $loginMessage = "default";
         $atlas = $viewLogger->kernel->atlas;
         if (isset($_POST["email"]) && isset($_POST["password"])) {
@@ -96,7 +95,7 @@ class Admin extends Controller implements ControllerInterface
                 "html_elements" => [
                     "\App\Server\Views\Elements\Admin\Login" => [
                         "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
+                        "message" => $loginMessage . " SESSION : " . print_r($_POST, true),
                         "rand" => rand(0, 9)
                     ],
                 ],

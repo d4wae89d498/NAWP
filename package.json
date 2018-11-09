@@ -18,6 +18,7 @@
   "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
     "install": "bower install",
+    "udbg": "php -d xdebug.remote_autostart=On src/Server/unixStartup.php start",
     "start-unix": "php src/Server/unixStartup.php start",
     "start-win": "php src/Server/Workers/Http.php src/Server/Workers/SocketIO.php",
     "pre-build": "gulp",

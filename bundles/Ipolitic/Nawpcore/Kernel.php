@@ -167,6 +167,7 @@ class Kernel implements LoggerAwareInterface
      */
     public function init(): void
     {
+        date_default_timezone_set(getenv("TIMEZONE"));
         $this->factories       = new PsrFactories($this);
         $this->setLogger($this->factories->getLoggerFactory()->createLogger());
         // set memory to 4go
