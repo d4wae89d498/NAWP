@@ -14,6 +14,7 @@ use App\Ipolitic\Nawpcore\Components\Collection;
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Components\Logger;
 use App\Ipolitic\Nawpcore\Components\Packet;
+use App\Ipolitic\Nawpcore\Components\SQL;
 use App\Ipolitic\Nawpcore\Factories\CacheFactory;
 use App\Server\PsrFactories;
 use App\Server\PsrMiddlewares;
@@ -269,7 +270,7 @@ class Kernel implements LoggerAwareInterface
     public function getAtlas() : Atlas
     {
         $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", ".atlas-config.php"]);
-        return Atlas::new(
+        return SQL::new(
             $arr['pdo'][0],
             $arr['pdo'][1],
             $arr['pdo'][2]

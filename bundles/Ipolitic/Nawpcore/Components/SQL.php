@@ -31,6 +31,7 @@ class SQL extends Atlas
      * @param mixed ...$args
      */
     public function __construct( ... $args) {
+        $this->queries = new Queries();
         $transactionClass = AutoCommit::CLASS;
         $end = end($args);
         if (is_string($end) && is_subclass_of($end, Transaction::CLASS)) {

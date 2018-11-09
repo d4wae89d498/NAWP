@@ -62,41 +62,67 @@ class Admin extends Controller implements ControllerInterface
     {
         $loginMessage = "default";
         $atlas = $viewLogger->kernel->atlas;
-        if (isset($_POST["email"]) && isset($_POST["password"])) {
-            $userRecord = $atlas
-                ->select(User::class)
-                ->where('email = ', $_POST["email"])
-                ->fetchRecord();
-
-            if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["password"]))) {
-                $this->logger->alert("LOGIN REFUSED");
-                // wrong email and/or password
-                $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
-            } else {
-                $this->logger->alert("LOGIN SUCCESS");
-                $_GET["UID"] = $uid = Utils::generateUID(9);
-                $url = "/admin";
-                if ($viewLogger->cookiePoolInstance->areCookieEnabled()) {
-                    $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
-                } else {
-                    $url = Utils::buildUrlParams($url, ["UID" => $uid]);
-                }
-                $viewLogger->sessionInstance->set("user_id", 5);
-                $viewLogger->redirectTo($httpResponse, $url, $args);
-                return true;
-            }
-        }
+        $missingFields = function() {
+            $type = $_POST["accessTypeRadio"];
+            return "<hr class=\"loginhr\">  Please fill theses missing fields :   <br>"
+            .(  empty($_POST["firstName"])  ? " * First name       <br>"    :"")
+            .(  empty($_POST["lastName"])   ? " * Last name        <br>"    :"")
+            .(  empty($_POST["birthPlace"]) ? " * Birth place      <br>"    :"")
+            .(  empty($_POST["pin"])        ? " * Pin              <br>"    :"")
+            .(  $type == "register"         ? (
+                 (       empty($_POST["birthDay"])  ?  " * Birthday         <br>"    :"")
+                .(       empty($_POST["pin2"])      ?  " * Pin confirmation <br>"    :"")
+            ):"");
+        };
+        if (isset($_POST["accessTypeRadio"])) :
+            switch($_POST["accessTypeRadio"]):
+                case "register":
+                    if (!empty($_POST["firstName"] && !empty($_POST["lastName"]) && !empty($_POST["birthPlace"]) && !empty($_POST["pin"]) && !empty($_POST["pin2"]) && !empty($_POST["birthDay"]))) :
+                        $loginMessage = "IN REGISTER WITH VALID POSTS";
+                    else:
+                        $loginMessage = $missingFields();
+                    endif;
+                break;
+                case "login":
+                    if (!empty($_POST["firstName"] && !empty($_POST["lastName"]) && !empty($_POST["birthPlace"]) && !empty($_POST["pin"]))) :
+                        $userRecord = $atlas
+                            ->select(User::class)
+                            ->where('email = ', $_POST["firstName"])
+                            ->fetchRecord();
+                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["password"]))) :
+                            // wrong email and/or password
+                            $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
+                        else:
+                            $_GET["UID"] = $uid = Utils::generateUID(9);
+                            $url = "/admin";
+                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
+                                $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
+                            else:
+                                $url = Utils::buildUrlParams($url, ["UID" => $uid]);
+                            endif;
+                            $viewLogger->sessionInstance->set("user_id", 5);
+                            $viewLogger->redirectTo($httpResponse, $url, $args);
+                            return true;
+                        endif;
+                    else:
+                        $loginMessage = $missingFields();
+                    endif;
+                break;
+            endswitch;
+        endif;
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
         $newBody->write($viewLogger->render(
             ["\App\Server\Views\Elements\Admin\Header" => [
-                "page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]],
+                "page" => "Login",
+                "title" => "TEST".rand(0, 99),
+                "url" => $_SERVER["REQUEST_URI"]]],
             ["\App\Server\Views\Pages\Admin\Page" =>  [
-                "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                "pass"          => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                 "html_elements" => [
                     "\App\Server\Views\Elements\Admin\Login" => [
-                        "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message" => $loginMessage . " SESSION : " . print_r($_POST, true),
-                        "rand" => rand(0, 9)
+                        "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
+                        "message"   => $loginMessage,
+                        "rand"      => rand(0, 9)
                     ],
                 ],
             ]],

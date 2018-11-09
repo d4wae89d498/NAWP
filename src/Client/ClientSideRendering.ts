@@ -40,7 +40,7 @@ export class ClientSideRendering {
             });
             // we re-render it using twig.js and jquery
             const template: any = twig({
-                data: baseTpl.twig
+                data:   baseTpl.twig
             });
             console.log(baseTpl);
             let rendered = await template.render(states);
@@ -65,7 +65,7 @@ export class ClientSideRendering {
             if (maxId > 0) {
                 // append here
                 const template = twig({
-                    data: window["baseTemplates"].find((e) => {
+                    data:  window["baseTemplates"].find((e) => {
                         return e.generatedID === this.TemplateNameToId(templateDataId, true);
                     }).twig
                 });
