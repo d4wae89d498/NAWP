@@ -110,6 +110,7 @@ class Admin extends Controller implements ControllerInterface
                 break;
             endswitch;
         endif;
+
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
         $newBody->write($viewLogger->render(
             ["\App\Server\Views\Elements\Admin\Header" => [

@@ -7,6 +7,8 @@
  */
 namespace App\Ipolitic\Nawpcore\Components;
 
+use App\Ipolitic\Nawpcore\Exceptions\Exception;
+use App\Ipolitic\Nawpcore\Exceptions\NoTwigFileFound;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Twig\Loader\ArrayLoader;
@@ -159,4 +161,29 @@ abstract class View implements LoggerAwareInterface
     {
         $this->logger = $logger;
     }
+
+    /**
+     * @throws NoTwigFileFound
+     */
+    public function twig() : void
+    {
+        $className = get_class($this);
+        $explodedClassName = explode("\\", $className);
+        unset($explodedClassName[0]);
+        $path = join(DIRECTORY_SEPARATOR, array_merge([__DIR__, "..", "..", "..", "..", "src"], $explodedClassName));
+        $path .= ".twig";
+        if (file_exists($path)) {
+            echo file_get_contents($path);
+        } else {
+            throw new NoTwigFileFound($path);
+        }
+    }
+
+    /**
+     *     public function twig(): void
+    {
+    echo file_get_contents(__DIR__ . PATH_SEPARATOR .
+    (($a = explode(".",__FILE__))[count($a) - 1]));
+    }
+     */
 }
