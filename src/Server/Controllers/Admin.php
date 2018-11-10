@@ -123,7 +123,16 @@ class Admin extends Controller implements ControllerInterface
                     "\App\Server\Views\Elements\Admin\Login" => [
                         "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
                         "message"   => $loginMessage,
-                        "rand"      => rand(0, 9)
+                        "rand"      => rand(0, 9),
+                        "fields"    => [
+                            "firstName"        => ["k" => "aaaa", "v" => "First name must not be empty"],  // 0 : value | 1 : error message
+                            "lastName"         => ["k" => null, "v" => null],
+                            "birthPlace"       => ["k" => null, "v" => null],
+                            "birthDay"         => ["k" => null, "v" => null],
+                            "pin"              => ["k" => null, "v" => null],
+                            "pin2"             => ["k" => null, "v" => null],
+                            "accessTypeRadio"  => ["k" => null, "v" => null],
+                        ],
                     ],
                 ],
             ]],
