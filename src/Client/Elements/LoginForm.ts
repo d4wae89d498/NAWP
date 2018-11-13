@@ -6,7 +6,6 @@ export default class LoginForm implements IElement {
      * form states
      */
     public currentTab: number = 0;
-    public isFirstPage: boolean = true;
     public lastPage: string = "";
     /**
      * Called at each page change
@@ -14,11 +13,7 @@ export default class LoginForm implements IElement {
     public refreshTick(): void {
         this.currentTab = 0;
         // if we are on login / register page
-        if ((window.location.href.indexOf("admin/login") > -1) && (this.isFirstPage || (this.lastPage !== window.location.href))) {
-            if (this.isFirstPage) {
-                $("#registrationSection").slideToggle();
-                this.isFirstPage = false;
-            }
+        if ((window.location.href.indexOf("admin/login") > -1) && (this.lastPage !== window.location.href)) {
             $("[name=\"accessTypeRadio\"]").on("click",
                 (e: Event) => {
                     let shouldToggle: boolean = false;
@@ -44,10 +39,6 @@ export default class LoginForm implements IElement {
                     }
                 }
             );
-        } else {
-            if (this.lastPage !== window.location.href) {
-                this.isFirstPage = true;
-            }
         }
         this.lastPage = window.location.href;
     }

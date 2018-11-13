@@ -60,55 +60,83 @@ class Admin extends Controller implements ControllerInterface
      */
     public function login(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
-        $loginMessage = "default";
-        $atlas = $viewLogger->kernel->atlas;
-        $missingFields = function() {
-            $type = $_POST["accessTypeRadio"];
-            return "<hr class=\"loginhr\">  Please fill theses missing fields :   <br>"
-            .(  empty($_POST["firstName"])  ? " * First name       <br>"    :"")
-            .(  empty($_POST["lastName"])   ? " * Last name        <br>"    :"")
-            .(  empty($_POST["birthPlace"]) ? " * Birth place      <br>"    :"")
-            .(  empty($_POST["pin"])        ? " * Pin              <br>"    :"")
-            .(  $type == "register"         ? (
-                 (       empty($_POST["birthDay"])  ?  " * Birthday         <br>"    :"")
-                .(       empty($_POST["pin2"])      ?  " * Pin confirmation <br>"    :"")
-            ):"");
+        $atlas              = $viewLogger->kernel->atlas;
+        $loginMessage       = "default";
+        $loginFields        = ["firstName", "lastName", "birthPlace", "birthDay", "pin", "pin2", "accessTypeRadio"];
+        $registrationFields = ["birthDay", "pin2"];
+        $defaultLoginType   = "login";
+        /**
+         * convert a field name to an error message, or null if all checks succeed
+         * @param $k
+         * @return null|string
+         */
+        $fieldToError = function($k) {
+            $upCase = ucfirst($k);
+            return (!empty($_POST[$k]) or !isset($_POST[$k])) ? null : "{$upCase} must not be empty.";
         };
+        // initializing login fields
+        $newTab = [];
+        for ($i = 0; $i < count($loginFields); $i++) {
+            $newTab[$loginFields[$i]] = ["v" => null, "m" => null];
+
+        }
+        if (!isset($_POST["accessTypeRadio"])) {
+            $newTab["accessTypeRadio"] = ["v" => $defaultLoginType, "m" => null];
+        }
+        $loginFields = $newTab;
+        if (isset($_POST["accessTypeRadio"])) {
+            foreach ($loginFields as $k => $v) {
+                if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) {
+                    $loginFields[$k]["v"] = $fieldToError($k) === null ? $_POST[$k] : "";
+                    $loginFields[$k]["m"] = $fieldToError($k);
+                }
+            }
+        }
+        /**
+         * return true if we can proceed the form
+         * @return bool
+         */
+        $allFieldsAreCorrect = function() use ($loginFields, $fieldToError, $registrationFields) : bool {
+            $return = true;
+            foreach ($loginFields as $k => $v) {
+                if (isset($_POST["accessTypeRadio"]) && (($_POST["accessTypeRadio"] == "login") xor in_array($k, $registrationFields))) {
+                    $return = $return && ($fieldToError($k) == null);
+                }
+            }
+            return $return;
+        };
+        // proceed the form
         if (isset($_POST["accessTypeRadio"])) :
-            switch($_POST["accessTypeRadio"]):
-                case "register":
-                    if (!empty($_POST["firstName"] && !empty($_POST["lastName"]) && !empty($_POST["birthPlace"]) && !empty($_POST["pin"]) && !empty($_POST["pin2"]) && !empty($_POST["birthDay"]))) :
-                        $loginMessage = "IN REGISTER WITH VALID POSTS";
-                    else:
-                        $loginMessage = $missingFields();
-                    endif;
-                break;
-                case "login":
-                    if (!empty($_POST["firstName"] && !empty($_POST["lastName"]) && !empty($_POST["birthPlace"]) && !empty($_POST["pin"]))) :
-                        $userRecord = $atlas
-                            ->select(User::class)
-                            ->where('email = ', $_POST["firstName"])
-                            ->fetchRecord();
-                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["password"]))) :
-                            // wrong email and/or password
-                            $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["password"] . $_ENV["PASSWORD_SALT"]).")";
-                        else:
-                            $_GET["UID"] = $uid = Utils::generateUID(9);
-                            $url = "/admin";
-                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
-                                $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
+            if ($allFieldsAreCorrect()) :
+                switch($_POST["accessTypeRadio"]):
+                    case "register":
+                            $loginMessage = "IN REGISTER WITH VALID POSTS";
+                    break;
+                    case "login":
+                          $userRecord = $atlas
+                                ->select(User::class)
+                                ->where('email = ', $_POST["firstName"])
+                                ->fetchRecord();
+                            if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
+                                // wrong email and/or password
+                                $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")";
                             else:
-                                $url = Utils::buildUrlParams($url, ["UID" => $uid]);
+                                $_GET["UID"] = $uid = Utils::generateUID(9);
+                                $url = "/admin";
+                                if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
+                                    $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
+                                else:
+                                    $url = Utils::buildUrlParams($url, ["UID" => $uid]);
+                                endif;
+                                $viewLogger->sessionInstance->set("user_id", 5);
+                                $viewLogger->redirectTo($httpResponse, $url, $args);
+                                return true;
                             endif;
-                            $viewLogger->sessionInstance->set("user_id", 5);
-                            $viewLogger->redirectTo($httpResponse, $url, $args);
-                            return true;
-                        endif;
-                    else:
-                        $loginMessage = $missingFields();
-                    endif;
-                break;
-            endswitch;
+                    break;
+                endswitch;
+            else:
+                $loginMessage = "Please fill incorrect fields";
+            endif;
         endif;
 
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
@@ -118,21 +146,13 @@ class Admin extends Controller implements ControllerInterface
                 "title" => "TEST".rand(0, 99),
                 "url" => $_SERVER["REQUEST_URI"]]],
             ["\App\Server\Views\Pages\Admin\Page" =>  [
-                "pass"          => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
+                "pass"          => isset($_POST["pin"]) ? $_POST["pin"] : "emptypass!",
                 "html_elements" => [
                     "\App\Server\Views\Elements\Admin\Login" => [
                         "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
                         "message"   => $loginMessage,
                         "rand"      => rand(0, 9),
-                        "fields"    => [
-                            "firstName"        => ["k" => "aaaa", "v" => "First name must not be empty"],  // 0 : value | 1 : error message
-                            "lastName"         => ["k" => null, "v" => null],
-                            "birthPlace"       => ["k" => null, "v" => null],
-                            "birthDay"         => ["k" => null, "v" => null],
-                            "pin"              => ["k" => null, "v" => null],
-                            "pin2"             => ["k" => null, "v" => null],
-                            "accessTypeRadio"  => ["k" => null, "v" => null],
-                        ],
+                        "fields"    => $loginFields,
                     ],
                 ],
             ]],

@@ -21,12 +21,12 @@ class Login extends View implements TwigInterface
         "message"   => "",
         "cookie_on" => "false",
         "fields"    => [
-                "firstName"        => ["k" => "aaaa", "v" => "NOT EMPTY"],  // 0 : value | 1 : error message
-                "lastName"         => ["k" => null, "v" => null],
-                "birthPlace"       => ["k" => null, "v" => null],
-                "birthDay"         => ["k" => null, "v" => null],
-                "pin"              => ["k" => null, "v" => null],
-                "pin2"             => ["k" => null, "v" => null],
-                "accessTypeRadio"  => ["k" => null, "v" => null],],
+                "firstName"        => ["v" => "aaaa", "m" => "NOT EMPTY"],  // 0 : value | 1 : error message
+                "lastName"         => ["v" => null, "m" => null],
+                "birthPlace"       => ["v" => null, "m" => null],
+                "birthDay"         => ["v" => null, "m" => null],
+                "pin"              => ["v" => null, "m" => null],
+                "pin2"             => ["v" => null, "m" => null],
+                "accessTypeRadio"  => ["v" => null, "m" => null],],
     ];
 }
