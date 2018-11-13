@@ -46,14 +46,14 @@ class Http
                     $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
                     $response = $dispatcher->handle($request);
                     $connection->send((string) $response->getBody());
-                } catch (\Exception $exception) {
+                } catch (\Exception $ex) {
                     $connection->send(
                         isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
-                            Exception::catch($exception)
+                            Exception::catch($ex)
                             :
                             "Our server is currently in maintenance mode. Please come back later."
                     );
-                    throw $exception;
+                    throw $ex;
                 }
             }
         );

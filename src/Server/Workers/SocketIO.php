@@ -25,44 +25,52 @@ class SocketIO
     public function __construct()
     {
         require_once join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "vendor", "autoload.php"]);
-        $kernel = new Kernel();
         Worker::$eventLoopClass = $_ENV["EVENT_LOOP_CLASS"];
         $io = new \PHPSocketIO\SocketIO($_ENV["SOCKETIO_WORKER_PORT"]);
+        $kernel = new Kernel();
+        $io->on('connection', function ($socket) use (&$kernel) {
+            $socket->addedUser = false;
+            $kernel->logger->info("Got connection");
+            try {
 
-        $io->on('connection', function (\PHPSocketIO\Socket $socket) use (&$kernel) {
-            $socket->on("packet", function (array $data) use (&$kernel, $socket) {
-                $kernel->logger->log("Got SOCKET Request", "info");
-                try {
-                    /**
-                     * @var $socket \PHPSocketIO\Socket
-                     */
-                    $request = (new ServerRequest())->withGlobalEnvironment(true);
-                    $packet = (new Packet($kernel, $request, $data, true))
-                        ->useAdaptor()
-                        ->toArray();
-                    $response = new \Jasny\HttpMessage\Response();
-                    $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
-                        $kernel,
-                        "SOCKET",
-                        $packet
-                    );
-                    $dispatcher = new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy());
-                    $requestHandler->response = $dispatcher->handle($request);
-                    // var_dump((string) $response->getBody());
-                    $socket->emit("packetout", (string) $requestHandler->response->getBody());
-                    return;
-                } catch (Exception $ex) {
-                    while (@ob_end_flush());
+                $socket->on("packet", function (array $data) use (&$kernel, $socket) {
+                    $kernel->logger->log("Got SOCKET Request", "info");
+                    try {
+                        /**
+                         * @var $socket \PHPSocketIO\Socket
+                         */
+                        $request = (new ServerRequest())->withGlobalEnvironment(true);
+                        $packet = (new Packet($kernel, $request, $data, true))
+                            ->useAdaptor()
+                            ->toArray();
+                        $response = new \Jasny\HttpMessage\Response();
+                        $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
+                            $kernel,
+                            "SOCKET",
+                            $packet
+                        );
+                        $dispatcher = new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy());
+                        $requestHandler->response = $dispatcher->handle($request);
+                        // var_dump((string) $response->getBody());
+                        $socket->emit("packetout", (string)$requestHandler->response->getBody());
+                        return;
+                    } catch (Exception $ex) {
+                        echo "error" . PHP_EOL;
+                        var_dump($ex->getMessage());
+                        $socket->emit("packetout", "ERROR : " . $ex->getMessage());
+                        throw new $ex;
+                    }
+                });
+            } catch (Exception $ex) {
                     echo "error" . PHP_EOL;
                     var_dump($ex->getMessage());
                     $socket->emit("packetout", "ERROR : " . $ex->getMessage());
                     throw new $ex;
                 }
-            });
         });
-        $this->worker = $io->worker;
+        $this->worker = &$io->worker;
         $this->worker->name = "socketio";
-        $this->worker->count = $_ENV["SOCKETIO_WORKER_CNT"];
+        $this->worker->count = 1; // $_ENV["SOCKETIO_WORKER_CNT"];
         if(!defined("unix")) {
             Worker::runAll();
         }
@@ -70,6 +78,6 @@ class SocketIO
 }
 try {
     new SocketIO();
-} catch (Exception $exception) {
-    echo 'Caught worker startup exception: ',  $e->getMessage(), PHP_EOL;
+} catch (Exception $ex) {
+    echo 'Caught worker startup exception: ',  $ex->getMessage(), PHP_EOL;
 }
