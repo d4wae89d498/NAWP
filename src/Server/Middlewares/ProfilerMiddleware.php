@@ -15,6 +15,7 @@ use App\Ipolitic\Nawpcore\Kernel;
 use Fabfuel\Prophiler\Adapter\Psr\Log\Logger;
 use Fabfuel\Prophiler\Profiler;
 use Fabfuel\Prophiler\Toolbar;
+use Jasny\HttpMessage\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -51,6 +52,7 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
         $queries->append("<pre><code class=\"sql hljs\">select * from \"users\"</code></pre>");
         $toolbar->addDataCollector($queries);
 
+        // in http mode
         if ((Kernel::$currentRequestType !== "SOCKET")) {
             // Allow any HTML content type
             $contentType = HttpCache::$header["Content-Type"];
@@ -62,8 +64,23 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
             if (!$body->eof() && $body->isSeekable()) {
                 $body->seek(0, SEEK_END);
             }
-            $body->write($toolbar->render());
+            $rendered = $toolbar->render();
+            $body->write($rendered);
             $response->withBody($body);
+        }
+        // socketio mode
+        else {
+            $rendered = $toolbar->render();
+            $generatedStates = (array) json_decode((string) $response->getBody());
+            $generatedStates["debugBar"] = $rendered;
+
+            $stream = $this->kernel->factories->getStreamFactory()->createStream();
+            $toWrite = json_encode((array) $generatedStates);
+
+            var_dump($toWrite);
+
+            $stream->write($toWrite);
+            $response = $response->withBody($stream);
         }
         return $response;
     }

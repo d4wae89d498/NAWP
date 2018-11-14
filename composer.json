@@ -23,8 +23,12 @@
                     "type": "git"
         },
         {
-                  "url": "https://github.com/MarcFaussurier/dispatcher.git",
-                  "type": "git"
+                    "url": "https://github.com/MarcFaussurier/dispatcher.git",
+                    "type": "git"
+        },
+        {
+                    "url": "https://github.com/MarcFaussurier/prophiler.git",
+                    "type": "git"
         }
     ],
     "require": {

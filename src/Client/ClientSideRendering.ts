@@ -42,7 +42,6 @@ export class ClientSideRendering {
             const template: any = twig({
                 data:   baseTpl.twig
             });
-            console.log(baseTpl);
             let rendered = await template.render(states);
             if (returnAsString) {
                 return rendered;

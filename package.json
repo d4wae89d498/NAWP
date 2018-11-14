@@ -22,7 +22,7 @@
     "start-unix": "php src/Server/unixStartup.php start",
     "start-win": "php src/Server/Workers/Http.php src/Server/Workers/SocketIO.php",
     "start": "npm run start-unix",
-    "startb": "npm run start && npm run build-dev",
+    "startb": "npm run build-dev && npm run start",
     "pre-build": "gulp",
     "build-dev": "npm run pre-build && webpack -d --config=configs/webpack/dev.ts",
     "build-prod": "npm run pre-build && webpack -p --config=configs/webpack/prod.ts",

@@ -76,22 +76,21 @@ class Admin extends Controller implements ControllerInterface
         };
         // initializing login fields
         $newTab = [];
-        for ($i = 0; $i < count($loginFields); $i++) {
+        for ($i = 0; $i < count($loginFields); $i++) :
             $newTab[$loginFields[$i]] = ["v" => null, "m" => null];
-
-        }
-        if (!isset($_POST["accessTypeRadio"])) {
+        endfor;
+        if (!isset($_POST["accessTypeRadio"])) :
             $newTab["accessTypeRadio"] = ["v" => $defaultLoginType, "m" => null];
-        }
+        endif;
         $loginFields = $newTab;
-        if (isset($_POST["accessTypeRadio"])) {
-            foreach ($loginFields as $k => $v) {
-                if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) {
+        if (isset($_POST["accessTypeRadio"])):
+            foreach ($loginFields as $k => $v):
+                if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) :
                     $loginFields[$k]["v"] = $fieldToError($k) === null ? $_POST[$k] : "";
                     $loginFields[$k]["m"] = $fieldToError($k);
-                }
-            }
-        }
+                endif;
+            endforeach;
+        endif;
         /**
          * return true if we can proceed the form
          * @return bool
@@ -113,32 +112,32 @@ class Admin extends Controller implements ControllerInterface
                             $loginMessage = "IN REGISTER WITH VALID POSTS";
                     break;
                     case "login":
-                          $userRecord = $atlas
-                                ->select(User::class)
-                                ->where('email = ', $_POST["firstName"])
-                                ->fetchRecord();
-                            if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
-                                // wrong email and/or password
-                                $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")";
+                        $userRecord = $atlas
+                        ->select(User::class)
+                        ->where('email = ', $_POST["firstName"])
+                        ->fetchRecord();
+                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
+                            // wrong email and/or password
+                            $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")";
+                        else:
+                            $_GET["UID"] = $uid = Utils::generateUID(9);
+                            $url = "/admin";
+                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
+                                $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
                             else:
-                                $_GET["UID"] = $uid = Utils::generateUID(9);
-                                $url = "/admin";
-                                if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
-                                    $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
-                                else:
-                                    $url = Utils::buildUrlParams($url, ["UID" => $uid]);
-                                endif;
-                                $viewLogger->sessionInstance->set("user_id", 5);
-                                $viewLogger->redirectTo($httpResponse, $url, $args);
-                                return true;
+                                $url = Utils::buildUrlParams($url, ["UID" => $uid]);
                             endif;
+                            $viewLogger->sessionInstance->set("user_id", 5);
+                            $viewLogger->redirectTo($httpResponse, $url, $args);
+                            return true;
+                        endif;
                     break;
                 endswitch;
             else:
                 $loginMessage = "Please fill incorrect fields";
             endif;
         endif;
-
+        // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
         $newBody->write($viewLogger->render(
             ["\App\Server\Views\Elements\Admin\Header" => [
