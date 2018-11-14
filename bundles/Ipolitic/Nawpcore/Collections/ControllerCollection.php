@@ -7,6 +7,7 @@
  */
 namespace App\Ipolitic\Nawpcore\Collections;
 
+use App\Ipolitic\Nawpcore\Components\Queries;
 use Jasny\HttpMessage\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,6 +61,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      */
     public function handle(Kernel &$kernel, ServerRequestInterface &$request, ResponseInterface &$response, $requestType, $packet = null, $array = [], $viewLogger = null): void
     {
+        $kernel->atlas->queries = new Queries();
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $request, $array, $packet, $requestType);
         if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
             $viewLogger->cookiePoolInstance->destroy();

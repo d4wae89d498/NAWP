@@ -29,6 +29,11 @@ export class SocketClient {
                 if (typeof data["debugBar"] !== "undefined") {
                     morphdom($("[data-id=\"debugBar\"]")[0], $(data["debugBar"])[0]);
                     delete data["debugBar"];
+                    $(document).ready(function() {
+                        $("pre code").each(function(i, block) {
+                            window["hljs"].highlightBlock(block);
+                        });
+                    });
                 }
                 console.log(data);
                 if (data instanceof Object) {

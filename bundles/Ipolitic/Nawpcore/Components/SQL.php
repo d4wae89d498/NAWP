@@ -50,8 +50,8 @@ class SQL extends Atlas
      */
     public function insert(Record $record): void
     {
-        $this->queries->append("insert into '"
-            . $record->getMapperClass() ."' VALUES ('".json_encode($record)."')");
+        $this->queries->append('<pre><code class="sql hljs">insert into \''
+            . $record->getMapperClass() ."' VALUES ('".json_encode($record)."')". '</code></pre>');
         parent::insert($record);
         return;
     }
@@ -61,8 +61,8 @@ class SQL extends Atlas
      */
     public function delete(Record $record): void
     {
-        $this->queries->append("delete from '"
-            . $record->getMapperClass() ."' where ('".json_encode($record)."')");
+        $this->queries->append('<pre><code class="sql hljs">delete from \'' .
+            $record->getMapperClass() ."' where ('".json_encode($record)."')". '</code></pre>');
         parent::delete($record);
         return;
     }
@@ -72,8 +72,8 @@ class SQL extends Atlas
      */
     public function update(Record $record): void
     {
-        $this->queries->append("update table '"
-            . $record->getMapperClass() ."' where ('".json_encode($record)."')");
+        $this->queries->append('<pre><code class="sql hljs">' ."update table '"
+            . $record->getMapperClass() ."' where ('".json_encode($record)."')". '</code></pre>');
         parent::update($record);
         return;
     }
@@ -86,7 +86,12 @@ class SQL extends Atlas
     public function select(string $mapperClass, array $whereEquals = []): MapperSelect
     {
         $result = parent::select($mapperClass, $whereEquals);
-        $this->queries->append($result->getStatement());
+        $query = $result->getStatement();
+        if (strlen($query) < 200) {
+            $query = str_replace(PHP_EOL,"",str_replace("<br>", "", $query));
+        }
+        var_dump($query);
+        $this->queries->append("<pre><code class=\"sql hljs\">{$query}</code></pre>");
         return $result;
     }
 }

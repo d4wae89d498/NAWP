@@ -23,7 +23,7 @@ class Queries extends ProfilerCollection implements DataCollectorInterface
      */
     public function getTitle() : string
     {
-        return 'Requests';
+        return 'SQL Queries';
     }
 
     /**

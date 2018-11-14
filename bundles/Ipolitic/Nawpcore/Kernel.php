@@ -270,7 +270,7 @@ class Kernel implements LoggerAwareInterface
     public function getAtlas() : Atlas
     {
         $arr = include join(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", ".atlas-config.php"]);
-        return SQL::new(
+        return new SQL(
             $arr['pdo'][0],
             $arr['pdo'][1],
             $arr['pdo'][2]

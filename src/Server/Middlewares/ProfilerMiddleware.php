@@ -48,8 +48,7 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
         $toolbar->getProfiler()->stop($benchmark);
 
         // SNIPET :: ADD LOG TO THE DATABASE
-        $queries = new Queries();
-        $queries->append("<pre><code class=\"sql hljs\">select * from \"users\"</code></pre>");
+        $queries = $this->kernel->atlas->queries;
         $toolbar->addDataCollector($queries);
 
         // in http mode
