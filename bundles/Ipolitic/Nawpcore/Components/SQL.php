@@ -90,7 +90,6 @@ class SQL extends Atlas
         if (strlen($query) < 200) {
             $query = str_replace(PHP_EOL,"",str_replace("<br>", "", $query));
         }
-        var_dump($query);
         $this->queries->append("<pre><code class=\"sql hljs\">{$query}</code></pre>");
         return $result;
     }

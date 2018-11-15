@@ -52,13 +52,13 @@ class Requests implements DataCollectorInterface
         foreach ($this->request->getHeaders() as $name => $values) {
             $headers[$name] = implode(', ', $values);
         }
-        $data = [
+        $data = [ 0 => "<pre><code class=\"json hljs\">" . json_encode([
             'SERVER' => $this->request->getServerParams(),
             'QUERY' => $this->request->getQueryParams(),
             'COOKIES' => $this->request->getCookieParams(),
             'HEADERS' => $headers,
             'ATTRIBUTES' => $this->request->getAttributes()
-        ];
+        ]) . "</code></pre>"];
         return $data;
     }
 }

@@ -61,7 +61,10 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      */
     public function handle(Kernel &$kernel, ServerRequestInterface &$request, ResponseInterface &$response, $requestType, $packet = null, $array = [], $viewLogger = null): void
     {
+        $benchmark = Kernel::$profiler->start(__METHOD__, ["severity" => "info"],  ($arr = explode("\\", get_class()))[count($arr) - 1]);
+
         $kernel->atlas->queries = new Queries();
+        $kernel->logger->debug("test");
         $viewLogger = $viewLogger !== null ? $viewLogger : new ViewLogger($kernel, $request, $array, $packet, $requestType);
         if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
             $viewLogger->cookiePoolInstance->destroy();
@@ -82,6 +85,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
                         if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
                             $viewLogger->cookiePoolInstance->destroy();
                         }
+                        Kernel::$profiler->stop($benchmark);
                         return;
                     }
                 }
@@ -166,6 +170,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
         if (isset($_ENV["CLEAR_COOKIES"]) && (((int) $_ENV["CLEAR_COOKIES"]) === 1)) {
             $viewLogger->cookiePoolInstance->destroy();
         }
+        Kernel::$profiler->stop($benchmark);
         return;
     }
 

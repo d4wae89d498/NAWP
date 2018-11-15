@@ -212,7 +212,9 @@ class Logger implements LoggerInterface
     public function logWithStyle(string $text, string ... $args): Logger
     {
         $today = (string) date("F j, g:i a");
-        $string = "[" . $today . self::formatTrace(debug_backtrace(), 2, false) ."] " . $this->_applyStyles($text, $args) . PHP_EOL ;
+        $trace = self::formatTrace(debug_backtrace(), 1, false);
+        $trace = str_replace(".php", "", $trace);
+        $string = "[" . $today . $trace ."] " . $this->_applyStyles($text, $args) . PHP_EOL ;
         $this->output = $string;
         for ($i = 0; $i < count($args) - 1; $i++) {
             if ($args[$i] === "emergency") {

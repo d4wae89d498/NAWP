@@ -24,20 +24,19 @@ export class SocketClient {
             }
             this.socket = io("http://127.0.0.1:8070");
             this.socket.on("packetout", function(data) {
-                data = JSON.parse(data);
+                let ndata = JSON.parse(data);
                 window["csr"] = ClientSideRendering;
-                if (typeof data["debugBar"] !== "undefined") {
-                    morphdom($("[data-id=\"debugBar\"]")[0], $(data["debugBar"])[0]);
-                    delete data["debugBar"];
+                if (typeof ndata["debugBar"] !== "undefined") {
+                    morphdom($("[data-id=\"debugBar\"]")[0], $(ndata["debugBar"])[0]);
+                    delete ndata["debugBar"];
                     $(document).ready(function() {
                         $("pre code").each(function(i, block) {
                             window["hljs"].highlightBlock(block);
                         });
                     });
                 }
-                console.log(data);
-                if (data instanceof Object) {
-                    ClientSideRendering.RenderStates(data);
+                if (ndata instanceof Object) {
+                    ClientSideRendering.RenderStates(ndata);
                 }
             });
         });

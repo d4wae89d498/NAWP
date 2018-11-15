@@ -8,6 +8,7 @@
 
 namespace App\Server\Middlewares;
 
+use App\Ipolitic\Nawpcore\Collections\LoggerCollection;
 use App\Ipolitic\Nawpcore\Components\Middleware;
 use App\Ipolitic\Nawpcore\Components\Queries;
 use App\Ipolitic\Nawpcore\Components\Requests;
@@ -20,6 +21,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LogLevel;
 use Workerman\Protocols\HttpCache;
 
 /**
@@ -32,6 +34,8 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
+     * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
+     * @throws \Exception
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -41,15 +45,17 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
         // SNIPET :: LOG REQUEST
         $toolbar->addDataCollector(new Requests($request));
 
-        $response = $handler->handle($request);
+        Kernel::$profilerLogger = new \Fabfuel\Prophiler\Adapter\Psr\Log\Logger($profiler);
+        Kernel::$profiler = $toolbar->getProfiler();
+        $benchmark =
+        Kernel::$profiler->start(__METHOD__, ["severity" => "info"], ($arr = explode("\\", get_class()))[count($arr) - 1]);
+            $response = $handler->handle($request);
+            Kernel::$profilerLogger->debug("Test message.");
+            // SNIPET :: ADD LOG TO THE DATABASE
+            $queries = $this->kernel->atlas->queries;
+            $toolbar->addDataCollector($queries);
 
-        // SNIPET :: ADD A LOG TO THE PROFILER
-        $benchmark = $toolbar->getProfiler()->start("TEST", ["severity" => "error"], 'Logger');
-        $toolbar->getProfiler()->stop($benchmark);
-
-        // SNIPET :: ADD LOG TO THE DATABASE
-        $queries = $this->kernel->atlas->queries;
-        $toolbar->addDataCollector($queries);
+        Kernel::$profiler->stop();
 
         // in http mode
         if ((Kernel::$currentRequestType !== "SOCKET")) {
@@ -76,7 +82,7 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
             $stream = $this->kernel->factories->getStreamFactory()->createStream();
             $toWrite = json_encode((array) $generatedStates);
 
-            var_dump($toWrite);
+           // var_dump($toWrite);
 
             $stream->write($toWrite);
             $response = $response->withBody($stream);

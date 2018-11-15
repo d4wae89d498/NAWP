@@ -52,7 +52,8 @@ class SocketIO
                         $dispatcher = new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy());
                         $requestHandler->response = $dispatcher->handle($request);
                         // var_dump((string) $response->getBody());
-                        $socket->emit("packetout", (string)$requestHandler->response->getBody());
+                        $bodyStr =  (string)$requestHandler->response->getBody();
+                        $socket->emit("packetout", $bodyStr);
                         return;
                     } catch (Exception $ex) {
                         echo "error" . PHP_EOL;

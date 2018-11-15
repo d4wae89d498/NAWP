@@ -16,12 +16,15 @@ use App\Ipolitic\Nawpcore\Kernel;
  */
 class Middleware
 {
+    /**
+     * @var Kernel
+     */
     public $kernel;
     /**
      * Middleware constructor.
      * @param Kernel $kernel
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel &$kernel)
     {
         $this->kernel = $kernel;
     }

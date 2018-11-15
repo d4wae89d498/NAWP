@@ -18,6 +18,7 @@ use App\Ipolitic\Nawpcore\Components\SQL;
 use App\Ipolitic\Nawpcore\Factories\CacheFactory;
 use App\Server\PsrFactories;
 use App\Server\PsrMiddlewares;
+use Fabfuel\Prophiler\Profiler;
 use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,11 +58,19 @@ class Kernel implements LoggerAwareInterface
      */
     public static $PHPUNIT_MODE = false;
     /**
+     * @var LoggerInterface
+     */
+    public static $profilerLogger;
+    /**
+     * @var Profiler
+     */
+    public static $profiler;
+    /**
      * @var PsrFactories
      */
     public $factories = [];
     /**
-     * @var LoggerInterface
+     * @var Logger
      */
     public $logger;
     /**
@@ -81,7 +90,7 @@ class Kernel implements LoggerAwareInterface
      */
     public $middlewareCollection;
     /**
-     * @var Atlas
+     * @var SQL
      */
     public $atlas;
     /**
