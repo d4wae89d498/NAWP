@@ -32,7 +32,6 @@ class SocketIO
             $socket->addedUser = false;
             $kernel->logger->info("Got connection");
             try {
-
                 $socket->on("packet", function (array $data) use (&$kernel, $socket) {
                     $kernel->logger->log("Got SOCKET Request", "info");
                     try {
@@ -63,16 +62,16 @@ class SocketIO
                     }
                 });
             } catch (Exception $ex) {
-                    echo "error" . PHP_EOL;
-                    var_dump($ex->getMessage());
-                    $socket->emit("packetout", "ERROR : " . $ex->getMessage());
-                    throw new $ex;
-                }
+                echo "error" . PHP_EOL;
+                var_dump($ex->getMessage());
+                $socket->emit("packetout", "ERROR : " . $ex->getMessage());
+                throw new $ex;
+            }
         });
         $this->worker = &$io->worker;
         $this->worker->name = "socketio";
         $this->worker->count = 1; // $_ENV["SOCKETIO_WORKER_CNT"];
-        if(!defined("unix")) {
+        if (!defined("unix")) {
             Worker::runAll();
         }
     }

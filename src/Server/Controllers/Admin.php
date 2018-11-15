@@ -70,7 +70,7 @@ class Admin extends Controller implements ControllerInterface
          * @param $k
          * @return null|string
          */
-        $fieldToError = function($k) {
+        $fieldToError = function ($k) {
             $upCase = ucfirst($k);
             return (!empty($_POST[$k]) or !isset($_POST[$k])) ? null : "{$upCase} must not be empty.";
         };
@@ -87,15 +87,15 @@ class Admin extends Controller implements ControllerInterface
             foreach ($loginFields as $k => $v):
                 if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) :
                     $loginFields[$k]["v"] = $fieldToError($k) === null ? $_POST[$k] : "";
-                    $loginFields[$k]["m"] = $fieldToError($k);
-                endif;
-            endforeach;
+        $loginFields[$k]["m"] = $fieldToError($k);
+        endif;
+        endforeach;
         endif;
         /**
          * return true if we can proceed the form
          * @return bool
          */
-        $allFieldsAreCorrect = function() use ($loginFields, $fieldToError, $registrationFields) : bool {
+        $allFieldsAreCorrect = function () use ($loginFields, $fieldToError, $registrationFields) : bool {
             $return = true;
             foreach ($loginFields as $k => $v) {
                 if (isset($_POST["accessTypeRadio"]) && (($_POST["accessTypeRadio"] == "login") xor in_array($k, $registrationFields))) {
@@ -107,35 +107,32 @@ class Admin extends Controller implements ControllerInterface
         // proceed the form
         if (isset($_POST["accessTypeRadio"])) :
             if ($allFieldsAreCorrect()) :
-                switch($_POST["accessTypeRadio"]):
+                switch ($_POST["accessTypeRadio"]):
                     case "register":
                             $loginMessage = "IN REGISTER WITH VALID POSTS";
-                    break;
-                    case "login":
+        break;
+        case "login":
                         $userRecord = $atlas
                         ->select(User::class)
                         ->where('email = ', $_POST["firstName"])
                         ->fetchRecord();
-                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
+        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
                             // wrong email and/or password
-                            $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")";
-                        else:
+                            $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")"; else:
                             $_GET["UID"] = $uid = Utils::generateUID(9);
-                            $url = "/admin";
-                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
-                                $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
-                            else:
+        $url = "/admin";
+        if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
+                                $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid)); else:
                                 $url = Utils::buildUrlParams($url, ["UID" => $uid]);
-                            endif;
-                            $viewLogger->sessionInstance->set("user_id", 5);
-                            $viewLogger->redirectTo($httpResponse, $url, $args);
-                            return true;
-                        endif;
-                    break;
-                endswitch;
-            else:
+        endif;
+        $viewLogger->sessionInstance->set("user_id", 5);
+        $viewLogger->redirectTo($httpResponse, $url, $args);
+        return true;
+        endif;
+        break;
+        endswitch; else:
                 $loginMessage = "Please fill incorrect fields";
-            endif;
+        endif;
         endif;
         // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();

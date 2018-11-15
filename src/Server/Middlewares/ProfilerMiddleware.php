@@ -49,11 +49,11 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
         Kernel::$profiler = $toolbar->getProfiler();
         $benchmark =
         Kernel::$profiler->start(__METHOD__, ["severity" => "info"], ($arr = explode("\\", get_class()))[count($arr) - 1]);
-            $response = $handler->handle($request);
-            Kernel::$profilerLogger->debug("Test message.");
-            // SNIPET :: ADD LOG TO THE DATABASE
-            $queries = $this->kernel->atlas->queries;
-            $toolbar->addDataCollector($queries);
+        $response = $handler->handle($request);
+        Kernel::$profilerLogger->debug("Test message.");
+        // SNIPET :: ADD LOG TO THE DATABASE
+        $queries = $this->kernel->atlas->queries;
+        $toolbar->addDataCollector($queries);
 
         Kernel::$profiler->stop();
 
@@ -61,7 +61,7 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
         if ((Kernel::$currentRequestType !== "SOCKET")) {
             // Allow any HTML content type
             $contentType = HttpCache::$header["Content-Type"];
-            if (false === strpos($contentType,"text/")) {
+            if (false === strpos($contentType, "text/")) {
                 $this->kernel->logger->debug('Content-Type of response is not HTML. Skipping Prophiler toolbar generation.');
                 return $response;
             }
@@ -82,7 +82,7 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
             $stream = $this->kernel->factories->getStreamFactory()->createStream();
             $toWrite = json_encode((array) $generatedStates);
 
-           // var_dump($toWrite);
+            // var_dump($toWrite);
 
             $stream->write($toWrite);
             $response = $response->withBody($stream);

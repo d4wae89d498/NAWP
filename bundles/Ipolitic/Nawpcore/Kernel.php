@@ -116,7 +116,7 @@ class Kernel implements LoggerAwareInterface
         $prefix = join(DIRECTORY_SEPARATOR, self::ROOT_PATH) . DIRECTORY_SEPARATOR;
         // include all project files
         foreach (self::FRAMEWORK_FOLDERS as $v) {
-            if($bool || $v == "bundles") {
+            if ($bool || $v == "bundles") {
                 Kernel::loadDir($prefix . $v);
             }
         }
