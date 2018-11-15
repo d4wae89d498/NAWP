@@ -37,8 +37,8 @@ class Kernel implements LoggerAwareInterface
     public const CACHE_FOLDER_NAME = "cache";
     public const ROOT_PATH = [__DIR__, "..", "..", ".."];
     public const FRAMEWORK_FOLDERS = [
-        ["bundles"],
-        ["src"],
+        "bundles",
+        "src",
     ];
     public const ENV_PATH = ["configs", ".env"];
     /**
@@ -110,14 +110,15 @@ class Kernel implements LoggerAwareInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws Exceptions\InvalidImplementation
      */
-    public function __construct()
+    public function __construct($bool = true)
     {
         // means path/to/project/root/ using defined constants
         $prefix = join(DIRECTORY_SEPARATOR, self::ROOT_PATH) . DIRECTORY_SEPARATOR;
         // include all project files
         foreach (self::FRAMEWORK_FOLDERS as $v) {
-            Kernel::loadDir($prefix . join(DIRECTORY_SEPARATOR, $v));
-            Kernel::loadDir($prefix . join(DIRECTORY_SEPARATOR, $v));
+            if($bool || $v == "bundles") {
+                Kernel::loadDir($prefix . $v);
+            }
         }
         $dotEnv = new Dotenv();
         // load .env file
@@ -140,13 +141,13 @@ class Kernel implements LoggerAwareInterface
         if (is_dir($directory)) {
             $scan = scandir($directory);
             unset($scan[0], $scan[1]); //unset . and ..
-            if (!file_exists($directory."/.noInclude")) {
+            if (!file_exists($directory. DIRECTORY_SEPARATOR . ".noInclude")) {
                 foreach ($scan as $file) {
-                    if (is_dir($directory."/".$file)) {
-                        self::loadDir($directory."/".$file, $deep + 1);
+                    if (is_dir($directory.DIRECTORY_SEPARATOR.$file)) {
+                        self::loadDir($directory.DIRECTORY_SEPARATOR.$file, $deep + 1);
                     } else {
                         if (strpos($file, '.php') !== false) {
-                            require_once($directory."/".$file);
+                            require_once($directory.DIRECTORY_SEPARATOR.$file);
                         }
                     }
                 }
