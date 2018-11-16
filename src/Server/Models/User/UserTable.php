@@ -66,6 +66,28 @@ class UserTable extends Table
             'primary' => false,
             'options' => null,
         ],
+        'birth_day' => [
+            'name' => 'birth_day',
+            'type' => 'date',
+            'size' => null,
+            'scale' => null,
+            'notnull' => false,
+            'default' => null,
+            'autoinc' => false,
+            'primary' => false,
+            'options' => null,
+        ],
+        'birth_place' => [
+            'name' => 'birth_place',
+            'type' => 'varchar',
+            'size' => 255,
+            'scale' => null,
+            'notnull' => false,
+            'default' => null,
+            'autoinc' => false,
+            'primary' => false,
+            'options' => null,
+        ],
         'first_name' => [
             'name' => 'first_name',
             'type' => 'varchar',
@@ -121,17 +143,6 @@ class UserTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'role' => [
-            'name' => 'role',
-            'type' => 'int',
-            'size' => 10,
-            'scale' => 0,
-            'notnull' => true,
-            'default' => null,
-            'autoinc' => false,
-            'primary' => false,
-            'options' => null,
-        ],
     ];
 
     const COLUMN_NAMES = [
@@ -139,12 +150,13 @@ class UserTable extends Table
         'inserted_at',
         'updated_at',
         'email',
+        'birth_day',
+        'birth_place',
         'first_name',
         'last_name',
         'hashed_password',
         'rgpd',
         'newsletter',
-        'role',
     ];
 
     const COLUMN_DEFAULTS = [
@@ -152,12 +164,13 @@ class UserTable extends Table
         'inserted_at' => null,
         'updated_at' => null,
         'email' => null,
+        'birth_day' => null,
+        'birth_place' => null,
         'first_name' => null,
         'last_name' => null,
         'hashed_password' => null,
         'rgpd' => null,
         'newsletter' => null,
-        'role' => null,
     ];
 
     const PRIMARY_KEY = [

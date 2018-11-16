@@ -36,7 +36,6 @@ class Http
             "http://0.0.0.0:" .$_ENV["HTTP_WORKER_PORT"],
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
-                var_dump(\Workerman\Protocols\HttpCache::$header);
                 try {
                     \App\Ipolitic\Nawpcore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);

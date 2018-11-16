@@ -54,8 +54,7 @@ class Requests implements DataCollectorInterface
         /**
          * @var $request ServerRequest
          */
-        foreach($this->requests as $requestKey => $request) {
-
+        foreach ($this->requests as $requestKey => $request) {
             $servkeys = [   "PHP_SELF",
                 "argv",
                 "argc",
@@ -108,7 +107,7 @@ class Requests implements DataCollectorInterface
                 }
             }
             $scopy = $server;
-            foreach($server as $k => $v) {
+            foreach ($server as $k => $v) {
                 if (!in_array($k, $servkeys)) {
                     unset($scopy[$k]);
                 }

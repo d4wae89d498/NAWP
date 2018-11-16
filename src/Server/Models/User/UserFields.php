@@ -11,12 +11,13 @@ namespace App\Server\Models\User;
  * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
  * @property mixed $email varchar(255)
+ * @property mixed $birth_day date
+ * @property mixed $birth_place varchar(255)
  * @property mixed $first_name varchar(255)
  * @property mixed $last_name varchar(255)
  * @property mixed $hashed_password varchar(255) NOT NULL
  * @property mixed $rgpd bit(1) NOT NULL
  * @property mixed $newsletter bit(1) NOT NULL
- * @property mixed $role int(10,0) NOT NULL
  */
 trait UserFields
 {

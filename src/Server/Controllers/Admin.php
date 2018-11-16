@@ -76,21 +76,21 @@ class Admin extends Controller implements ControllerInterface
         };
         // initializing login fields
         $newTab = [];
-        for ($i = 0; $i < count($loginFields); $i++) :
+        for ($i = 0; $i < count($loginFields); $i++) {
             $newTab[$loginFields[$i]] = ["v" => null, "m" => null];
-        endfor;
-        if (!isset($_POST["accessTypeRadio"])) :
+        }
+        if (!isset($_POST["accessTypeRadio"])) {
             $newTab["accessTypeRadio"] = ["v" => $defaultLoginType, "m" => null];
-        endif;
+        }
         $loginFields = $newTab;
-        if (isset($_POST["accessTypeRadio"])):
-            foreach ($loginFields as $k => $v):
-                if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) :
+        if (isset($_POST["accessTypeRadio"])) {
+            foreach ($loginFields as $k => $v) {
+                if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) {
                     $loginFields[$k]["v"] = $fieldToError($k) === null ? $_POST[$k] : "";
                     $loginFields[$k]["m"] = $fieldToError($k);
-                endif;
-            endforeach;
-        endif;
+                }
+            }
+        }
         /**
          * return true if we can proceed the form
          * @return bool
@@ -105,57 +105,59 @@ class Admin extends Controller implements ControllerInterface
             return $return;
         };
         // proceed the form
-        if (isset($_POST["accessTypeRadio"])) :
-            if ($allFieldsAreCorrect()) :
-                switch ($_POST["accessTypeRadio"]):
+        if (isset($_POST["accessTypeRadio"])) {
+            if ($allFieldsAreCorrect()) {
+                switch ($_POST["accessTypeRadio"]) {
                     case "register":
                                 $loginMessage = "IN REGISTER WITH VALID POSTS";
-                        break;
+                    break;
                     case "login":
                         $userRecord = $atlas
                         ->select(User::class)
                         ->where('email = ', $_POST["firstName"])
                         ->fetchRecord();
-                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
+                        var_dump($userRecord);
+                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) {
                             // wrong email and/or password
-                            $loginMessage = "<font color=\"red\">Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")</font>"; else:
+                            $loginMessage = "<font color=\"red\">Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")</font>";
+                        } else {
                             $_GET["UID"] = $uid = Utils::generateUID(9);
                             $url = "/admin";
-                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
+                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()) {
                                 $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
-                            else:
+                            } else {
                                 $url = Utils::buildUrlParams($url, ["UID" => $uid]);
-                            endif;
+                            }
                             $viewLogger->sessionInstance->set("user_id", 5);
                             $viewLogger->redirectTo($httpResponse, $url, $args);
                             return true;
-                        endif;
+                        }
                     break;
-                endswitch;
-            else:
+                }
+            } else {
                 $loginMessage = "<font color=\"red\">Please fill incorrect fields</font>";
-            endif;
-        endif;
+            }
+        }
         // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
         $newBody->write($viewLogger->render(
-            ["\App\Server\Views\Elements\Admin\Header" => [
-                "page" => "Login",
-                "title" => "TEST".rand(0, 99),
-                "url" => $_SERVER["REQUEST_URI"]]],
-            ["\App\Server\Views\Pages\Admin\Page" =>  [
-                "pass"          => isset($_POST["pin"]) ? $_POST["pin"] : "emptypass!",
-                "html_elements" => [
-                    "\App\Server\Views\Elements\Admin\Login" => [
-                        "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message"   => $loginMessage,
-                        "rand"      => rand(0, 9),
-                        "fields"    => $loginFields,
-                    ],
+        ["\App\Server\Views\Elements\Admin\Header" => [
+            "page" => "Login",
+            "title" => "TEST".rand(0, 99),
+            "url" => $_SERVER["REQUEST_URI"]]],
+        ["\App\Server\Views\Pages\Admin\Page" =>  [
+            "pass"          => isset($_POST["pin"]) ? $_POST["pin"] : "emptypass!",
+            "html_elements" => [
+                "\App\Server\Views\Elements\Admin\Login" => [
+                    "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
+                    "message"   => $loginMessage,
+                    "rand"      => rand(0, 9),
+                    "fields"    => $loginFields,
                 ],
-            ]],
-            ["\App\Server\Views\Elements\Admin\Footer" => []]
-        ));
+            ],
+        ]],
+        ["\App\Server\Views\Elements\Admin\Footer" => []]
+    ));
         $response = $response->withBody($newBody);
         return true;
     }
