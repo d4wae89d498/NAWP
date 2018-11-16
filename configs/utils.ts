@@ -14,7 +14,11 @@ export function bindArr(str: string, obj: object): string {
 export async function isStrInFile(fpath: string, needle: string, linesLimit: number = 15) {
     let wasFound: boolean = false;
     for (let i = 0; i < linesLimit; i++) {
-        wasFound = wasFound || ((await getLine(fpath, i)).indexOf(needle) > -1);
+        let line = (await getLine(fpath, i));
+        wasFound = wasFound || (typeof line !== "undefined" && line.indexOf(needle) > -1);
+        if (wasFound) {
+            break;
+        }
     }
     return wasFound;
 }

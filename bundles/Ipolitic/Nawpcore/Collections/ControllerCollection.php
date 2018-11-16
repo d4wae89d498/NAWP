@@ -61,7 +61,7 @@ class ControllerCollection extends Collection implements LoggerAwareInterface
      */
     public function handle(Kernel &$kernel, ServerRequestInterface &$request, ResponseInterface &$response, $requestType, $packet = null, $array = [], $viewLogger = null): void
     {
-        $benchmark = Kernel::$profiler->start(__METHOD__, ["severity" => "info"],  ($arr = explode("\\", get_class()))[count($arr) - 1]);
+        $benchmark = Kernel::$profiler->start(__METHOD__, ["severity" => "info"], ($arr = explode("\\", get_class()))[count($arr) - 1]);
 
         $kernel->atlas->queries = new Queries();
         $kernel->logger->debug("test");

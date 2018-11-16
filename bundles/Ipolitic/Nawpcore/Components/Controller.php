@@ -57,7 +57,7 @@ class Controller implements LoggerAwareInterface
      */
     public function call(ViewLogger &$viewLogger, ResponseInterface &$response, string $method, $args = []): bool
     {
-        $benchmark = Kernel::$profiler->start(get_class($this) . "::" .$method, ["severity" => "info"],  ($arr = explode("\\", get_class()))[count($arr) - 1]);
+        $benchmark = Kernel::$profiler->start(get_class($this) . "::" .$method, ["severity" => "info"], ($arr = explode("\\", get_class()))[count($arr) - 1]);
         //var_dump("IN CALLL" . $method);
         if (method_exists($this, $method)) {
             $res = $this->$method($viewLogger, $response, $args);

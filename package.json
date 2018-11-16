@@ -17,7 +17,7 @@
   "author": "Faussurier Marc <faussurier.marc@icloud.com>",
   "homepage": "https://github.com/vikpe/react-webpack-typescript-starter",
   "scripts": {
-    "install": "bower install",
+    "install": "bower install && npm run mkdb",
     "udbg": "php -d xdebug.remote_autostart=On src/Server/unixStartup.php start",
     "start-unix": "php src/Server/unixStartup.php start",
     "start-win": "php src/Server/Workers/Http.php src/Server/Workers/SocketIO.php",
@@ -29,6 +29,7 @@
     "watch": "npm run pre-build && concurrently \"npm run watch-client\" \"npm run watch-server\" --kill-others",
     "watch-client": "webpack -d --config=configs/webpack/dev.ts --watch",
     "watch-server": "nodemon --exec \"npm run start\"",
+    "mkdb": "php ./configs/mkdb.php",
     "lint": "tslint './src/Client/**/*.ts*' --format stylish --force",
     "generate-models": "php ./vendor/atlas/cli/bin/atlas-skeleton.php ./.atlas-config.php && npm run cs-fix",
     "pre-cs-fix": "ts-node configs/precsfix.ts",

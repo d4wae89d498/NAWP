@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: fauss
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Components;
-
 
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperQueryFactory;
@@ -30,11 +29,12 @@ class SQL extends Atlas
      * SQL constructor.
      * @param mixed ...$args
      */
-    public function __construct( ... $args) {
+    public function __construct(... $args)
+    {
         $this->queries = new Queries();
-        $transactionClass = AutoCommit::CLASS;
+        $transactionClass = AutoCommit::class;
         $end = end($args);
-        if (is_string($end) && is_subclass_of($end, Transaction::CLASS)) {
+        if (is_string($end) && is_subclass_of($end, Transaction::class)) {
             $transactionClass = array_pop($args);
         }
         $connectionLocator = ConnectionLocator::new(...$args);
@@ -42,7 +42,7 @@ class SQL extends Atlas
             $connectionLocator,
             new MapperQueryFactory()
         );
-       parent::__construct(new MapperLocator($tableLocator), new $transactionClass($connectionLocator));
+        parent::__construct(new MapperLocator($tableLocator), new $transactionClass($connectionLocator));
     }
 
     /**
@@ -88,7 +88,7 @@ class SQL extends Atlas
         $result = parent::select($mapperClass, $whereEquals);
         $query = $result->getStatement();
         if (strlen($query) < 200) {
-            $query = str_replace(PHP_EOL,"",str_replace("<br>", "", $query));
+            $query = str_replace(PHP_EOL, "", str_replace("<br>", "", $query));
         }
         $this->queries->append("<pre><code class=\"sql hljs\">{$query}</code></pre>");
         return $result;
