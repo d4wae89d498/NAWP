@@ -43,7 +43,7 @@ class ProfilerMiddleware extends Middleware implements MiddlewareInterface
         $toolbar = new Toolbar($profiler);
 
         // SNIPET :: LOG REQUEST
-        $toolbar->addDataCollector(new Requests($request));
+        $toolbar->addDataCollector(Kernel::$requests);
 
         Kernel::$profilerLogger = new \Fabfuel\Prophiler\Adapter\Psr\Log\Logger($profiler);
         Kernel::$profiler = $toolbar->getProfiler();

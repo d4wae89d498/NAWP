@@ -14,10 +14,12 @@ use App\Ipolitic\Nawpcore\Components\Collection;
 use App\Ipolitic\Nawpcore\Components\Factory;
 use App\Ipolitic\Nawpcore\Components\Logger;
 use App\Ipolitic\Nawpcore\Components\Packet;
+use App\Ipolitic\Nawpcore\Components\Requests;
 use App\Ipolitic\Nawpcore\Components\SQL;
 use App\Ipolitic\Nawpcore\Factories\CacheFactory;
 use App\Server\PsrFactories;
 use App\Server\PsrMiddlewares;
+use Fabfuel\Prophiler\DataCollector\Request;
 use Fabfuel\Prophiler\Profiler;
 use Jasny\HttpMessage\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -65,6 +67,10 @@ class Kernel implements LoggerAwareInterface
      * @var Profiler
      */
     public static $profiler;
+    /**
+     * @var Requests
+     */
+    public static $requests;
     /**
      * @var PsrFactories
      */
@@ -168,6 +174,7 @@ class Kernel implements LoggerAwareInterface
      */
     public function handle(ServerRequestInterface &$request, ResponseInterface &$response, string $requestType, $packet = null, $array = [], &$viewLogger = null): void
     {
+        self::$requests->requests[] = $request;
         $this->controllerCollection->handle($this, $request, $response, $requestType, $packet, $array, $viewLogger);
     }
 
@@ -190,6 +197,7 @@ class Kernel implements LoggerAwareInterface
         $this->viewCollection           ->setLogger($this->logger);
         $this->middlewareCollection     ->setLogger($this->logger);
         $this->atlas                    = $this->getAtlas();
+        self::$requests                 = new Requests();
         $this->packetAdapterCache       = (new CacheFactory(
             'Symfony\Component\Cache\Simple\FilesystemCache',
         ['' , 0, join(DIRECTORY_SEPARATOR, [$this->cachePath, "packetAdapter"])]

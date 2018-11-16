@@ -1,3 +1,5 @@
+import {JsonViewer} from "./DebugBar/jsonViewer";
+
 const $: JQueryStatic  = window["$"];
 import LoginForm from "./Elements/LoginForm";
 import {SocketClient} from "./SocketClient";

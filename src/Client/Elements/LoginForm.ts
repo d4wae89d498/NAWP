@@ -1,4 +1,4 @@
-const $ = window["$"];
+const $: JQueryStatic = window["$"];
 import {IElement} from "./../NoRedicrection";
 
 export default class LoginForm implements IElement {

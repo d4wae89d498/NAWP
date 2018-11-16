@@ -3,6 +3,8 @@ import * as morphdom from "morphdom";
 const $ = window["$"];
 import {ClientSideRendering} from "./ClientSideRendering";
 import {NoRedirection} from "./NoRedicrection";
+import {JsonViewer} from "./DebugBar/jsonViewer";
+window["jsonviewer"] = JsonViewer;
 export class SocketClient {
     /*
      * Instance of current socket
@@ -35,9 +37,12 @@ export class SocketClient {
                         });
                     });
                 }
-                if (ndata instanceof Object) {
-                    ClientSideRendering.RenderStates(ndata);
-                }
+                (async () => {
+                    if (ndata instanceof Object) {
+                        let str = await ClientSideRendering.RenderStates(ndata);
+                    }
+                    JsonViewer.refresh();
+                })();
             });
         });
     }
