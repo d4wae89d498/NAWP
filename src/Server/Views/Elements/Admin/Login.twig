@@ -21,7 +21,7 @@
                     <label>
                         <input class="loginRadio" type="radio" name="accessTypeRadio" id="optionsRadios1" value="login" {% if fields.accessTypeRadio.v == "login" %}checked="true"{% endif %}>
                         I already have an account <br>
-                        {{ message }}
+                        {{ message | raw }}
                     </label>
                 </div>
             </div>

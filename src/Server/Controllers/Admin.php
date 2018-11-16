@@ -118,7 +118,7 @@ class Admin extends Controller implements ControllerInterface
                         ->fetchRecord();
                         if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) :
                             // wrong email and/or password
-                            $loginMessage = "Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")"; else:
+                            $loginMessage = "<font color=\"red\">Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")</font>"; else:
                             $_GET["UID"] = $uid = Utils::generateUID(9);
                             $url = "/admin";
                             if ($viewLogger->cookiePoolInstance->areCookieEnabled()):
@@ -133,7 +133,7 @@ class Admin extends Controller implements ControllerInterface
                     break;
                 endswitch;
             else:
-                $loginMessage = "Please fill incorrect fields";
+                $loginMessage = "<font color=\"red\">Please fill incorrect fields</font>";
             endif;
         endif;
         // rendering the page

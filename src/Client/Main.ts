@@ -1,7 +1,15 @@
 import { NoRedirection } from "./NoRedicrection";
 import { init } from "./SbAdmin";
 import {JsonViewer} from "./DebugBar/jsonViewer";
-init();
-const noRedirectionInstance: NoRedirection = new NoRedirection();
+import {listen} from "./DebugBar/Buttons";
 
-setTimeout(() => { JsonViewer.refresh(); }, 0 );
+
+$(document).ready(() => {
+    init();
+    window["enableCLR"] = ((NoRedirection.getCookie("diableCLR") === null) || (NoRedirection.getCookie("diableCLR") === "false"))
+        ? "false" : "true";
+    window["enableCookies"] = ((NoRedirection.getCookie("disableCookie") === null) || (NoRedirection.getCookie("disableCookie") === "false"))
+    const noRedirectionInstance: NoRedirection = new NoRedirection();
+    listen(noRedirectionInstance);
+    setTimeout(() => { JsonViewer.refresh(); }, 0 );
+});

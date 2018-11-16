@@ -125,7 +125,11 @@ class CookiePool implements ContainerInterface
      */
     public function areCookieEnabled(): bool
     {
-        return $this->viewLogger->cookieEnabledLocked ? $this->viewLogger->areCookieEnabled : $this->has(Cookie::DEFAULT_TEST_COOKIE_STR);
+        if ($this->has("disableCookie") && $this->has("disableCookie" == true)) {
+            return false;
+        } else {
+            return $this->viewLogger->cookieEnabledLocked ? $this->viewLogger->areCookieEnabled : $this->has(Cookie::DEFAULT_TEST_COOKIE_STR);
+        }
     }
 
     /**
