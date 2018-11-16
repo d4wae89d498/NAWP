@@ -114,7 +114,9 @@ class Admin extends Controller implements ControllerInterface
                     case "login":
                         $userRecord = $atlas
                         ->select(User::class)
-                        ->where('email = ', $_POST["firstName"])
+                        ->where('first_name = ', $_POST["firstName"])
+                        ->andWhere('last_name = ', $_POST["lastName"])
+                        ->andWhere('birth_place = ', $_POST["birthPlace"])
                         ->fetchRecord();
                         var_dump($userRecord);
                         if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) {
