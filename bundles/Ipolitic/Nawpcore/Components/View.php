@@ -167,10 +167,20 @@ abstract class View implements LoggerAwareInterface
      */
     public function twig() : void
     {
-        $className = get_class($this);
-        $explodedClassName = explode("\\", $className);
-        unset($explodedClassName[0]);
-        $path = join(DIRECTORY_SEPARATOR, array_merge([__DIR__, "..", "..", "..", "..", "src"], $explodedClassName));
+        $viewPath = explode("\\", explode("\\Views\\", get_class($this))[1]);
+        $viewRootFolder = explode("\\", explode("Views", get_class($this))[0]);
+        unset($viewRootFolder[0]);
+        $viewRootFolder = array_filter($viewRootFolder);
+        $pathToViews = join(DIRECTORY_SEPARATOR, $viewRootFolder) . DIRECTORY_SEPARATOR . "Views";
+        // a bundle
+        if (count($viewRootFolder) > 1) {
+            $pathToViews = "bundles" . DIRECTORY_SEPARATOR . $pathToViews;
+        }
+        // src folder
+        else {
+            $pathToViews = "src" . DIRECTORY_SEPARATOR . $pathToViews;
+        }
+        $path = join(DIRECTORY_SEPARATOR, array_merge([__DIR__, "..", "..", "..", "..", $pathToViews], $viewPath));
         $path .= ".twig";
         if (file_exists($path)) {
             echo file_get_contents($path);

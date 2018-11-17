@@ -143,6 +143,17 @@ class UserTable extends Table
             'primary' => false,
             'options' => null,
         ],
+        'role' => [
+            'name' => 'role',
+            'type' => 'int',
+            'size' => 10,
+            'scale' => 0,
+            'notnull' => false,
+            'default' => '0',
+            'autoinc' => false,
+            'primary' => false,
+            'options' => null,
+        ],
     ];
 
     const COLUMN_NAMES = [
@@ -157,6 +168,7 @@ class UserTable extends Table
         'hashed_password',
         'rgpd',
         'newsletter',
+        'role',
     ];
 
     const COLUMN_DEFAULTS = [
@@ -171,6 +183,7 @@ class UserTable extends Table
         'hashed_password' => null,
         'rgpd' => null,
         'newsletter' => null,
+        'role' => '0',
     ];
 
     const PRIMARY_KEY = [
