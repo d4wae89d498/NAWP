@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: marc
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\Fields;
-
 
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;

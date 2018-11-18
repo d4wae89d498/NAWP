@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: marc
@@ -8,10 +8,8 @@
 
 namespace App\Ipolitic\Nawpcore\Views;
 
-
 use App\Ipolitic\Nawpcore\Components\FieldView;
 
 class TextArea extends FieldView
 {
-
 }
