@@ -8,10 +8,11 @@
 
 namespace App\Ipolitic\Nawpcore\Components;
 
-use App\Ipolitic\Nawpcore\Exceptions\IncompatibleFieldAndRecordType;
+use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
 use Atlas\Mapper\Record;
 
-class Field
+class Field implements FieldInterface
 {
     /**
      * @var Record
@@ -26,6 +27,10 @@ class Field
      */
     public $column;
     /**
+     * @var array
+     */
+    public $prop;
+    /**
      * Field constructor.
      * @param Record $record
      * @param string $column
@@ -35,15 +40,17 @@ class Field
     public function __construct(Record &$record, string $column, $value = null, array $prop = [])
     {
         $this->record = &$record;
-        $this->value = $value;
-        $this->column = $column;
         $this->prop = $prop;
+        $this->set($value, $column);
     }
 
     public function set($value, $column = "")
     {
         $this->value = $value;
         $this->column = $column != "" ? $column : $this->column;
+        $this->prop["value"] = $this->value;
+        $this->prop["column"] = $this->column;
+        $this->prop["message"] = $this->checkValidity();
     }
 
     public function equalDatabase() : bool
@@ -55,7 +62,18 @@ class Field
         }
     }
 
-    public function save()
+    public function checkValidity()
+    {
+        return true;
+    }
+
+    public function getViews(): array
+    {
+        return [];
+    }
+
+
+    public function save() : void
     {
         $this->record->$this->column = $this->value;
     }

@@ -278,6 +278,20 @@ class ViewLogger
     }
 
     /**
+     * Will render an element using given informations
+     * @param array $elements
+     * @return string
+     */
+    public function renderOne(array $elements) : string
+    {
+        $output = "";
+        $className = array_keys($elements)[0];
+        $states = $elements[$className];
+        $output .= ($this->resurciveHtmlElementsInstancier($className, $states))->render();
+        return $output;
+    }
+
+    /**
      *  Will redirect the http or the socket response
      * @param ResponseInterface $response
      * @param string $url

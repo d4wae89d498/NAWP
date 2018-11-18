@@ -20,6 +20,7 @@ use Atlas\Table\Row;
  * @property mixed $hashed_password varchar(255) NOT NULL
  * @property mixed $rgpd bit(1) NOT NULL
  * @property mixed $newsletter bit(1) NOT NULL
+ * @property mixed $role int(10,0)
  */
 class UserRow extends Row
 {
@@ -35,5 +36,6 @@ class UserRow extends Row
         'hashed_password' => null,
         'rgpd' => null,
         'newsletter' => null,
+        'role' => '0',
     ];
 }

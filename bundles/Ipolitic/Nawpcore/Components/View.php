@@ -188,12 +188,4 @@ abstract class View implements LoggerAwareInterface
             throw new NoTwigFileFound($path);
         }
     }
-
-    /**
-     *     public function twig(): void
-    {
-    echo file_get_contents(__DIR__ . PATH_SEPARATOR .
-    (($a = explode(".",__FILE__))[count($a) - 1]));
-    }
-     */
 }

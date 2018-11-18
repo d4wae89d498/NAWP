@@ -19,9 +19,9 @@ class TextAreaField extends Field implements FieldInterface
         return "";
     }
 
-    public function render(): string
+    public function getViews(): array
     {
         // TODO: Implement render() method.
-        return "";
+        return [];
     }
 }

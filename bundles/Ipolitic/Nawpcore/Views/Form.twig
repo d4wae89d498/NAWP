@@ -1,0 +1,6 @@
+{# @var id              \string #}
+{# @var html_elements   \array #}
+
+<section data-id="{{id}}">
+    {% for element in html_elements %}{{ element | raw}}{% endfor %}
+</section>

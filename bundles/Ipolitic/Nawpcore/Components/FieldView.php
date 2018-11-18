@@ -11,5 +11,11 @@ namespace App\Ipolitic\Nawpcore\Components;
 
 class FieldView extends View
 {
-    public $states = ["message" => "", "value" => "", "column" => "", "placeholder" => "", "icon" => "", "autoCompletionUrl"];
+    public $states = [
+        "message" => "",
+        "value" => "",
+        "column" => "",
+        "placeHolder" => "",
+        "icon" => "",
+        "autoCompletionUrl" => ""];
 }

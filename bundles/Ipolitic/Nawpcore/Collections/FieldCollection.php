@@ -8,8 +8,11 @@
 
 namespace App\Ipolitic\Nawpcore\Collections;
 
-use App\Ipolitic\Nawpcore\Components\{Collection, Field};
+use App\Ipolitic\Nawpcore\Components\{Collection, Field, ViewLogger};
+use App\Ipolitic\Nawpcore\Exceptions\SetViewLoggerNotCalled;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
+use App\Ipolitic\Nawpcore\Views\Form;
 use App\Server\Models\ModelsFields;
 use Atlas\Mapper\Record;
 
@@ -18,9 +21,13 @@ use Atlas\Mapper\Record;
  * Provide storage and match for a controller list
  * @package App\Ipolitic\Nawpcore
  */
-class FieldCollection extends Collection implements FieldInterface
+class FieldCollection extends Collection implements FieldInterface, ViewLoggerAwareInterface
 {
     public const blackListFields = ["row_id", "inserted_at", "updated_at"];
+    /**
+     * @var ViewLogger|null
+     */
+    public $viewLogger;
     /**
      * @var string
      */
@@ -29,9 +36,11 @@ class FieldCollection extends Collection implements FieldInterface
      * @var Record
      */
     public $record;
+
     /**
-     * ControllerCollection constructor.
+     * FieldCollection constructor.
      * @param Record $record
+     * @param array $input
      * @param int $flags
      * @param string $iterator_class
      */
@@ -42,8 +51,15 @@ class FieldCollection extends Collection implements FieldInterface
         parent::__construct($input, $flags, $iterator_class);
     }
 
+    /**
+     * @throws SetViewLoggerNotCalled
+     */
     public function fill(): void
     {
+        if ($this->viewLogger === null) {
+            throw new SetViewLoggerNotCalled();
+        }
+
         $recordModelFields = ModelsFields::getModelsFields()[$this->recordClass];
         $fields =  (
             // remove null values
@@ -70,15 +86,24 @@ class FieldCollection extends Collection implements FieldInterface
 
         foreach ($this->record->getArrayCopy() as $k => $v)
         {
-            if (isset($recordModelFields[$k])) {
-                $field = new $recordModelFields[$k][0]($this->record, $k, $v, $recordModelFields[$k][1]);
+            if (!in_array($k, self::blackListFields)) {
+                $className = $recordModelFields[$k][0];
+                /**
+                 * @var Field $field
+                 */
+                $field = new $className($this->record, $k, $v, $recordModelFields[$k][1]);
                 $this->append($field);
-                // si dasn array => append dans la collection
-                echo "SET IN MODELSFIELDS" . PHP_EOL;
-            } else {
-                // sinon => récupérer fields par défault à partir du type de la collone
             }
         }
+    }
+    /**
+     * @param ViewLogger $viewLogger
+     * @return FieldCollection
+     */
+    public function setViewLogger(ViewLogger &$viewLogger): FieldCollection
+    {
+        $this->viewLogger = &$viewLogger;
+        return $this;
     }
 
     public function checkValidity()
@@ -101,16 +126,20 @@ class FieldCollection extends Collection implements FieldInterface
         }
     }
 
-    public function render() : string
+    public function getViews() : array
     {
-        $output = "";
+        $output = [];
         /**
          * @var FieldInterface $v
          */
         foreach($this->getArrayCopy() as $k => $v) {
-            $output .= $v->render();
+            $output = array_merge($output,  $v->getViews());
         }
 
-        return $output;
+        return [
+            Form::class => [
+                "html_elements" => $output
+            ]
+        ];
     }
 }

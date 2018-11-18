@@ -18,6 +18,7 @@ namespace App\Server\Models\User;
  * @property mixed $hashed_password varchar(255) NOT NULL
  * @property mixed $rgpd bit(1) NOT NULL
  * @property mixed $newsletter bit(1) NOT NULL
+ * @property mixed $role int(10,0)
  */
 trait UserFields
 {

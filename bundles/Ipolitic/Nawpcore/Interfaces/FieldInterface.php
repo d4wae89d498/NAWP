@@ -17,5 +17,5 @@ interface FieldInterface
 
     public function equalDatabase() : bool ;
 
-    public function render() : string;
+    public function getViews() : array ;
 }

@@ -14,6 +14,10 @@ use App\Ipolitic\Nawpcore\Components\Utils;
 use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Components\Controller;
 use App\Ipolitic\Nawpcore\Interfaces\ControllerInterface;
+use App\Server\Views\Elements\Admin\Footer;
+use App\Server\Views\Elements\Admin\Header;
+use App\Server\Views\Elements\Admin\Login;
+use App\Server\Views\Pages\Admin\Page;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -143,23 +147,23 @@ class Admin extends Controller implements ControllerInterface
         // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
         $newBody->write($viewLogger->render(
-        ["\App\Server\Views\Elements\Admin\Header" => [
-            "page" => "Login",
-            "title" => "TEST".rand(0, 99),
-            "url" => $_SERVER["REQUEST_URI"]]],
-        ["\App\Server\Views\Pages\Admin\Page" =>  [
-            "pass"          => isset($_POST["pin"]) ? $_POST["pin"] : "emptypass!",
-            "html_elements" => [
-                "\App\Server\Views\Elements\Admin\Login" => [
-                    "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
-                    "message"   => $loginMessage,
-                    "rand"      => rand(0, 9),
-                    "fields"    => $loginFields,
+            [Header::class => [
+                "page" => "Login",
+                "title" => "TEST".rand(0, 99),
+                "url" => $_SERVER["REQUEST_URI"]]],
+            [Page::class =>  [
+                "pass"          => isset($_POST["pin"]) ? $_POST["pin"] : "emptypass!",
+                "html_elements" => [
+                    Login::class => [
+                        "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
+                        "message"   => $loginMessage,
+                        "rand"      => rand(0, 9),
+                        "fields"    => $loginFields,
+                    ],
                 ],
-            ],
-        ]],
-        ["\App\Server\Views\Elements\Admin\Footer" => []]
-    ));
+            ]],
+            [Footer::class => []]
+        ));
         $response = $response->withBody($newBody);
         return true;
     }
