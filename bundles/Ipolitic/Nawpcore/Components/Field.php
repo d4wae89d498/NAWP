@@ -9,10 +9,13 @@
 namespace App\Ipolitic\Nawpcore\Components;
 
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
-use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
 use App\Ipolitic\Nawpcore\Kernel;
 use Atlas\Mapper\Record;
 
+/**
+ * Class Field
+ * @package App\Ipolitic\Nawpcore\Components
+ */
 class Field implements FieldInterface
 {
     /**
@@ -35,6 +38,7 @@ class Field implements FieldInterface
      * @var array
      */
     public $prop;
+
     /**
      * Field constructor.
      * @param Kernel $kernel
@@ -51,6 +55,10 @@ class Field implements FieldInterface
         $this->set($value, $column);
     }
 
+    /**
+     * @param mixed $value
+     * @param string $column
+     */
     public function set($value, $column = "")
     {
         $this->value = $value;
@@ -59,6 +67,9 @@ class Field implements FieldInterface
         $this->prop["column"] = $this->column;
     }
 
+    /**
+     * @return bool
+     */
     public function equalDatabase() : bool
     {
         if ($this->record->has($this->column)) {
@@ -69,19 +80,28 @@ class Field implements FieldInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function checkValidity()
     {
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function getViews(): array
     {
         return [];
     }
 
-
+    /**
+     * @return void
+     */
     public function save() : void
     {
-        $this->record->$this->column = $this->value;
+        $col = $this->column;
+        $this->record->$col = $this->value;
     }
 }

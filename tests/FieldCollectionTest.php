@@ -211,4 +211,39 @@ class FieldCollectionTest extends TestCase
         $emailField         ->set("ThisFieldNoLongerEqualTheDatabaseONe");
         $this               ->assertFalse($fieldCollection->equalDatabase());
     }
+
+    /**
+     * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
+     * @throws \App\Ipolitic\Nawpcore\Exceptions\SetViewLoggerNotCalled
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function testSave() : void
+    {
+        $kernel                 = new Kernel();
+        $record                 = $kernel->atlas->newRecord(User::class, [
+            "updated_at"        => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "inserted_at"       => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "email"             => "test@icloud.com",
+            "birth_day"         => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "birth_place"       => "London, United Kingdom",
+            "first_name"        => "john",
+            "last_name"         => "doe",
+            "hashed_password"   => "5684",
+            "rgpd"              => true,
+            "newsletter"        => true,
+            "role"              => 0
+        ]);
+        $fieldCollection    = new FieldCollection($kernel, $record);
+        $request            = new ServerRequest();
+        $viewLogger         = new ViewLogger($kernel,$request);
+        $fieldCollection    ->setViewLogger($viewLogger);
+        $fieldCollection    ->fill();
+        /**
+         * @var EmailField $emailField
+         */
+        $emailField         = $fieldCollection->getArrayCopy()["email"];
+        $emailField         ->set("ThisFieldNoLongerEqualTheDatabaseONe");
+        $fieldCollection    ->save();
+        $this               ->assertTrue($fieldCollection->equalDatabase());
+    }
 }
