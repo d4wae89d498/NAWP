@@ -91,7 +91,7 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
                  * @var Field $field
                  */
                 $field = new $className($this->kernel, $this->record, $k, $v, $recordModelFields[$k][1]);
-                $this->append($field);
+                $this[$field->column] = $field;
             }
         }
     }

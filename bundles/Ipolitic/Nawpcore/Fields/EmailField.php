@@ -9,11 +9,7 @@
 namespace App\Ipolitic\Nawpcore\Fields;
 
 use App\Ipolitic\Nawpcore\Components\Field;
-use App\Ipolitic\Nawpcore\Components\ViewLogger;
-use App\Ipolitic\Nawpcore\Exceptions\SetViewLoggerNotCalled;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
-use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
-use App\Ipolitic\Nawpcore\Kernel;
 use App\Ipolitic\Nawpcore\Views\Email;
 
 /**
@@ -43,7 +39,6 @@ class EmailField extends Field implements FieldInterface
      */
     public function getViews(): array
     {
-        var_dump($this->prop);
         return [
             Email::class => $this->prop
         ];

@@ -62,7 +62,8 @@ class Field implements FieldInterface
     public function equalDatabase() : bool
     {
         if ($this->record->has($this->column)) {
-            return $this->value === $this->record->$this->collumn;
+            $col = $this->column;
+            return $this->value === $this->record->$col;
         } else {
             return false;
         }
