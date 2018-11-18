@@ -8,10 +8,13 @@
 
 namespace App\Ipolitic\Nawpcore\Collections;
 
-use App\Ipolitic\Nawpcore\Components\{Collection, Field, ViewLogger};
+use App\Ipolitic\Nawpcore\Components\Collection;
+use App\Ipolitic\Nawpcore\Components\Field;
+use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Exceptions\SetViewLoggerNotCalled;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
 use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
+use App\Ipolitic\Nawpcore\Kernel;
 use App\Ipolitic\Nawpcore\Views\Form;
 use App\Server\Models\ModelsFields;
 use Atlas\Mapper\Record;
@@ -25,6 +28,10 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
 {
     public const blackListFields = ["row_id", "inserted_at", "updated_at"];
     /**
+     * @var Kernel
+     */
+    public $kernel;
+    /**
      * @var ViewLogger|null
      */
     public $viewLogger;
@@ -36,19 +43,34 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
      * @var Record
      */
     public $record;
+    /**
+     * @var callable[]
+     */
+    public $additionalCallbacks;
 
     /**
      * FieldCollection constructor.
+     * @param Kernel $kernel
      * @param Record $record
      * @param array $input
      * @param int $flags
      * @param string $iterator_class
      */
-    public function __construct(Record $record,  array $input = [], int $flags = 0, string $iterator_class = "ArrayIterator")
+    public function __construct(Kernel &$kernel, Record &$record, array $input = [], int $flags = 0, string $iterator_class = "ArrayIterator")
     {
-        $this->record = $record;
+        $this->kernel = &$kernel;
+        $this->record = &$record;
         $this->recordClass = get_class($record);
         parent::__construct($input, $flags, $iterator_class);
+    }
+
+    /**
+     * @param string $column
+     * @param callable $callback
+     */
+    public function addAdditionalValidityCheck(string $column, callable $callback)
+    {
+        $this->additionalCallbacks[$column] = $callback;
     }
 
     /**
@@ -61,37 +83,14 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
         }
 
         $recordModelFields = ModelsFields::getModelsFields()[$this->recordClass];
-        $fields =  (
-            // remove null values
-            array_filter(
-            // convert declared class name to controller instance if match, or null value
-                array_map(
-                    function (string $className) use (&$arguments) {
-                        $componentName = "Fields";
-                        // if a valid $className was given, we continue
-                        if (stristr($className, "\\" . ucfirst($componentName) . "\\") !== false) {
-                            // if the $arguments array is not empty, we simply instantiate $componentName
-                            return $className;
-                        }
-                        // else we stop with a null that will be filtered later
-                        else {
-                            return null;
-                        }
-                    },
-                    // get all declared class names @see http://php.net/manual/pl/function.get-declared-classes.php
-                    \get_declared_classes()
-                 )
-            )
-        );
 
-        foreach ($this->record->getArrayCopy() as $k => $v)
-        {
+        foreach ($this->record->getArrayCopy() as $k => $v) {
             if (!in_array($k, self::blackListFields)) {
                 $className = $recordModelFields[$k][0];
                 /**
                  * @var Field $field
                  */
-                $field = new $className($this->record, $k, $v, $recordModelFields[$k][1]);
+                $field = new $className($this->kernel, $this->record, $k, $v, $recordModelFields[$k][1]);
                 $this->append($field);
             }
         }
@@ -106,14 +105,52 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
         return $this;
     }
 
-    public function checkValidity()
+    /**
+     * @return bool
+     */
+    public function checkValidity() : bool
     {
-        // TODO: Implement checkValidity() method.
+        $result = true;
+        /**
+         * @var Field $field
+         */
+        foreach ($this as $k => $field) {
+            if (!in_array($field->column, self::blackListFields)) {
+                // proceed default check
+                $fieldError = $field->checkValidity();
+                if ($fieldError !== "") {
+                    $field->prop["message"] = $fieldError;
+                    $result = false;
+                } else {
+                    // proceed additional checks if one were given
+                    if (isset($this->additionalCallbacks[$field->column])) {
+                        $fieldError = $this->additionalCallbacks[$field->column]($field->value);
+                        if ($fieldError !== "") {
+                            $field->prop["message"] = $fieldError;
+                            $result = false;
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
+    /**
+     * @return bool
+     */
     public function equalDatabase(): bool
     {
-        // TODO: Implement equalDatabase() method.
+        $equal = true;
+        /**
+         * @var Field $field
+         */
+        foreach ($this->getArrayCopy() as $k => $field) {
+            if (!in_array($field->column, self::blackListFields)) {
+                $equal = $equal && $field->equalDatabase();
+            }
+        }
+        return $equal;
     }
 
     public function save()
@@ -121,7 +158,7 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
         /**
          * @var Field $v
          */
-        foreach($this->getArrayCopy() as $k => $v) {
+        foreach ($this->getArrayCopy() as $k => $v) {
             $v->save();
         }
     }
@@ -132,8 +169,8 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
         /**
          * @var FieldInterface $v
          */
-        foreach($this->getArrayCopy() as $k => $v) {
-            $output = array_merge($output,  $v->getViews());
+        foreach ($this->getArrayCopy() as $k => $v) {
+            $output = array_merge($output, $v->getViews());
         }
 
         return [

@@ -15,12 +15,16 @@ require_once "vendor/autoload.php";
             ->where("row_id = ", 1)
             ->fetchRecord();
 // convert it to a field collection
-    $fieldCollection = new \App\Ipolitic\Nawpcore\Collections\FieldCollection($record);
+    $fieldCollection = new \App\Ipolitic\Nawpcore\Collections\FieldCollection($kernel, $record);
     $request = new \Jasny\HttpMessage\ServerRequest();
 // append all fields to the collection
     $viewLogger = new \App\Ipolitic\Nawpcore\Components\ViewLogger($kernel,$request);
     $fieldCollection->setViewLogger($viewLogger);
     $fieldCollection->fill();
+    $fieldCollection->addAdditionalValidityCheck("email", function($value) {
+        return "SOME ERROR TEST";
+    });
+    var_dump($fieldCollection->checkValidity());
     var_dump($viewLogger->renderOne($fieldCollection->getViews()));
 // should render the user form
 

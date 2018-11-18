@@ -13,6 +13,7 @@ use App\Ipolitic\Nawpcore\Components\ViewLogger;
 use App\Ipolitic\Nawpcore\Exceptions\SetViewLoggerNotCalled;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
 use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
+use App\Ipolitic\Nawpcore\Kernel;
 use App\Ipolitic\Nawpcore\Views\Email;
 
 /**
@@ -21,23 +22,16 @@ use App\Ipolitic\Nawpcore\Views\Email;
  */
 class EmailField extends Field implements FieldInterface
 {
-
     /**
      * @return string
      */
     public function checkValidity(): string
     {
         if (is_string($this->value)) {
-            // check if arobase
-            if (strpos($this->value, "@") !== false) {
-                // check if domain
-                if (strpos(explode("@", $this->value)[1], ".") !== false) {
-                    return "";
-                } else {
-                    return "Your email is not in valid format : *@*.*";
-                }
+            if (preg_match('#^[\w.-]+@[\w.-]+\.[a-z]{2,6}$#i', $this->value)) {
+                return "";
             } else {
-                return "Your email is not in valid format : *@*.*";
+                return "Given value was not a valid email.";
             }
         } else {
             return "Given value was not a string.";

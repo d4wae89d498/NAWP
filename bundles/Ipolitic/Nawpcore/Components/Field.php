@@ -10,10 +10,15 @@ namespace App\Ipolitic\Nawpcore\Components;
 
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
 use App\Ipolitic\Nawpcore\Interfaces\ViewLoggerAwareInterface;
+use App\Ipolitic\Nawpcore\Kernel;
 use Atlas\Mapper\Record;
 
 class Field implements FieldInterface
 {
+    /**
+     * @var Kernel
+     */
+    public $kernel;
     /**
      * @var Record
      */
@@ -32,13 +37,15 @@ class Field implements FieldInterface
     public $prop;
     /**
      * Field constructor.
+     * @param Kernel $kernel
      * @param Record $record
      * @param string $column
      * @param mixed $value
      * @param array $prop
      */
-    public function __construct(Record &$record, string $column, $value = null, array $prop = [])
+    public function __construct(Kernel &$kernel, Record &$record, string $column, $value = null, array $prop = [])
     {
+        $this->kernel = &$kernel;
         $this->record = &$record;
         $this->prop = $prop;
         $this->set($value, $column);
@@ -50,7 +57,6 @@ class Field implements FieldInterface
         $this->column = $column != "" ? $column : $this->column;
         $this->prop["value"] = $this->value;
         $this->prop["column"] = $this->column;
-        $this->prop["message"] = $this->checkValidity();
     }
 
     public function equalDatabase() : bool
