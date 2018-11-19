@@ -10,18 +10,20 @@ namespace App\Ipolitic\Nawpcore\Fields;
 
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Views\Decimal;
 
 class DecimalField extends Field implements FieldInterface
 {
     public function checkValidity(): string
     {
-        // TODO: Implement checkValidity() method.
+        if (!is_numeric($this->value)) {
+            return "The given value was not numeric";
+        }
         return "";
     }
 
     public function getViews(): array
     {
-        // TODO: Implement render() method.
-        return [];
+        return [Decimal::class => $this->prop];
     }
 }

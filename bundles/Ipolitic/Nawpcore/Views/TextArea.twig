@@ -3,7 +3,7 @@
 {# @var column \string #}
 {# @var placeholder \string #}
 
-<div class="form-group input-group {% if message is not null %}has-error{% endif %}">
+<div class="form-group input-group{% if message is not empty %} has-error{% endif %}">
     <span class="input-group-addon"><i class="fa fa-mail-reply"></i> </span>
     <label class="control-label" for="lastName">
         {% if message is not null %}

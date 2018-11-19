@@ -15,8 +15,13 @@ class FilesField extends Field implements FieldInterface
 {
     public function checkValidity(): string
     {
-        // TODO: Implement checkValidity() method.
-        return "";
+        // todo : check file extension for each sub elements
+        $result = json_decode($this->value);
+        if (json_last_error() === JSON_ERROR_NONE or empty($this->value)) {
+            return "";
+        } else {
+            return "Given value was not a string";
+        }
     }
 
     public function getViews(): array

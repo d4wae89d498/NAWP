@@ -10,18 +10,20 @@ namespace App\Ipolitic\Nawpcore\Fields;
 
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Views\Number;
 
 class PinField extends Field implements FieldInterface
 {
     public function checkValidity(): string
     {
-        // TODO: Implement checkValidity() method.
+        if (!filter_var($this->value, FILTER_VALIDATE_INT)) {
+            return "Given value was not a number";
+        }
         return "";
     }
 
     public function getViews(): array
     {
-        // TODO: Implement render() method.
-        return [];
+        return [Number::class => $this->prop];
     }
 }
