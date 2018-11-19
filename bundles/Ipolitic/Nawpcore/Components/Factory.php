@@ -61,7 +61,7 @@ class Factory
 
             return $instance;
         } catch (\Throwable $exception) {
-            Exception::catch($exception);
+            // Exception::catch($exception);
             throw new InvalidImplementation("Invalid implementation given.");
         }
     }

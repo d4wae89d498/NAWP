@@ -135,15 +135,15 @@ abstract class View implements LoggerAwareInterface
         try {
             $html =  $twig->render($str, $this->get("states"));
         } catch (\Exception $ex) {
-            return $ex->getMessage();
+            throw $ex;
         }
         return $html;
     }
 
-    /**
-     * Magic function called when a template is rendered to string
+    /** Magic function called when a template is rendered to string
      * i.e : in <?=new Template()?> format
      * @return string
+     * @throws \Exception
      */
     public function __toString(): string
     {
