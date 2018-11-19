@@ -10,12 +10,6 @@ use App\Ipolitic\Nawpcore\Kernel;
 use Workerman\Worker;
 use Workerman\WebServer;
 use Jasny\HttpMessage\ServerRequest;
-use Whoops\Handler\PrettyPageHandler;
-use Whoops\Run;
-
-class TestEx extends Exception
-{
-}
 
 /**
  * Class Http
@@ -42,37 +36,33 @@ class Http
             "http://0.0.0.0:" .$_ENV["HTTP_WORKER_PORT"],
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
-                    set_error_handler(function ($error) {
-                        echo "GOT ERRRRR";
-                    });
-                    $handler = function ($exception) {
-                        echo "GOT EXCEPTION";
-                    };
-                    set_exception_handler($handler);
+                try {
+
                     \App\Ipolitic\Nawpcore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
-                    try {
-                        throw new TestEx("SOMEWHAT HAPPEND");
-                    } catch (Exception $es) {
-                        $handler($es);
-                        var_dump("BROKEN");
-                    }
                     $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
-                        $kernel,
-                        isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
-                    );
-                    $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
-                    $response = $dispatcher->handle($request);
-                    $connection->send((string)$response->getBody());
-                    /*  } catch (\Exception $ex) {
-                          $connection->send(
-                              isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
-                                  Exception::catch($ex)
-                                  :
-                                  "Our server is currently in maintenance mode. Please come back later."
-                          );
-                          throw $ex;
-                      } */
+                            $kernel,
+                            isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
+                        );
+                        $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
+                        $response = $dispatcher->handle($request);
+                        $connection->send((string)$response->getBody());
+                        /*  } catch (\Exception $ex) {
+                              $connection->send(
+                                  isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
+                                      Exception::catch($ex)
+                                      :
+                                      "Our server is currently in maintenance mode. Please come back later."
+                              );
+                              throw $ex;
+                          } */
+                    return;
+                } catch (Exception $ex) {
+                    echo "error" . PHP_EOL;
+                    var_dump($ex->getMessage());
+                    $connection->send("ERROR : " . $ex->getMessage());
+                    throw new $ex;
+                }
             }
         );
         $this->worker->name = "http";

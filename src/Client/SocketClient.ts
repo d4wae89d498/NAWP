@@ -27,6 +27,24 @@ export class SocketClient {
             this.socket = io("http://127.0.0.1:8070");
             this.socket.on("packetout", function(data) {
                 let ndata = JSON.parse(data);
+                if (typeof ndata["error"] !== "undefined") {
+                    let html = ndata["error"];
+                    let body = $("body");
+                    body.html("<iframe frameborder=\"0\" id=\"someWhat\"></iframe><style> body { margin: 0; " +
+                        "/* Reset default margin */ } " +
+                        "iframe { display: block; " +
+                        "/* iframes are inline by default */" +
+                        " background: #000; border: none; /* Reset default border */ height: 100vh; " +
+                        "/* Viewport-relative units */ width: 100vw; }");
+                    let ifrm: any = document.getElementById("someWhat");
+                    ifrm = ifrm.contentWindow || ifrm.contentDocument.document || ifrm.contentDocument;
+                    ifrm.document.open();
+                    ifrm.document.write(html);
+                    ifrm.document.close();
+                    console.log(ndata);
+                    document.title = "NAWP socket server exception!";
+                    return;
+                }
                 window["csr"] = ClientSideRendering;
                 if (typeof ndata["debugBar"] !== "undefined") {
                     morphdom($("[data-id=\"debugBar\"]")[0], $(ndata["debugBar"])[0]);

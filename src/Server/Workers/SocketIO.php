@@ -50,7 +50,6 @@ class SocketIO
                         );
                         $dispatcher = new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy());
                         $requestHandler->response = $dispatcher->handle($request);
-                        // var_dump((string) $response->getBody());
                         $bodyStr =  (string)$requestHandler->response->getBody();
                         $socket->emit("packetout", $bodyStr);
                         return;
