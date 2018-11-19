@@ -58,7 +58,8 @@
         "middlewares/negotiation": "dev-master",
         "fabfuel/prophiler": "dev-master",
         "phpunit/phpunit": "^7.5@dev",
-        "workerman/phpsocket.io": "dev-master"
+        "workerman/phpsocket.io": "dev-master",
+        "filp/whoops": "^2.2@dev"
     },
     "require-dev": {
         "jaschilz/php-coverage-badger": "dev-master"
