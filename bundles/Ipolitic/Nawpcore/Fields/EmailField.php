@@ -25,12 +25,12 @@ class EmailField extends Field implements FieldInterface
     {
         if (is_string($this->value)) {
             if (preg_match('#^[\w.-]+@[\w.-]+\.[a-z]{2,6}$#i', $this->value)) {
-                return "";
+                return $this->prop["message"] = "";
             } else {
-                return "Given value was not a valid email.";
+                return $this->prop["message"] = "Given value was not a valid email.";
             }
         } else {
-            return "Given value was not a string.";
+            return $this->prop["message"] = "Given value was not a string.";
         }
     }
 
@@ -39,8 +39,6 @@ class EmailField extends Field implements FieldInterface
      */
     public function getViews(): array
     {
-        return [
-            Email::class => $this->prop
-        ];
+        return [Email::class => $this->prop];
     }
 }

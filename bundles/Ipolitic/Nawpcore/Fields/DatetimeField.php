@@ -10,18 +10,44 @@ namespace App\Ipolitic\Nawpcore\Fields;
 
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Views\Date;
+use App\Ipolitic\Nawpcore\Views\Datetime;
 
+/**
+ * Class DateField
+ * @package App\Ipolitic\Nawpcore\Fields
+ */
 class DatetimeField extends Field implements FieldInterface
 {
+    /**
+     * @return string
+     */
     public function checkValidity(): string
     {
-        // TODO: Implement checkValidity() method.
-        return "";
+        $parsedTime = is_int($this->value) ? $this->value : strtotime($this->value);
+        if ($parsedTime === false) {
+            return $this->prop["message"] = "Given value was not a valid date.";
+        }
+        // test if in range
+        if ((($this->prop["range"][0] === null) || ($parsedTime >= $this->prop["range"][0])) &&
+            (($this->prop["range"][0] === null) || ($parsedTime <= $this->prop["range"][1]))) {
+            return $this->prop["message"] =  "";
+        } else {
+            $dateTime1 = new \DateTime();
+            $dateTime1->setTimestamp($this->prop["range"][0]);
+            $dateTime2 = new \DateTime();
+            $dateTime2->setTimestamp($this->prop["range"][1]);
+            return $this->prop["message"] =  ucfirst($this->column) . " must be in range : [" .
+                $dateTime1->format("Y-m-d H:i:s") . "," .
+                $dateTime2->format("Y-m-d H:i:s") ."].";
+        }
     }
 
+    /**
+     * @return array
+     */
     public function getViews(): array
     {
-        // TODO: Implement render() method.
-        return [];
+        return [Datetime::class => $this->prop];
     }
 }

@@ -77,6 +77,11 @@ gulp.task('copy', function() {
     gulp.src(['bower_components/raphael/raphael.js', 'bower_components/raphael/raphael.min.js'])
         .pipe(gulp.dest(destFolder + 'vendor/raphael'));
 
+    gulp.src(['bower_components/eonasdan-bootstrap-datetimepicker/build/**/*'])
+        .pipe(gulp.dest(destFolder + 'vendor/datetimepicker'));
+
+    gulp.src(['bower_components/moment/min/**/*'])
+        .pipe(gulp.dest(destFolder + 'vendor/moment'));
 });
 
 // Run everything

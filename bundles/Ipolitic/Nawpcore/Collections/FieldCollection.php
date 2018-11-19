@@ -114,7 +114,7 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
         /**
          * @var Field $field
          */
-        foreach ($this as $k => $field) {
+        foreach ($this as $k => &$field) {
             if (!in_array($field->column, self::blackListFields)) {
                 // proceed default check
                 $fieldError = $field->checkValidity();

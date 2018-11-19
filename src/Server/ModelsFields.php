@@ -41,7 +41,7 @@ class ModelsFields
             ]],
             UserTable::COLUMNS["birth_day"][n]         => [DateField::class, [
                 "icon"          => "fa fa-envelope-o",
-                "range"         => [-2208988800, 2208988800 + $minAge * 365 * 24 * 60 * 60]
+                "range"         => [-2208988800, time() - $minAge * 365 * 24 * 60 * 60]
             ]],
             UserTable::COLUMNS["birth_place"][n]       => [PlaceField::class, [
                 "icon"          => "fa fa-location-arrow",
