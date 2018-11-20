@@ -23,7 +23,7 @@ class PinField extends Field implements FieldInterface
         "column"        => "",
         "placeholder"   => "",
         "icon"          => "",
-        "range"         => [null, null],
+        "length"         => [null, null],
         "numOnly"       => false
     ];
 
@@ -35,15 +35,14 @@ class PinField extends Field implements FieldInterface
             }
         }
         $intVal = strlen((string) $this->value);
-        if ((($this->prop["range"][0] === null) || ($intVal >= $this->prop["range"][0])) &&
-            (($this->prop["range"][0] === null) || ($intVal <= $this->prop["range"][1]))) {
+        if ((($this->prop["length"][0] === null) || ($intVal >= $this->prop["length"][0])) &&
+            (($this->prop["length"][0] === null) || ($intVal <= $this->prop["length"][1]))) {
             return   "";
         } else {
-            return  "The password length must be in range [" .
-            $this->prop["range"][0] !== null ? $this->prop["range"][0] : "-inf" . "," .
-            $this->prop["range"][0] !== null ? $this->prop["range"][1] : "+inf" ."]";
+            return  "The password length must be in length [" .
+            $this->prop["length"][0] !== null ? $this->prop["length"][0] : "-inf" . "," .
+            $this->prop["length"][0] !== null ? $this->prop["length"][1] : "+inf" ."]";
         }
-        return "";
     }
 
     public function getViews(): array

@@ -59,7 +59,7 @@ class ModelsFields
             ]],
             UserTable::COLUMNS["hashed_password"][n]   => [PinField::class, [
                 "icon"          => "fa fa-key",
-                "length"        => [$minPasswordLength, $maxPasswordLength],
+                "length"         => [$minPasswordLength, $maxPasswordLength],
                 "usePwdHash"    => true,
                 "numOnly"       => true
             ]],
