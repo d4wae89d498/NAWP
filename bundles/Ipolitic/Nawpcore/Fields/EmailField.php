@@ -25,12 +25,12 @@ class EmailField extends Field implements FieldInterface
     {
         if (is_string($this->value)) {
             if (preg_match('#^[\w.-]+@[\w.-]+\.[a-z]{2,6}$#i', $this->value)) {
-                return $this->prop["message"] = "";
+                return  "";
             } else {
-                return $this->prop["message"] = "Given value was not a valid email.";
+                return  "Given value was not a valid email.";
             }
         } else {
-            return $this->prop["message"] = "Given value was not a string.";
+            return  "Given value was not a string.";
         }
     }
 

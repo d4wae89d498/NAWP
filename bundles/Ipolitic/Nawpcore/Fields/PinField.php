@@ -14,10 +14,34 @@ use App\Ipolitic\Nawpcore\Views\Number;
 
 class PinField extends Field implements FieldInterface
 {
+    /**
+     * @var array
+     */
+    public $prop = [
+        "message"       => "",
+        "value"         => "",
+        "column"        => "",
+        "placeholder"   => "",
+        "icon"          => "",
+        "range"         => [null, null],
+        "numOnly"       => false
+    ];
+
     public function checkValidity(): string
     {
-        if (!filter_var($this->value, FILTER_VALIDATE_INT)) {
-            return "Given value was not a number";
+        if ($this->prop["numOnly"] !== false) {
+            if (!filter_var($this->value, FILTER_VALIDATE_INT)) {
+                return  "The pin code must be a number";
+            }
+        }
+        $intVal = strlen((string) $this->value);
+        if ((($this->prop["range"][0] === null) || ($intVal >= $this->prop["range"][0])) &&
+            (($this->prop["range"][0] === null) || ($intVal <= $this->prop["range"][1]))) {
+            return   "";
+        } else {
+            return  "The password length must be in range [" .
+            $this->prop["range"][0] !== null ? $this->prop["range"][0] : "-inf" . "," .
+            $this->prop["range"][0] !== null ? $this->prop["range"][1] : "+inf" ."]";
         }
         return "";
     }

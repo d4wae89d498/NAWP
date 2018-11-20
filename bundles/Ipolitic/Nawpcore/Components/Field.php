@@ -88,6 +88,11 @@ class Field implements FieldInterface
         return true;
     }
 
+    public function checkValiditySetMessage()
+    {
+        $this->prop["message"] = $this->checkValidity();
+    }
+
     /**
      * @return array
      */

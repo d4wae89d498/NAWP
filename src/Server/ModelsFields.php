@@ -60,7 +60,8 @@ class ModelsFields
             UserTable::COLUMNS["hashed_password"][n]   => [PinField::class, [
                 "icon"          => "fa fa-key",
                 "length"        => [$minPasswordLength, $maxPasswordLength],
-                "usePwdHash"    => true
+                "usePwdHash"    => true,
+                "numOnly"       => true
             ]],
             UserTable::COLUMNS["rgpd"][n]              => [ToggleField::class, [
                 "description"   => "I accept the use of my data for only website features, and not adverts, AI or somewhat else. "

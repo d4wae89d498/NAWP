@@ -14,12 +14,35 @@ use App\Ipolitic\Nawpcore\Views\Number;
 
 class NumberField extends Field implements FieldInterface
 {
+    /**
+     * @var array
+     */
+    public $prop = [
+        "message"       => "",
+        "value"         => "",
+        "column"        => "",
+        "placeholder"   => "",
+        "icon"          => "",
+        "range"         => [null, null],
+    ];
+
+    /**
+     * @return string
+     */
     public function checkValidity(): string
     {
         if (!filter_var($this->value, FILTER_VALIDATE_INT)) {
             return "Given value was not a number";
         }
-        return "";
+        $intVal = intval($this->value);
+        if ((($this->prop["range"][0] === null) || ($intVal >= $this->prop["range"][0])) &&
+            (($this->prop["range"][0] === null) || ($intVal <= $this->prop["range"][1]))) {
+            return   "";
+        } else {
+            return  "Value must be in range [" .
+            $this->prop["range"][0] !== null ? $this->prop["range"][0] : "-inf" . "," .
+            $this->prop["range"][0] !== null ? $this->prop["range"][1] : "+inf" ."]";
+        }
     }
 
     public function getViews(): array

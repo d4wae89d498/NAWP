@@ -179,28 +179,28 @@ class Admin extends Controller implements ControllerInterface
     {
         $loginMessage = "SUCCESS";
         $response->getBody()->write("<!DOCTYPE html><html lang=\"en\">" .
-            new \App\Server\Views\Elements\Admin\Header(
+            new \App\Server\Views\Elements\Admin\Header
+            (
                 $viewLogger,
                 $this->logger,
                 ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
             ) .
             "<body>" .
             new \App\Server\Views\Pages\Admin\Page(
-
                 $viewLogger,
                 $this->logger,
                 [
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                     "html_elements" => [
+                        (new \App\Server\Views\Elements\Admin\Login
                         (
-                        new \App\Server\Views\Elements\Admin\Login(
                             $viewLogger,
                             $this->logger,
                             [
-                            "email" => isset($_POST["email"]) ? $_POST["email"] : null,
-                            "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
-                            "rand" => rand(0, 9)
-                        ]
+                                "email" => isset($_POST["email"]) ? $_POST["email"] : null,
+                                "message" => $loginMessage . " SESSION : " . print_r($viewLogger->sessionInstance->getAll(), true),
+                                "rand" => rand(0, 9)
+                            ]
                         )),
                     ],
                 ]

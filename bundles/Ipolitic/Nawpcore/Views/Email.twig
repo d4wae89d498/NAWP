@@ -1,10 +1,13 @@
-{# @var message \string #}
-{# @var value \string #}
-{# @var column \string #}
+{# @var id          \string #}
+{# @var message     \string #}
+{# @var value       \string #}
+{# @var column      \string #}
 {# @var placeHolder \string #}
 
-<div class="form-group input-group{% if message is not empty %} has-error{% endif %}">
-    <span class="input-group-addon"><i class="fa fa-mail-reply"></i> </span>
-    <label class="control-label" for="lastName">{% if message is not empty %}{{ message }}{% endif %}</label>
-    <input type="email" class="form-control" name="{{ column }}" placeholder="{{ placeHolder }}" value="{{ value }}">
-</div>
+<section data-id="{{id}}">
+    <div class="form-group input-group{% if message is not empty %} has-error{% endif %}">
+        <span class="input-group-addon"><i class="fa fa-mail-reply"></i> </span>
+        <label class="control-label" for="lastName">{% if message is not empty %}{{ message }}{% endif %}</label>
+        <input type="email" class="form-control" name="{{ column }}" placeholder="{{ placeHolder }}" value="{{ value }}">
+    </div>
+</section>
