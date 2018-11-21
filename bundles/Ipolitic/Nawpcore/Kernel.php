@@ -11,6 +11,7 @@ use App\Ipolitic\Nawpcore\Collections\ControllerCollection;
 use App\Ipolitic\Nawpcore\Collections\MiddlewareCollection;
 use App\Ipolitic\Nawpcore\Collections\ViewCollection;
 use App\Ipolitic\Nawpcore\Components\Collection;
+use App\Ipolitic\Nawpcore\Traits\DataScrapper;
 use App\Ipolitic\Nawpcore\Components\Logger;
 use App\Ipolitic\Nawpcore\Components\Packet;
 use App\Ipolitic\Nawpcore\Components\Requests;
@@ -32,6 +33,7 @@ use Symfony\Component\Dotenv\Dotenv;
 
 class Kernel implements LoggerAwareInterface
 {
+    use DataScrapper;
     public const MAX_INC_DEEP = 10;
     public const CACHE_FOLDER_NAME = "cache";
     public const ROOT_PATH = [__DIR__, "..", "..", ".."];

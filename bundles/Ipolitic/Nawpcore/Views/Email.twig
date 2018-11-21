@@ -1,4 +1,5 @@
 {# @var id          \string #}
+{# @var icon        \string #}
 {# @var message     \string #}
 {# @var value       \string #}
 {# @var column      \string #}
@@ -6,7 +7,7 @@
 
 <section data-id="{{id}}">
     <div class="form-group input-group{% if message is not empty %} has-error{% endif %}">
-        <span class="input-group-addon"><i class="fa fa-mail-reply"></i> </span>
+        <span class="input-group-addon"><i class="{{ icon }}"></i> </span>
         <label class="control-label" for="lastName">{% if message is not empty %}{{ message }}{% endif %}</label>
         <input type="email" class="form-control" name="{{ column }}" placeholder="{{ placeHolder }}" value="{{ value }}">
     </div>

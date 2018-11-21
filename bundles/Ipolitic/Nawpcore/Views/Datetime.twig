@@ -15,8 +15,14 @@
         </label>
         <input type="text" class="form-control" id="{{ column }}" name="{{ column }}" placeholder="{{ placeholder }}" value="{{ value }}">
         <script type="text/javascript">
-            $(function () {
-                $('#' + '{{  column }}1').datetimepicker();
+            window.addEventListener("load", function() {
+                $(function () {
+                    var defaultValue = new Date($("#" + "birth_day").val() * 1000);
+                    var selector = $("#" + "{{ column }}");
+                    selector.datetimepicker({
+                        date: defaultValue
+                    });
+                });
             });
         </script>
     </div>

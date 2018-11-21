@@ -54,10 +54,7 @@ class Header extends View implements TwigInterface
                 <script src="{{ cssFile }}"></script>
             {% endfor %}
             <script>hljs.initHighlightingOnLoad();</script>
-            <script type="text/javascript" src="/vendor/moment/moment.min.js"></script>
-            <script type="text/javascript" src="/vendor/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-            <link rel="stylesheet" href="/vendor/bootstrap/datetimepicker/css/bootstrap.min.css" />
-            <link rel="stylesheet" href="/vendor/bootstrap/datetimepicker/css/bootstrap-datetimepicker.min.css" />
+            <link rel="stylesheet" href="/vendor/datetimepicker/css/bootstrap-datetimepicker.min.css" />
         </head>
     <?php
     }

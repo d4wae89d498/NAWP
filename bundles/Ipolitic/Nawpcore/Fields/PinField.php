@@ -11,6 +11,7 @@ namespace App\Ipolitic\Nawpcore\Fields;
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
 use App\Ipolitic\Nawpcore\Views\Number;
+use App\Ipolitic\Nawpcore\Views\Pin;
 
 class PinField extends Field implements FieldInterface
 {
@@ -47,6 +48,6 @@ class PinField extends Field implements FieldInterface
 
     public function getViews(): array
     {
-        return [Number::class => $this->prop];
+        return [Pin::class => $this->prop];
     }
 }

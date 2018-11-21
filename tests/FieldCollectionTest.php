@@ -141,11 +141,13 @@ class FieldCollectionTest extends TestCase
     public function testFieldCollectionRendering() : void
     {
         $kernel                 = new Kernel();
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp(0);
         $record                 = $kernel->atlas->newRecord(User::class, [
-            "updated_at"        => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
-            "inserted_at"       => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "updated_at"        => $dateTime->format('Y-m-d H:i:s'),
+            "inserted_at"       => $dateTime->format('Y-m-d H:i:s'),
             "email"             => "test@icloud.com",
-            "birth_day"         => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "birth_day"         => $dateTime->format('Y-m-d H:i:s'),
             "birth_place"       => "London, United Kingdom",
             "first_name"        => "john",
             "last_name"         => "doe",
@@ -184,11 +186,13 @@ class FieldCollectionTest extends TestCase
     public function testEqualDatabase() : void
     {
         $kernel                 = new Kernel();
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp(0);
         $record                 = $kernel->atlas->newRecord(User::class, [
-            "updated_at"        => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
-            "inserted_at"       => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "updated_at"        => $dateTime->format('Y-m-d H:i:s'),
+            "inserted_at"       => $dateTime->format('Y-m-d H:i:s'),
             "email"             => "test@icloud.com",
-            "birth_day"         => \DateTime::createFromFormat('U', 0)->format('Y-m-d H:i:s'),
+            "birth_day"         => $dateTime->format('Y-m-d H:i:s'),
             "birth_place"       => "London, United Kingdom",
             "first_name"        => "john",
             "last_name"         => "doe",

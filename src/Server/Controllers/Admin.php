@@ -7,6 +7,7 @@
  */
 namespace App\Server\Controllers;
 
+use App\Ipolitic\Nawpcore\Collections\FieldCollection;
 use App\Ipolitic\Nawpcore\Components\Query;
 use App\Server\Models\User\User;
 use App\Ipolitic\Nawpcore\Components\Cookie;
@@ -19,6 +20,7 @@ use App\Server\Views\Elements\Admin\Header;
 use App\Server\Views\Elements\Admin\Login;
 use App\Server\Views\Pages\Admin\Page;
 use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\ServerRequest;
 
 /**
  * Class Admin
@@ -144,6 +146,27 @@ class Admin extends Controller implements ControllerInterface
                 $loginMessage = "<font color=\"red\">Please fill incorrect fields</font>";
             }
         }
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp(0);
+        $record                 = $viewLogger->kernel->atlas->newRecord(User::class, [
+            "updated_at"        => $dateTime->format('Y-m-d H:i:s'),
+            "inserted_at"       => $dateTime->format('Y-m-d H:i:s'),
+            "email"             => "test@icloud.com",
+            "birth_day"         => $dateTime->format('Y-m-d H:i:s'),
+            "birth_place"       => "London, United Kingdom",
+            "first_name"        => "john",
+            "last_name"         => "doe",
+            "hashed_password"   => "5684",
+            "rgpd"              => true,
+            "newsletter"        => true,
+            "role"              => 0
+        ]);
+        $fieldCollection    = new FieldCollection($viewLogger->kernel, $record);
+        $request            = new ServerRequest();
+        $viewLogger         = new ViewLogger($viewLogger->kernel,$viewLogger->request);
+        $fieldCollection    ->setViewLogger($viewLogger);
+        $fieldCollection    ->fill();
+        $fieldCollection    ->checkValidity();
         // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
         $newBody->write($viewLogger->render(
@@ -159,6 +182,7 @@ class Admin extends Controller implements ControllerInterface
                         "message"   => $loginMessage,
                         "rand"      => rand(0, 9),
                         "fields"    => $loginFields,
+                        "html_elements" => $fieldCollection->getViews()
                     ],
                 ],
             ]],

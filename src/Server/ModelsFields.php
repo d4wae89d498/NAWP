@@ -9,6 +9,7 @@
 namespace App\Server\Models;
 
 use App\Ipolitic\Nawpcore\Fields\DateField;
+use App\Ipolitic\Nawpcore\Fields\DatetimeField;
 use App\Ipolitic\Nawpcore\Fields\EmailField;
 use App\Ipolitic\Nawpcore\Fields\PinField;
 use App\Ipolitic\Nawpcore\Fields\PlaceField;
@@ -36,11 +37,11 @@ class ModelsFields
         $maxPasswordLength = 6;
         $output[UserRecord::class] = [
             UserTable::COLUMNS["email"][n]             => [EmailField::class, [
-                "icon"          => "fa fa-italic",
+                "icon"          => "fa fa-envelope-o",
                 "placeHolder"   => "Email"
             ]],
-            UserTable::COLUMNS["birth_day"][n]         => [DateField::class, [
-                "icon"          => "fa fa-envelope-o",
+            UserTable::COLUMNS["birth_day"][n]         => [DatetimeField::class, [
+                "icon"          => "fa fa-birthday-cake",
                 "range"         => [-2208988800, time() - $minAge * 365 * 24 * 60 * 60]
             ]],
             UserTable::COLUMNS["birth_place"][n]       => [PlaceField::class, [
