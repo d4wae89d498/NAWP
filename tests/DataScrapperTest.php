@@ -10,6 +10,7 @@ namespace App\Tests;
 
 
 use App\Ipolitic\Nawpcore\Kernel;
+use function GuzzleHttp\Psr7\parse_query;
 use PHPUnit\Framework\TestCase;
 
 class DataScrapperTest extends TestCase

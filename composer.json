@@ -37,8 +37,10 @@
     ],
     "require": {
         "php": ">= 7.2.0",
+        "ext-dom": "*",
         "ext-json": "*",
         "ext-openssl": "*",
+        "ext-libxml": "*",
         "psr/log": "^1.0",
         "psr/container": "^1.0",
         "psr/http-server-middleware": "^1.0",
