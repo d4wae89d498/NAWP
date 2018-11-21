@@ -5,15 +5,12 @@
  * Date: 21/11/18
  * Time: 12:12
  */
-
 namespace App\Tests;
 
-
+use App\Ipolitic\Nawpcore\DataScrapper\WikipediaSearchResults;
 use App\Ipolitic\Nawpcore\Kernel;
-use function GuzzleHttp\Psr7\parse_query;
-use PHPUnit\Framework\TestCase;
 
-class DataScrapperTest extends TestCase
+class DataScrapperTest
 {
     /**
      * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
@@ -22,8 +19,7 @@ class DataScrapperTest extends TestCase
     public function testGet() : void
     {
         $kernel = new Kernel();
-        $cache = $kernel->factories->getCacheFactory()->createCache();
-        $kernel->get("POMME");
-        $this->assertTrue(true);
+         $searchResults = (new WikipediaSearchResults("pomme de terre"))->fill()->fetch();
+
     }
 }

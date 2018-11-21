@@ -25,9 +25,12 @@ trait DataScrapper
     public function search(string $keyWords) : string
     {
         $parsed_params = (Utils::parseUrlParams(self::$URL_SAMPLE));
-        $parsed_params["search"] = "pomme de terre";
+        $parsed_params["search"]    = "pomme de terre";
+        $parsed_params["limit"]     = 500;
+        $parsed_params["offset"]    = 0;
       //  var_dump($parsed_params);
         $new_url = Utils::buildUrlParams("https://fr.wikipedia.org/w/index.php", $parsed_params);
+       // var_dump($new_url);
         return file_get_contents($new_url);
     }
 
@@ -39,7 +42,12 @@ trait DataScrapper
     public function get(string $what, array $params = [])
     {
         $nokogiri = new Nokogiri($this->search($what));
-        //var_dump($nokogiri->get("a")->toArray());
+        $nbResults = intval($nokogiri
+            ->get(".results-info")
+            ->toArray()[0]["data-mw-num-results-total"]);
+        var_dump("NO : ");
+        var_dump($nbResults);
+        //var_dump($nokogiri->get("div.searchresults")->get("a")->toArray());
         /**
          * @var PsrFactories $cacheFactory
          */
