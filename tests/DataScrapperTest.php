@@ -9,8 +9,9 @@ namespace App\Tests;
 
 use App\Ipolitic\Nawpcore\DataScrapper\WikipediaSearchResults;
 use App\Ipolitic\Nawpcore\Kernel;
+use PHPUnit\Framework\TestCase;
 
-class DataScrapperTest
+class DataScrapperTest extends TestCase
 {
     /**
      * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
@@ -19,7 +20,9 @@ class DataScrapperTest
     public function testGet() : void
     {
         $kernel = new Kernel();
-         $searchResults = (new WikipediaSearchResults("pomme de terre"))->fill()->fetch();
+        $searchResults = (new WikipediaSearchResults("pomme de terre"))->fill()->fetch();
+        var_dump($searchResults->allLinks);
+        $this->assertTrue(true);
 
     }
 }

@@ -35,7 +35,7 @@ class WikipediaSearchResults
     /**
      * @var int
      */
-    public $stopAt              = 501;
+    public $stopAt              = 10;
     /**
      * @var string
      */
@@ -122,12 +122,14 @@ class WikipediaSearchResults
         echo "IN FETCH";
         foreach($this->allLinks as $k => $v) {
            if (intval($k) > intval($this->getMax())) {
-               break;
+               unset($this->allLinks[$k]);
+               continue;
            }
            $url = str_replace("{l}", self::LANG,self::BASE_DOMAIN) . $v[0];
            echo "Fetching page : " . $k . " / " . strval($this->getMax()) . " -> " . $url . PHP_EOL;
            $test = file_get_contents($url);
-           sleep(0.2);
+           $this->allLinks[$k] = $test;
+           sleep(self::SLEEP_SECONDS);
        }
        return $this;
     }
