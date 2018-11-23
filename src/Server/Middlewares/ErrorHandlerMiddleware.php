@@ -18,6 +18,7 @@ use Whoops\Exception\Frame;
 use Whoops\Exception\Inspector;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+
 /**
  * Class ProfilerMiddleware
  * @package App\Server\Middlewares
@@ -40,7 +41,7 @@ class ErrorHandlerMiddleware extends Middleware implements MiddlewareInterface
         $errorHandler = new PrettyPageHandler();
         $errorHandler->handleUnconditionally(true);
         $errorHandler->setApplicationPaths([__FILE__]);
-        $errorHandler->addDataTableCallback('Details', function(\Whoops\Exception\Inspector $inspector) {
+        $errorHandler->addDataTableCallback('Details', function (\Whoops\Exception\Inspector $inspector) {
             $data = array();
             $exception = $inspector->getException();
             $data['Exception class'] = get_class($exception);
@@ -72,7 +73,7 @@ class ErrorHandlerMiddleware extends Middleware implements MiddlewareInterface
             $response = $handler->handle($request);
             // throw new Exception("SOMEWHAT HAPPEND");
         } catch (\Exception | \Throwable $es) {
-            foreach($_ENV as $k => $v) {
+            foreach ($_ENV as $k => $v) {
                 unset($_ENV[$k]);
             }
             $html = "";

@@ -28,9 +28,9 @@ trait DataScrapper
         $parsed_params["search"]    = "pomme de terre";
         $parsed_params["limit"]     = 500;
         $parsed_params["offset"]    = 0;
-      //  var_dump($parsed_params);
+        //  var_dump($parsed_params);
         $new_url = Utils::buildUrlParams("https://fr.wikipedia.org/w/index.php", $parsed_params);
-       // var_dump($new_url);
+        // var_dump($new_url);
         return file_get_contents($new_url);
     }
 

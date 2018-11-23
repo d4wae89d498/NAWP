@@ -40,7 +40,7 @@ class DecimalField extends Field implements FieldInterface
             (($this->prop["range"][0] === null) || ($floatVal <= $this->prop["range"][1]))) {
             return   "";
         } else {
-           return  "Value must be in range [" .
+            return  "Value must be in range [" .
            $this->prop["range"][0] !== null ? $this->prop["range"][0] : "-inf" . "," .
            $this->prop["range"][0] !== null ? $this->prop["range"][1] : "+inf" ."]";
         }

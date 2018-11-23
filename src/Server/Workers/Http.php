@@ -37,25 +37,24 @@ class Http
             [],
             function (Workerman\Connection\ConnectionInterface &$connection) use (&$kernel) {
                 try {
-
                     \App\Ipolitic\Nawpcore\Components\PacketAdapter::populateGet();
                     $request = (new ServerRequest())->withGlobalEnvironment(true);
                     $requestHandler = new \App\Ipolitic\Nawpcore\Components\RequestHandler(
                             $kernel,
                             isset($request->getServerParams()["REQUEST_METHOD"]) ? $request->getServerParams()["REQUEST_METHOD"] : "GET"
                         );
-                        $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
-                        $response = $dispatcher->handle($request);
-                        $connection->send((string)$response->getBody());
-                        /*  } catch (\Exception $ex) {
-                              $connection->send(
-                                  isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
-                                      Exception::catch($ex)
-                                      :
-                                      "Our server is currently in maintenance mode. Please come back later."
-                              );
-                              throw $ex;
-                          } */
+                    $dispatcher = (new \Ellipse\Dispatcher($requestHandler, $kernel->middlewareCollection->getArrayCopy()));
+                    $response = $dispatcher->handle($request);
+                    $connection->send((string)$response->getBody());
+                    /*  } catch (\Exception $ex) {
+                          $connection->send(
+                              isset($_ENV["APP_DEBUG"]) && (((int) $_ENV["APP_DEBUG"]) === 1) ?
+                                  Exception::catch($ex)
+                                  :
+                                  "Our server is currently in maintenance mode. Please come back later."
+                          );
+                          throw $ex;
+                      } */
                     return;
                 } catch (Exception $ex) {
                     echo "error" . PHP_EOL;

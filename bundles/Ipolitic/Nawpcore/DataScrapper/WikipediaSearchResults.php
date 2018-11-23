@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: marc
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\DataScrapper;
-
 
 use App\Ipolitic\Nawpcore\Components\Nokogiri;
 use App\Ipolitic\Nawpcore\Components\Utils;
@@ -66,12 +65,12 @@ class WikipediaSearchResults
      */
     public function setBaseHtml() : self
     {
-        $parsed_params = Utils::parseUrlParams(str_replace("{l}", self::LANG,self::URL_SAMPLE));
+        $parsed_params = Utils::parseUrlParams(str_replace("{l}", self::LANG, self::URL_SAMPLE));
         $parsed_params["search"]    =   $this->keyWords;
         $parsed_params["limit"]     =   self::RESULTS_PER_REQUESTS;
         $parsed_params["offset"]    =   $this->currentOffset;
         //  var_dump($parsed_params);
-        $this->currentSearchurl = Utils::buildUrlParams(str_replace("{l}", self::LANG,self::BASE_URL), $parsed_params);
+        $this->currentSearchurl = Utils::buildUrlParams(str_replace("{l}", self::LANG, self::BASE_URL), $parsed_params);
         // var_dump($new_url);
         $baseHtml =  file_get_contents($this->currentSearchurl);
         $this->html = $baseHtml;
@@ -110,7 +109,9 @@ class WikipediaSearchResults
             echo "Fetching search results url from no " . $i . " to " .$stopAt . " -----> " . $this->currentSearchurl . PHP_EOL;
             $this->setBaseHtml();
             $links = $this->nokogiri->get(".mw-search-result-heading")->get("a")->toArray();
-            $gotMinimalLinks = array_map(function($e){return [$e["href"], $e["title"]];}, $links);
+            $gotMinimalLinks = array_map(function ($e) {
+                return [$e["href"], $e["title"]];
+            }, $links);
             $this->allLinks = array_merge($this->allLinks, $gotMinimalLinks);
             sleep(self::SLEEP_SECONDS);
         }
@@ -120,17 +121,17 @@ class WikipediaSearchResults
     public function fetch() : self
     {
         echo "IN FETCH";
-        foreach($this->allLinks as $k => $v) {
-           if (intval($k) > intval($this->getMax())) {
-               unset($this->allLinks[$k]);
-               continue;
-           }
-           $url = str_replace("{l}", self::LANG,self::BASE_DOMAIN) . $v[0];
-           echo "Fetching page : " . $k . " / " . strval($this->getMax()) . " -> " . $url . PHP_EOL;
-           $test = file_get_contents($url);
-           $this->allLinks[$k] = $test;
-           sleep(self::SLEEP_SECONDS);
-       }
-       return $this;
+        foreach ($this->allLinks as $k => $v) {
+            if (intval($k) > intval($this->getMax())) {
+                unset($this->allLinks[$k]);
+                continue;
+            }
+            $url = str_replace("{l}", self::LANG, self::BASE_DOMAIN) . $v[0];
+            echo "Fetching page : " . $k . " / " . strval($this->getMax()) . " -> " . $url . PHP_EOL;
+            $test = file_get_contents($url);
+            $this->allLinks[$k] = $test;
+            sleep(self::SLEEP_SECONDS);
+        }
+        return $this;
     }
 }
