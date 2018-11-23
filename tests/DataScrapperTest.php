@@ -7,22 +7,16 @@
  */
 namespace App\Tests;
 
+use App\Ipolitic\Nawpcore\DataScrapper\WikipediaSearch;
 use App\Ipolitic\Nawpcore\DataScrapper\WikipediaSearchResults;
 use App\Ipolitic\Nawpcore\Kernel;
 use PHPUnit\Framework\TestCase;
 
-class DataScrapperTest extends TestCase
+class DataScrapperTest /*extends TestCase*/
 {
-    /**
-     * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
     public function testGet() : void
     {
-        $kernel = new Kernel();
-        $searchResults = (new WikipediaSearchResults("pomme de terre"))->fill()->fetch();
-        var_dump($searchResults->allLinks);
-        $this->assertTrue(true);
-
+        $search = new WikipediaSearch("TEST");
+        var_dump($search->fetch(1)->get(".firstHeading")->toArray());
     }
 }
