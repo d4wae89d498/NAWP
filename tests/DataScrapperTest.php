@@ -7,6 +7,7 @@
  */
 namespace App\Tests;
 
+use App\Ipolitic\Nawpcore\DataScrapper\AdministrativeDivisions\ListParser;
 use App\Ipolitic\Nawpcore\DataScrapper\WikipediaSearchResults;
 use App\Ipolitic\Nawpcore\Kernel;
 use PHPUnit\Framework\TestCase;
@@ -20,8 +21,7 @@ class DataScrapperTest extends TestCase
     public function testGet() : void
     {
         $kernel = new Kernel();
-        $searchResults = (new WikipediaSearchResults("pomme de terre"))->fill()->fetch();
-        var_dump($searchResults->allLinks);
+        $parser = new ListParser();
         $this->assertTrue(true);
 
     }

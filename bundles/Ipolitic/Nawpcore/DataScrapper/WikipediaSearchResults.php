@@ -57,7 +57,7 @@ class WikipediaSearchResults
     public function __construct(string $keyWords, int $stopAt = 0)
     {
         $this->keyWords = $keyWords;
-        $this->stopAt   = $stopAt === 0 ? $this->stopAt : 0;
+        $this->stopAt   = $stopAt;
     }
 
     /**
@@ -90,6 +90,9 @@ class WikipediaSearchResults
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getMax() : int
     {
         return ($a = count($this->allLinks)) > 0 ?
@@ -97,12 +100,10 @@ class WikipediaSearchResults
     }
 
     /**
-     *
+     * @return WikipediaSearchResults
      */
     public function fill() : self
     {
-        echo "IN FILL";
-
         $this->allLinks = [];
         $stopAt = $this->getMax();
         for ($i = 0; $i <= $stopAt; $i += self::RESULTS_PER_REQUESTS) {
@@ -118,9 +119,11 @@ class WikipediaSearchResults
         return $this;
     }
 
+    /**
+     * @return WikipediaSearchResults
+     */
     public function fetch() : self
     {
-        echo "IN FETCH";
         foreach ($this->allLinks as $k => $v) {
             if (intval($k) > intval($this->getMax())) {
                 unset($this->allLinks[$k]);
