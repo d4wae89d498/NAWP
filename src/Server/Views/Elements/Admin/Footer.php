@@ -20,6 +20,8 @@ class Footer extends View implements TwigInterface
             3 => "/js/app.min.js",
             4 => "/vendor/moment/moment.min.js",
             5 => "/vendor/datetimepicker/js/bootstrap-datetimepicker.min.js",
+            6 => "//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+            7 => "/vendor/countries/geodatasource-cr.min.js",
         ],
     ];
 

@@ -20,7 +20,9 @@ class Header extends View implements TwigInterface
             2 => "/css/SbAdmin2.css",
             3 => "/vendor/font-awesome/css/font-awesome.min.css",
             4 => "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css",
-            5 => "//highlightjs.org/static/demo/styles/vs2015.css"
+            5 => "//highlightjs.org/static/demo/styles/vs2015.css",
+            6 => "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
+            7 => "/vendor/countries/geodatasource-countryflag.css",
         ],
         "js" => [
             0 => "https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js",

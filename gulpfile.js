@@ -82,6 +82,9 @@ gulp.task('copy', function() {
 
     gulp.src(['bower_components/moment/min/**/*'])
         .pipe(gulp.dest(destFolder + 'vendor/moment'));
+
+    gulp.src(['bower_components/country-region-dropdown-menu/dist/**/*'])
+        .pipe(gulp.dest(destFolder + 'vendor/countries'));
 });
 
 // Run everything

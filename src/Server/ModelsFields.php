@@ -23,9 +23,7 @@ class ModelsFields
 {
     public static function getModelsFields(): array
     {
-        if (!defined("n")) {
-            define("n", "name");
-        }
+        if (!defined("n")) define("n", "name");
         $output = [];
         /**
          *  USER FIELDS
