@@ -163,7 +163,7 @@ class Admin extends Controller implements ControllerInterface
         ]);
         $fieldCollection    = new FieldCollection($viewLogger->kernel, $record);
         $request            = new ServerRequest();
-        $viewLogger         = new ViewLogger($viewLogger->kernel,$viewLogger->request);
+        $viewLogger         = new ViewLogger($viewLogger->kernel, $viewLogger->request);
         $fieldCollection    ->setViewLogger($viewLogger);
         $fieldCollection    ->fill();
         $fieldCollection    ->checkValidity();
@@ -203,8 +203,7 @@ class Admin extends Controller implements ControllerInterface
     {
         $loginMessage = "SUCCESS";
         $response->getBody()->write("<!DOCTYPE html><html lang=\"en\">" .
-            new \App\Server\Views\Elements\Admin\Header
-            (
+            new \App\Server\Views\Elements\Admin\Header(
                 $viewLogger,
                 $this->logger,
                 ["page" => "Login", "title" => "TEST".rand(0, 99), "url" => $_SERVER["REQUEST_URI"]]
@@ -216,8 +215,7 @@ class Admin extends Controller implements ControllerInterface
                 [
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                     "html_elements" => [
-                        (new \App\Server\Views\Elements\Admin\Login
-                        (
+                        (new \App\Server\Views\Elements\Admin\Login(
                             $viewLogger,
                             $this->logger,
                             [

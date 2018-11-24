@@ -34,7 +34,8 @@ class DateField extends Field implements FieldInterface
      */
     public function checkValidity(): string
     {
-        $undoValue = function () { is_int($this->value) ?
+        $undoValue = function () {
+            is_int($this->value) ?
             is_string($this->value = (new \DateTime())
                 ->setTimestamp(0)
                 ->format("Y-m-d H:i:s"))
