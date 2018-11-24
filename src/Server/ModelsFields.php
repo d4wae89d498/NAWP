@@ -42,33 +42,38 @@ class ModelsFields
          * @var SQL
          */
         $atlas = $kernel->atlas;
-        $roleCategory = $atlas
-            ->select(Categorie::class)
-            ->where("title = ", "roles")
-            ->fetchRecord()
-            ->row_id;
-
-        /**
-         * @var ContentsCategoryRecord[]
-         */
-        $allRoles = $atlas
-            ->select(ContentsCategory::class)
-            ->where("categorie_id = ", $roleCategory)
-            ->fetchRecords();
-        /**
-         * @var Record $role
-         */
-        foreach ($allRoles as $k => $role) {
-            $allRoles[$k] = $atlas->select(Content::class)
-                ->where("row_id = ", $role->getArrayCopy()["content_id"])
-                ->fetchRecord();
-        }
         $list = [];
-        /**
-         * @var Record $v
-         */
-        foreach($allRoles as $k => $v) {
-            $list[] = $v->getArrayCopy()["title"];
+        if (intval(getenv("ENABLE_DATABASE")) === 1) {
+            $roleCategory = $atlas
+                ->select(Categorie::class)
+                ->where("title = ", "roles")
+                ->fetchRecord()
+                ->row_id;
+
+            /**
+             * @var ContentsCategoryRecord[]
+             */
+            $allRoles = $atlas
+                ->select(ContentsCategory::class)
+                ->where("categorie_id = ", $roleCategory)
+                ->fetchRecords();
+            /**
+             * @var Record $role
+             */
+            foreach ($allRoles as $k => $role) {
+                $allRoles[$k] = $atlas->select(Content::class)
+                    ->where("row_id = ", $role->getArrayCopy()["content_id"])
+                    ->fetchRecord();
+            }
+            /**
+             * @var Record $v
+             */
+            foreach ($allRoles as $k => $v) {
+                $list[] = $v->getArrayCopy()["title"];
+            }
+
+        } else {
+            $list = [0 => "admin", 1 => "user"];
         }
         $minAge = 18;
         $minFirstNameLength = $minLastNameLength = 3;
