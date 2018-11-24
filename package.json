@@ -73,6 +73,7 @@
     "bower": "^1.8.4",
     "concurrently": "^4.0.1",
     "copy-dir": "^0.4.0",
+    "country-region-selector": "^0.5.1",
     "dotenv": "^6.1.0",
     "jquery": "^3.3.1",
     "morphdom": "^2.3.3",
