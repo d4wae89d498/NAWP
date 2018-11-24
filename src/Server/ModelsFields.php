@@ -63,9 +63,11 @@ class ModelsFields
                 "numOnly"       => true
             ]],
             UserTable::COLUMNS["rgpd"][n]              => [ToggleField::class, [
+                "icon"          => "fa fa-legal",
                 "description"   => "I accept the use of my data for only website features, and not adverts, AI or somewhat else. "
             ]],
             UserTable::COLUMNS["newsletter"][n]        => [ToggleField::class, [
+                "icon"          => "fa fa-newspaper-o",
                 "description"   => "I want to stay informed with the help of the newsletter. ",
                 "requiered"     => true
             ]],

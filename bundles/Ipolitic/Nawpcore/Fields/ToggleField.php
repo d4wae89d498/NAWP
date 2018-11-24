@@ -10,6 +10,7 @@ namespace App\Ipolitic\Nawpcore\Fields;
 
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Views\Toggle;
 
 class ToggleField extends Field implements FieldInterface
 {
@@ -22,6 +23,8 @@ class ToggleField extends Field implements FieldInterface
     public function getViews(): array
     {
         // TODO: Implement render() method.
-        return [];
+        return [
+            Toggle::class => $this->prop
+        ];
     }
 }

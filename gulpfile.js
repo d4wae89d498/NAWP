@@ -85,6 +85,9 @@ gulp.task('copy', function() {
 
     gulp.src(['bower_components/country-region-dropdown-menu/dist/**/*'])
         .pipe(gulp.dest(destFolder + 'vendor/countries'));
+
+    gulp.src(['bower_components/bootstrap-toggle/**/*'])
+        .pipe(gulp.dest(destFolder + 'vendor/toggle'));
 });
 
 // Run everything

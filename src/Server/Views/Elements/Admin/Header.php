@@ -23,12 +23,13 @@ class Header extends View implements TwigInterface
             5 => "//highlightjs.org/static/demo/styles/vs2015.css",
             6 => "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css",
             7 => "/vendor/countries/geodatasource-countryflag.css",
+            8 => "/vendor/toggle/css/bootstrap-toggle.min.css",
         ],
         "js" => [
             0 => "https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js",
             1 => "https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js",
-            2 => "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"
-        ],
+            2 => "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js",
+            ],
         "title" => "Ferme de cornaton",
         "page" => "Admin",
         "url" => "",
