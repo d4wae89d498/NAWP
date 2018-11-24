@@ -77,8 +77,8 @@ class CategorieTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'parent' => [
-            'name' => 'parent',
+        'parent_id' => [
+            'name' => 'parent_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -88,8 +88,8 @@ class CategorieTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'author' => [
-            'name' => 'author',
+        'author_id' => [
+            'name' => 'author_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -107,8 +107,8 @@ class CategorieTable extends Table
         'updated_at',
         'title',
         'content',
-        'parent',
-        'author',
+        'parent_id',
+        'author_id',
     ];
 
     const COLUMN_DEFAULTS = [
@@ -117,8 +117,8 @@ class CategorieTable extends Table
         'updated_at' => null,
         'title' => null,
         'content' => null,
-        'parent' => null,
-        'author' => null,
+        'parent_id' => null,
+        'author_id' => null,
     ];
 
     const PRIMARY_KEY = [

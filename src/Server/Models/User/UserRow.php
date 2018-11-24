@@ -12,15 +12,15 @@ use Atlas\Table\Row;
  * @property mixed $row_id int(10,0) NOT NULL
  * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
- * @property mixed $email varchar(255)
- * @property mixed $birth_day date
  * @property mixed $birth_place varchar(255)
+ * @property mixed $birth_day varchar(255)
+ * @property mixed $email varchar(255)
  * @property mixed $first_name varchar(255)
  * @property mixed $last_name varchar(255)
  * @property mixed $hashed_password varchar(255) NOT NULL
  * @property mixed $rgpd bit(1) NOT NULL
  * @property mixed $newsletter bit(1) NOT NULL
- * @property mixed $role int(10,0)
+ * @property mixed $role_id int(10,0) NOT NULL
  */
 class UserRow extends Row
 {
@@ -28,14 +28,14 @@ class UserRow extends Row
         'row_id' => null,
         'inserted_at' => null,
         'updated_at' => null,
-        'email' => null,
-        'birth_day' => null,
         'birth_place' => null,
+        'birth_day' => null,
+        'email' => null,
         'first_name' => null,
         'last_name' => null,
         'hashed_password' => null,
         'rgpd' => null,
         'newsletter' => null,
-        'role' => '0',
+        'role_id' => null,
     ];
 }

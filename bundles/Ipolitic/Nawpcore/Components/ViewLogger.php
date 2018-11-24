@@ -247,7 +247,7 @@ class ViewLogger
         $cnt = 0;
         if (isset($states["html_elements"])) {
             foreach ($states["html_elements"] as $x => $y) {
-                foreach($y as $subClassName => $subClassStates) {
+                foreach ($y as $subClassName => $subClassStates) {
                     $tmpClassName = $subClassName;
                     $tmpStates = $subClassStates;
                     unset($output["html_elements"][$subClassName]);
@@ -286,11 +286,11 @@ class ViewLogger
      */
     public function renderOne(array $elements) : string
     {
-      //  var_dump($elements);
+        //  var_dump($elements);
         $output = "";
         $className = array_keys($elements)[0];
         $states = $elements[$className];
-       // var_dump($className);
+        // var_dump($className);
         $output .= ($this->resurciveHtmlElementsInstancier($className, $states))->render();
         return $output;
     }

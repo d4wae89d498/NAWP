@@ -32,23 +32,12 @@ CREATE TABLE IF NOT EXISTS `atlas`.`content` (
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` VARCHAR(255) NULL DEFAULT NULL,
   `content` TEXT NULL DEFAULT NULL,
-  `author` INT(11) NULL DEFAULT NULL,
+  `author_id` INT(11) NULL DEFAULT NULL,
   `draft` BIT(1) NULL DEFAULT NULL,
-  `parent` INT(11) NULL DEFAULT NULL,
+  `parent_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`row_id`),
-  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC),
-  INDEX `fk_content_user1_idx` (`author` ASC),
-  INDEX `fk_content_content1_idx` (`parent` ASC),
-  CONSTRAINT `fk_content_user1`
-    FOREIGN KEY (`author`)
-    REFERENCES `atlas`.`user` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_content_content1`
-    FOREIGN KEY (`parent`)
-    REFERENCES `atlas`.`content` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC)
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -70,15 +59,10 @@ CREATE TABLE IF NOT EXISTS `atlas`.`user` (
   `hashed_password` VARCHAR(255) NOT NULL,
   `rgpd` BIT(1) NOT NULL,
   `newsletter` BIT(1) NOT NULL,
-  `role` INT NOT NULL,
+  `role_id` INT NOT NULL,
   PRIMARY KEY (`row_id`),
-  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC),
-  INDEX `fk_user_content_idx` (`role` ASC),
-  CONSTRAINT `fk_user_content`
-    FOREIGN KEY (`role`)
-    REFERENCES `atlas`.`content` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC)
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -94,22 +78,11 @@ CREATE TABLE IF NOT EXISTS `atlas`.`categorie` (
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` VARCHAR(255) NULL DEFAULT NULL,
   `content` TEXT NULL DEFAULT NULL,
-  `parent` INT(11) NULL DEFAULT NULL,
-  `author` INT(11) NOT NULL,
+  `parent_id` INT(11) NULL DEFAULT NULL,
+  `author_id` INT(11) NOT NULL,
   PRIMARY KEY (`row_id`),
-  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC),
-  INDEX `fk_categorie_categorie1_idx` (`parent` ASC),
-  INDEX `fk_categorie_user1_idx` (`author` ASC),
-  CONSTRAINT `fk_categorie_categorie1`
-    FOREIGN KEY (`parent`)
-    REFERENCES `atlas`.`categorie` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_categorie_user1`
-    FOREIGN KEY (`author`)
-    REFERENCES `atlas`.`user` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC)
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -123,8 +96,8 @@ CREATE TABLE IF NOT EXISTS `atlas`.`contents_categories` (
   `row_id` INT(11) NOT NULL AUTO_INCREMENT,
   `inserted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `content` INT(11) NOT NULL,
-  `categorie` INT(11) NOT NULL,
+  `content_id` INT(11) NOT NULL,
+  `categorie_id` INT(11) NOT NULL,
   PRIMARY KEY (`row_id`),
   UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC))
 ENGINE = InnoDB
@@ -138,27 +111,16 @@ DROP TABLE IF EXISTS `atlas`.`log` ;
 
 CREATE TABLE IF NOT EXISTS `atlas`.`log` (
   `row_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `insrted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `inserted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `author` INT(11) NOT NULL,
+  `author_id` INT(11) NOT NULL,
   `model` VARCHAR(255) NOT NULL,
-  `id` INT(11) NOT NULL,
+  `idstr` INT(11) NOT NULL,
   `previous_value` TEXT NOT NULL,
   `new_value` TEXT NOT NULL,
   PRIMARY KEY (`row_id`),
-  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC),
-  INDEX `fk_log_categorie1_idx` (`id` ASC),
-  INDEX `fk_log_user1_idx` (`author` ASC),
-  CONSTRAINT `fk_log_content1`
-    FOREIGN KEY (`id`)
-    REFERENCES `atlas`.`content` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_log_user1`
-    FOREIGN KEY (`author`)
-    REFERENCES `atlas`.`user` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC)
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -177,13 +139,8 @@ CREATE TABLE IF NOT EXISTS `atlas`.`translation` (
   `value` TEXT NOT NULL,
   `author` INT(11) NOT NULL,
   PRIMARY KEY (`row_id`),
-  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC),
-  INDEX `fk_translation_user1_idx` (`author` ASC),
-  CONSTRAINT `fk_translation_user1`
-    FOREIGN KEY (`author`)
-    REFERENCES `atlas`.`user` (`row_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `row_id_UNIQUE` (`row_id` ASC)
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 

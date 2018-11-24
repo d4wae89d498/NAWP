@@ -77,8 +77,8 @@ class ContentTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'author' => [
-            'name' => 'author',
+        'author_id' => [
+            'name' => 'author_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -99,8 +99,8 @@ class ContentTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'parent' => [
-            'name' => 'parent',
+        'parent_id' => [
+            'name' => 'parent_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -118,9 +118,9 @@ class ContentTable extends Table
         'updated_at',
         'title',
         'content',
-        'author',
+        'author_id',
         'draft',
-        'parent',
+        'parent_id',
     ];
 
     const COLUMN_DEFAULTS = [
@@ -129,9 +129,9 @@ class ContentTable extends Table
         'updated_at' => null,
         'title' => null,
         'content' => null,
-        'author' => null,
+        'author_id' => null,
         'draft' => null,
-        'parent' => null,
+        'parent_id' => null,
     ];
 
     const PRIMARY_KEY = [

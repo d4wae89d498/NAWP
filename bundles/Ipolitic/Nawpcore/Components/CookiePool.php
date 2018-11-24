@@ -77,7 +77,7 @@ class CookiePool implements ContainerInterface
             $cookieName,
             array_merge(
                 [Cookie::DEFAULT_TEST_COOKIE_STR],
-                explode(",", $_ENV["COOKIE_WHITELIST"])
+                explode(",", getenv("COOKIE_WHITELIST"))
             )
         );
     }

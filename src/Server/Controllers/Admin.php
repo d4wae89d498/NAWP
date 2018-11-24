@@ -159,7 +159,7 @@ class Admin extends Controller implements ControllerInterface
             "hashed_password"   => "5684",
             "rgpd"              => true,
             "newsletter"        => true,
-            "role"              => 0
+            "role_id"              => 1
         ]);
         $fieldCollection    = new FieldCollection($viewLogger->kernel, $record);
         $request            = new ServerRequest();

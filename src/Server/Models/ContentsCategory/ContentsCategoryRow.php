@@ -12,8 +12,8 @@ use Atlas\Table\Row;
  * @property mixed $row_id int(10,0) NOT NULL
  * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
- * @property mixed $content int(10,0) NOT NULL
- * @property mixed $categorie int(10,0) NOT NULL
+ * @property mixed $content_id int(10,0) NOT NULL
+ * @property mixed $categorie_id int(10,0) NOT NULL
  */
 class ContentsCategoryRow extends Row
 {
@@ -21,7 +21,7 @@ class ContentsCategoryRow extends Row
         'row_id' => null,
         'inserted_at' => null,
         'updated_at' => null,
-        'content' => null,
-        'categorie' => null,
+        'content_id' => null,
+        'categorie_id' => null,
     ];
 }

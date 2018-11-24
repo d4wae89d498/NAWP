@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: marcfsr
@@ -7,7 +7,6 @@
  */
 
 namespace App\Ipolitic\Nawpcore\DataScrapper\AdministrativeDivisions;
-
 
 use App\Ipolitic\Nawpcore\Components\Nokogiri;
 use App\Ipolitic\Nawpcore\DataScrapper\WikipediaSearchResults;
@@ -44,13 +43,15 @@ class ListParser
         }
     }
 
-    public function findWikiTables() : Nokogiri {
+    public function findWikiTables() : Nokogiri
+    {
         return $this->nokogiri->get(".wikitable");
     }
 
-    public function extractRowsFromCountryTables(Nokogiri $tables) : array {
+    public function extractRowsFromCountryTables(Nokogiri $tables) : array
+    {
         $rows =  $tables->get('tbody')->get('tr')->get('td');
         $text = ($rows->toArray());
-        file_put_contents("testt.txt", print_r($text,true));
+        file_put_contents("testt.txt", print_r($text, true));
     }
 }

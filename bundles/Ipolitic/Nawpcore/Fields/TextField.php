@@ -31,18 +31,18 @@ class TextField extends Field implements FieldInterface
         if (!is_string($this->value)) {
             return "Given value was not a vlid string";
         }
-    //   if (preg_match("/[~!@#\$%\^&\*\(\)=\+\|\[\]\{\};\\:\",\.\<\>\?\/]+/", $this->value)) {
-           if ((($this->prop["length"][0] === null) or (strlen($this->value) >= $this->prop["length"][0])) and
+        //   if (preg_match("/[~!@#\$%\^&\*\(\)=\+\|\[\]\{\};\\:\",\.\<\>\?\/]+/", $this->value)) {
+        if ((($this->prop["length"][0] === null) or (strlen($this->value) >= $this->prop["length"][0])) and
                ($this->prop["length"][1] === null) or (strlen($this->value) <= $this->prop["length"][1])) {
-               return "";
-           } else {
-               return "The string length must be between ["
+            return "";
+        } else {
+            return "The string length must be between ["
                    .(string)($this->prop["length"][0]===null?0:$this->prop["length"][0]).","
                    .(string)($this->prop["length"][1]===null?"+inf":$this->prop["length"][1]) ."]";
-           }
-     /*  } else {
-           return "The given string did not match a valid name format";
-       }*/
+        }
+        /*  } else {
+              return "The given string did not match a valid name format";
+          }*/
     }
 
     public function getViews(): array

@@ -55,8 +55,8 @@ class ContentsCategoryTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'content' => [
-            'name' => 'content',
+        'content_id' => [
+            'name' => 'content_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -66,8 +66,8 @@ class ContentsCategoryTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'categorie' => [
-            'name' => 'categorie',
+        'categorie_id' => [
+            'name' => 'categorie_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -83,16 +83,16 @@ class ContentsCategoryTable extends Table
         'row_id',
         'inserted_at',
         'updated_at',
-        'content',
-        'categorie',
+        'content_id',
+        'categorie_id',
     ];
 
     const COLUMN_DEFAULTS = [
         'row_id' => null,
         'inserted_at' => null,
         'updated_at' => null,
-        'content' => null,
-        'categorie' => null,
+        'content_id' => null,
+        'categorie_id' => null,
     ];
 
     const PRIMARY_KEY = [

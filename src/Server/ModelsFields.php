@@ -8,26 +8,68 @@
 
 namespace App\Server\Models;
 
+use App\Ipolitic\Nawpcore\Components\SQL;
 use App\Ipolitic\Nawpcore\Fields\DateField;
 use App\Ipolitic\Nawpcore\Fields\DatetimeField;
 use App\Ipolitic\Nawpcore\Fields\EmailField;
 use App\Ipolitic\Nawpcore\Fields\PinField;
 use App\Ipolitic\Nawpcore\Fields\PlaceField;
 use App\Ipolitic\Nawpcore\Fields\SelectMultipleField;
+use App\Ipolitic\Nawpcore\Fields\SelectOneField;
 use App\Ipolitic\Nawpcore\Fields\TextField;
 use App\Ipolitic\Nawpcore\Fields\ToggleField;
+use App\Ipolitic\Nawpcore\Kernel;
+use App\Server\Models\Categorie\Categorie;
+use App\Server\Models\Content\Content;
+use App\Server\Models\ContentsCategory\ContentsCategory;
+use App\Server\Models\ContentsCategory\ContentsCategoryRecord;
 use App\Server\Models\User\UserRecord;
 use App\Server\Models\User\UserTable;
+use Atlas\Mapper\Record;
 
 class ModelsFields
 {
-    public static function getModelsFields(): array
+    public static function getModelsFields(Kernel &$kernel): array
     {
-        if (!defined("n")) define("n", "name");
+        if (!defined("n")) {
+            define("n", "name");
+        }
         $output = [];
         /**
          *  USER FIELDS
          **/
+        /**
+         * @var SQL
+         */
+        $atlas = $kernel->atlas;
+        $roleCategory = $atlas
+            ->select(Categorie::class)
+            ->where("title = ", "roles")
+            ->fetchRecord()
+            ->row_id;
+
+        /**
+         * @var ContentsCategoryRecord[]
+         */
+        $allRoles = $atlas
+            ->select(ContentsCategory::class)
+            ->where("categorie_id = ", $roleCategory)
+            ->fetchRecords();
+        /**
+         * @var Record $role
+         */
+        foreach ($allRoles as $k => $role) {
+            $allRoles[$k] = $atlas->select(Content::class)
+                ->where("row_id = ", $role->getArrayCopy()["content_id"])
+                ->fetchRecord();
+        }
+        $list = [];
+        /**
+         * @var Record $v
+         */
+        foreach($allRoles as $k => $v) {
+            $list[] = $v->getArrayCopy()["title"];
+        }
         $minAge = 18;
         $minFirstNameLength = $minLastNameLength = 3;
         $maxFirstNameLength = $maxLastNameLength = 255;
@@ -71,9 +113,9 @@ class ModelsFields
                 "description"   => "I want to stay informed with the help of the newsletter. ",
                 "requiered"     => true
             ]],
-            UserTable::COLUMNS["role"][n]              => [SelectMultipleField::class, [
+            UserTable::COLUMNS["role_id"][n]              => [SelectOneField::class, [
                 "description"   => "User role",
-                "list"          => ["",""],
+                "list"          => $list,
             ]]
         ];
 

@@ -82,16 +82,20 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
             throw new SetViewLoggerNotCalled();
         }
 
-        $recordModelFields = ModelsFields::getModelsFields()[$this->recordClass];
+        $recordModelFields = ModelsFields::getModelsFields($this->kernel)[$this->recordClass];
 
         foreach ($this->record->getArrayCopy() as $k => $v) {
             if (!in_array($k, self::blackListFields)) {
-                $className = $recordModelFields[$k][0];
-                /**
-                 * @var Field $field
-                 */
-                $field = new $className($this->kernel, $this->record, $k, $v, $recordModelFields[$k][1]);
-                $this[$field->column] = $field;
+                if (isset($recordModelFields[$k])) {
+                    $className = $recordModelFields[$k][0];
+                    /**
+                     * @var Field $field
+                     */
+                    $field = new $className($this->kernel, $this->record, $k, $v, $recordModelFields[$k][1]);
+                    $this[$field->column] = $field;
+                } else {
+                    echo "Skipping key " . $k . PHP_EOL;
+                }
             }
         }
     }

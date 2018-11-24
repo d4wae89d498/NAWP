@@ -12,8 +12,8 @@ namespace App\Server\Models\Categorie;
  * @property mixed $updated_at datetime NOT NULL
  * @property mixed $title varchar(255)
  * @property mixed $content text(65535)
- * @property mixed $parent int(10,0)
- * @property mixed $author int(10,0) NOT NULL
+ * @property mixed $parent_id int(10,0)
+ * @property mixed $author_id int(10,0) NOT NULL
  */
 trait CategorieFields
 {

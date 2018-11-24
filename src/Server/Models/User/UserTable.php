@@ -55,8 +55,8 @@ class UserTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'email' => [
-            'name' => 'email',
+        'birth_place' => [
+            'name' => 'birth_place',
             'type' => 'varchar',
             'size' => 255,
             'scale' => null,
@@ -68,8 +68,8 @@ class UserTable extends Table
         ],
         'birth_day' => [
             'name' => 'birth_day',
-            'type' => 'date',
-            'size' => null,
+            'type' => 'varchar',
+            'size' => 255,
             'scale' => null,
             'notnull' => false,
             'default' => null,
@@ -77,8 +77,8 @@ class UserTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'birth_place' => [
-            'name' => 'birth_place',
+        'email' => [
+            'name' => 'email',
             'type' => 'varchar',
             'size' => 255,
             'scale' => null,
@@ -143,13 +143,13 @@ class UserTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'role' => [
-            'name' => 'role',
+        'role_id' => [
+            'name' => 'role_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
-            'notnull' => false,
-            'default' => '0',
+            'notnull' => true,
+            'default' => null,
             'autoinc' => false,
             'primary' => false,
             'options' => null,
@@ -160,30 +160,30 @@ class UserTable extends Table
         'row_id',
         'inserted_at',
         'updated_at',
-        'email',
-        'birth_day',
         'birth_place',
+        'birth_day',
+        'email',
         'first_name',
         'last_name',
         'hashed_password',
         'rgpd',
         'newsletter',
-        'role',
+        'role_id',
     ];
 
     const COLUMN_DEFAULTS = [
         'row_id' => null,
         'inserted_at' => null,
         'updated_at' => null,
-        'email' => null,
-        'birth_day' => null,
         'birth_place' => null,
+        'birth_day' => null,
+        'email' => null,
         'first_name' => null,
         'last_name' => null,
         'hashed_password' => null,
         'rgpd' => null,
         'newsletter' => null,
-        'role' => '0',
+        'role_id' => null,
     ];
 
     const PRIMARY_KEY = [

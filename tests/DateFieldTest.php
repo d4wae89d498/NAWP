@@ -40,7 +40,7 @@ class DateFieldTest extends TestCase
             "hashed_password"   => "5684",
             "rgpd"              => true,
             "newsletter"        => true,
-            "role"              => 0
+            "role_id"              => 1
         ]);
         $fieldCollection    = new FieldCollection($kernel, $record);
         $request                = new \Jasny\HttpMessage\ServerRequest();
@@ -78,7 +78,7 @@ class DateFieldTest extends TestCase
             "hashed_password"   => "5684",
             "rgpd"              => true,
             "newsletter"        => true,
-            "role"              => 0
+            "role_id"              => 1
         ]);
         $fieldCollection    = new FieldCollection($kernel, $record);
         $request                = new \Jasny\HttpMessage\ServerRequest();

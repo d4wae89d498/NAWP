@@ -14,9 +14,9 @@ use Atlas\Table\Row;
  * @property mixed $updated_at datetime NOT NULL
  * @property mixed $title varchar(255)
  * @property mixed $content text(65535)
- * @property mixed $author int(10,0)
+ * @property mixed $author_id int(10,0)
  * @property mixed $draft bit(1)
- * @property mixed $parent int(10,0)
+ * @property mixed $parent_id int(10,0)
  */
 class ContentRow extends Row
 {
@@ -26,8 +26,8 @@ class ContentRow extends Row
         'updated_at' => null,
         'title' => null,
         'content' => null,
-        'author' => null,
+        'author_id' => null,
         'draft' => null,
-        'parent' => null,
+        'parent_id' => null,
     ];
 }

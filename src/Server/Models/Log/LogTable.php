@@ -33,8 +33,8 @@ class LogTable extends Table
             'primary' => true,
             'options' => null,
         ],
-        'insrted_at' => [
-            'name' => 'insrted_at',
+        'inserted_at' => [
+            'name' => 'inserted_at',
             'type' => 'datetime',
             'size' => null,
             'scale' => null,
@@ -55,8 +55,8 @@ class LogTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'author' => [
-            'name' => 'author',
+        'author_id' => [
+            'name' => 'author_id',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -77,8 +77,8 @@ class LogTable extends Table
             'primary' => false,
             'options' => null,
         ],
-        'id' => [
-            'name' => 'id',
+        'idstr' => [
+            'name' => 'idstr',
             'type' => 'int',
             'size' => 10,
             'scale' => 0,
@@ -114,22 +114,22 @@ class LogTable extends Table
 
     const COLUMN_NAMES = [
         'row_id',
-        'insrted_at',
+        'inserted_at',
         'updated_at',
-        'author',
+        'author_id',
         'model',
-        'id',
+        'idstr',
         'previous_value',
         'new_value',
     ];
 
     const COLUMN_DEFAULTS = [
         'row_id' => null,
-        'insrted_at' => null,
+        'inserted_at' => null,
         'updated_at' => null,
-        'author' => null,
+        'author_id' => null,
         'model' => null,
-        'id' => null,
+        'idstr' => null,
         'previous_value' => null,
         'new_value' => null,
     ];

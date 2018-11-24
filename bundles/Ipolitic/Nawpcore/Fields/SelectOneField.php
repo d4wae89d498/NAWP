@@ -10,6 +10,7 @@ namespace App\Ipolitic\Nawpcore\Fields;
 
 use App\Ipolitic\Nawpcore\Components\Field;
 use App\Ipolitic\Nawpcore\Interfaces\FieldInterface;
+use App\Ipolitic\Nawpcore\Views\SelectOne;
 
 class SelectOneField extends Field implements FieldInterface
 {
@@ -22,6 +23,6 @@ class SelectOneField extends Field implements FieldInterface
     public function getViews(): array
     {
         // TODO: Implement render() method.
-        return [];
+        return [SelectOne::class => $this->prop];
     }
 }

@@ -10,11 +10,11 @@ use Atlas\Table\Row;
 
 /**
  * @property mixed $row_id int(10,0) NOT NULL
- * @property mixed $insrted_at datetime NOT NULL
+ * @property mixed $inserted_at datetime NOT NULL
  * @property mixed $updated_at datetime NOT NULL
- * @property mixed $author int(10,0) NOT NULL
+ * @property mixed $author_id int(10,0) NOT NULL
  * @property mixed $model varchar(255) NOT NULL
- * @property mixed $id int(10,0) NOT NULL
+ * @property mixed $idstr int(10,0) NOT NULL
  * @property mixed $previous_value text(65535) NOT NULL
  * @property mixed $new_value text(65535) NOT NULL
  */
@@ -22,11 +22,11 @@ class LogRow extends Row
 {
     protected $cols = [
         'row_id' => null,
-        'insrted_at' => null,
+        'inserted_at' => null,
         'updated_at' => null,
-        'author' => null,
+        'author_id' => null,
         'model' => null,
-        'id' => null,
+        'idstr' => null,
         'previous_value' => null,
         'new_value' => null,
     ];
