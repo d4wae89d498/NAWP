@@ -87,27 +87,27 @@ class Session extends Controller implements ControllerInterface
                 [
                     "pass" => isset($_POST["password"]) ? $_POST["password"] : "emptypass!",
                     "html_elements" => [
-                        new \App\Server\Views\Elements\Menu(
+                        [new \App\Server\Views\Elements\Menu(
                             $viewLogger,
                             $this->logger,
                             [
 
                             ]
-                        ),
-                        new \App\Server\Views\Elements\Carousel(
+                        )],
+                        [new \App\Server\Views\Elements\Carousel(
                             $viewLogger,
                             $this->logger,
                             [
 
                             ]
-                        ),
-                        new \App\Server\Views\Elements\Marketing(
+                        )],
+                        [new \App\Server\Views\Elements\Marketing(
                             $viewLogger,
                             $this->logger,
                             [
 
                             ]
-                        ),
+                        )],
                     ],
                 ]
             ) .

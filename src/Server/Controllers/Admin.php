@@ -167,8 +167,10 @@ class Admin extends Controller implements ControllerInterface
         $fieldCollection    ->setViewLogger($viewLogger);
         $fieldCollection    ->fill();
         $fieldCollection    ->checkValidity();
+        //var_dump($fieldCollection->getArrayCopy());
         // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
+        $views = $fieldCollection->getViews();
         $newBody->write($viewLogger->render(
             [Header::class => [
                 "page" => "Login",
@@ -177,13 +179,13 @@ class Admin extends Controller implements ControllerInterface
             [Page::class =>  [
                 "pass"          => isset($_POST["pin"]) ? $_POST["pin"] : "emptypass!",
                 "html_elements" => [
-                    Login::class => [
+                    [Login::class => [
                         "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
                         "message"   => $loginMessage,
                         "rand"      => rand(0, 9),
                         "fields"    => $loginFields,
-                        "html_elements" => $fieldCollection->getViews()
-                    ],
+                        "html_elements" => $views,
+                    ]],
                 ],
             ]],
             [Footer::class => []]

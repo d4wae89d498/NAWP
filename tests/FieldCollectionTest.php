@@ -164,7 +164,7 @@ class FieldCollectionTest extends TestCase
         $fieldCollection    ->checkValidity();
         $statesArray        = $fieldCollection->getViews();
         $this               ->assertIsArray($statesArray);
-        $html               = $viewLogger->renderOne($statesArray);
+        $html               = $viewLogger->renderOne($statesArray[0]);
         $this               ->assertTrue(
             (stristr($html, "name=\"email\"") !== false) && (stristr($html, "has-error") === false)
         );
@@ -174,7 +174,7 @@ class FieldCollectionTest extends TestCase
         $emailField         = $fieldCollection->getArrayCopy()["email"];
         $emailField         ->set("notAnEmail-iclud.com");
         $fieldCollection    ->checkValidity();
-        $html               = $viewLogger->renderOne($fieldCollection->getViews());
+        $html               = $viewLogger->renderOne($fieldCollection->getViews()[0]);
         $this               ->assertTrue(stristr($html, "has-error") !== false);
     }
 

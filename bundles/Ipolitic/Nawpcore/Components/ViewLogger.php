@@ -238,7 +238,7 @@ class ViewLogger
      * @param arra $states
      * @return View
      */
-    public function resurciveHtmlElementsInstancier($className, $states) : View
+    public function resurciveHtmlElementsInstancier($className, $states, $deep = 0) : View
     {
         $output = [];
         foreach ($states as $k => $v) {
@@ -246,11 +246,13 @@ class ViewLogger
         }
         $cnt = 0;
         if (isset($states["html_elements"])) {
-            foreach ($states["html_elements"] as $subClassName => $subClassStates) {
-                $tmpClassName = $subClassName;
-                $tmpStates = $subClassStates;
-                unset($output["html_elements"][$subClassName]);
-                $output["html_elements"][$cnt++] = $this->resurciveHtmlElementsInstancier($tmpClassName, $tmpStates);
+            foreach ($states["html_elements"] as $x => $y) {
+                foreach($y as $subClassName => $subClassStates) {
+                    $tmpClassName = $subClassName;
+                    $tmpStates = $subClassStates;
+                    unset($output["html_elements"][$subClassName]);
+                    $output["html_elements"][$cnt++] = $this->resurciveHtmlElementsInstancier($tmpClassName, $tmpStates, $deep + 1);
+                }
             }
         }
         return new $className($this, $this->kernel->logger, $output);
@@ -284,9 +286,11 @@ class ViewLogger
      */
     public function renderOne(array $elements) : string
     {
+      //  var_dump($elements);
         $output = "";
         $className = array_keys($elements)[0];
         $states = $elements[$className];
+       // var_dump($className);
         $output .= ($this->resurciveHtmlElementsInstancier($className, $states))->render();
         return $output;
     }

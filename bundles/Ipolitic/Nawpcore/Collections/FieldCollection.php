@@ -170,13 +170,19 @@ class FieldCollection extends Collection implements FieldInterface, ViewLoggerAw
          * @var FieldInterface $v
          */
         foreach ($this->getArrayCopy() as $k => $v) {
-            $output = array_merge($output, $v->getViews());
+            $views = $v->getViews();
+            echo "FETCHING COL " . $k . PHP_EOL;
+            $array_key = array_keys($views);
+            if (isset($array_key[0])) {
+                $output[] = $views;
+            } else {
+                echo "The column " . $k . " has not views attached yet. Please fix it.". PHP_EOL;
+            }
         }
-
         return [
-            Form::class => [
+            [Form::class => [
                 "html_elements" => $output
-            ]
+            ]]
         ];
     }
 }
