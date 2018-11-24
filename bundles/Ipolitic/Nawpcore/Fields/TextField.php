@@ -33,7 +33,7 @@ class TextField extends Field implements FieldInterface
         }
     //   if (preg_match("/[~!@#\$%\^&\*\(\)=\+\|\[\]\{\};\\:\",\.\<\>\?\/]+/", $this->value)) {
            if ((($this->prop["length"][0] === null) or (strlen($this->value) >= $this->prop["length"][0])) and
-               ($this->prop["length"][1] === null) or (strlen($this->value) <= $this->prop["length"][0])) {
+               ($this->prop["length"][1] === null) or (strlen($this->value) <= $this->prop["length"][1])) {
                return "";
            } else {
                return "The string length must be between ["
