@@ -46,12 +46,19 @@ class FieldCollectionTest extends TestCase
         $viewLogger             = new ViewLogger($kernel,$request);
         $fieldCollection        ->setViewLogger($viewLogger);
         $fieldCollection        ->fill();
+        $minus = 0;
+        // because _id means a relation column
+        foreach ($record->getArrayCopy() as $k => $v) {
+            if (($k !== "row_id") and (stristr($k, "_id") !== false)) {
+                ++$minus;
+            }
+        }
         /**
          * Checking field collection elements counts
          */
         $this->assertEquals(
             $fieldCollection->count(),
-            count($record->getArrayCopy()) - count(FieldCollection::blackListFields)
+            count($record->getArrayCopy()) - count(FieldCollection::blackListFields) - $minus
         );
         /**
          * Checking elements instances
