@@ -248,10 +248,9 @@ class ViewLogger
         if (isset($states["html_elements"])) {
             foreach ($states["html_elements"] as $x => $y) {
                 foreach ($y as $subClassName => $subClassStates) {
-                    $tmpClassName = $subClassName;
                     $tmpStates = $subClassStates;
                     unset($output["html_elements"][$subClassName]);
-                    $output["html_elements"][$cnt++] = $this->resurciveHtmlElementsInstancier($tmpClassName, $tmpStates, $deep + 1);
+                    $output["html_elements"][$cnt++] = $this->resurciveHtmlElementsInstancier($subClassName, $tmpStates, $deep + 1);
                 }
             }
         }

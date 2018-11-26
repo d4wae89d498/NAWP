@@ -19,100 +19,40 @@
             <div class="form-group">
                 <div class="radio">
                     <label>
-                        <input class="loginRadio" type="radio" name="accessTypeRadio" value="login" {% if fields.accessTypeRadio.v == "login" %}checked="true"{% endif %}>
+                        <input class="loginRadio" type="radio" name="accessTypeRadio" value="login" {% if not registration %}checked="true"{% endif %}>
                         I already have an account <br>
                         {{ message | raw }}
                     </label>
                 </div>
             </div>
-            <div id="commonLoginSection">
-                <div class="form-group input-group {% if fields.firstName.m is not null %}has-error{% endif %}">
-                    <span class="input-group-addon"><i class="fa fa-italic"></i></span>
-                    <label class="control-label" for="firstName">
-                        {% if fields.firstName.m is not null %}
-                            {{ fields.firstName.m }}
-                        {% endif %}
-                    </label>
-                    <input type="text" class="form-control" name="firstName" placeholder="First name" value="{{ fields.firstName.v }}">
-                </div>
-                <div class="form-group input-group {% if fields.lastName.m is not null %}has-error{% endif %}">
-                    <span class="input-group-addon"><i class="fa fa-font"></i> </span>
-                    <label class="control-label" for="lastName">
-                        {% if fields.lastName.m is not null %}
-                            {{ fields.lastName.m }}
-                        {% endif %}
-                    </label>
-                    <input type="text" class="form-control" name="lastName" placeholder="Last name" value="{{ fields.lastName.v }}">
-                </div>
-                <div class="form-group input-group {% if fields.birthPlace.m is not null %}has-error{% endif %}">
-                    <span class="input-group-addon"><span class="glyphicon  glyphicon-map-marker"></span> </span>
-                    <label class="control-label" for="lastName">
-                        {% if fields.birthPlace.m is not null %}
-                            {{ fields.birthPlace.m }}
-                        {% endif %}
-                    </label>
-                    <input type="text" class="form-control" name="birthPlace" placeholder="Birth place" value="{{ fields.birthPlace.v }}">
-                </div>
-                <div class="form-group input-group {% if fields.pin.m is not null %}has-error{% endif %}">
-                    <span class="input-group-addon"><i class="fa fa-key"></i> </span>
-                    <label class="control-label" for="lastName">
-                        {% if fields.pin.m is not null %}
-                            {{ fields.pin.m }}
-                        {% endif %}
-                    </label>
-                    <input class="form-control" placeholder="Pin" name="pin" type="password" value="{{ fields.pin.v }}">
-                </div>
+            <div id="loginSection">
+                {% for key,element in html_elements %}
+                    {% if key == 3 or key == 4 or key == 0 or key == 5 %}
+                        key : {{ key }} <br>
+                        {{ element | raw}}
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="form-group">
                 <div class="radio">
                     <label>
-                        <input class="registerRadio" type="radio" name="accessTypeRadio" value="register"  {% if fields.accessTypeRadio.v == "register" %}checked="true"{% endif %}>
+                        <input class="registerRadio" type="radio" name="accessTypeRadio" value="register"  {% if registration %}checked="true"{% endif %}>
                         I want to create one
                     </label>
                 </div>
             </div>
-            <div id="registrationSection" {% if fields.accessTypeRadio.v == "login" %}style="display: none;"{% endif %}>
-                <div class="form-group input-group {% if fields.birthDay.m is not null %}has-error{% endif %}">
-                    <span class="input-group-addon"><span class="fa fa-birthday-cake"></span> </span>
-                    <label class="control-label" for="lastName">
-                        {% if fields.birthDay.m is not null %}
-                            {{ fields.birthDay.m }}
-                        {% endif %}
-                    </label>
-                    <input type="date" class="form-control" name="birthDay" placeholder="Birth date" value="{{ fields.birthDay.v }}">
-                </div>
-                <div class="form-group input-group {% if fields.pin2.m is not null %}has-error{% endif %}">
-                    <span class="input-group-addon"><i class="fa fa-key"></i> </span>
-                    <label class="control-label" for="lastName">
-                        {% if fields.pin2.m is not null %}
-                            {{ fields.pin2.m }}
-                        {% endif %}
-                    </label>
-                    <input class="form-control" placeholder="Pin confirmation" name="pin2" type="password" value="{{ fields.pin2.v }}">
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input name="remember" type="radio" value="cookie">Remember me using a cookie
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input name="remember" type="radio" value="url">Remember me using url param
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input name="remember" type="radio" value="off">Logout on page exit
-                    </label>
-                </div>
+            <div id="registrationSection" {% if not registration %}style="display: none;"{% endif %}>
+                {% for key,element in html_elements %}
+                    {% if key != 3 and key != 4 and key != 0 and key != 5 and key != 8 %}
+                        key : {{ key }} <br>
+                        {{ element | raw}}
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="form-group input-group">
                 <span class="input-group-addon">  <i class="fa fa-arrow-right"></i></span>
                 <input type="submit" value="Submit" class="btn btn-lg btn-success btn-block" />
             </div>
-            {% for element in html_elements %}
-                {{ element | raw}}
-            {% endfor %}
             <!-- Change this to a button or input when using this as a form -->
         </fieldset>
     </form>

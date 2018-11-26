@@ -66,84 +66,12 @@ class Admin extends Controller implements ControllerInterface
      */
     public function login(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
-        $atlas              = $viewLogger->kernel->atlas;
-        $loginMessage       = "default";
-        $loginFields        = ["firstName", "lastName", "birthPlace", "birthDay", "pin", "pin2", "accessTypeRadio"];
-        $registrationFields = ["birthDay", "pin2"];
-        $defaultLoginType   = "login";
-        /**
-         * convert a field name to an error message, or null if all checks succeed
-         * @param $k
-         * @return null|string
-         */
-        $fieldToError = function ($k) {
-            $upCase = ucfirst($k);
-            return (!empty($_POST[$k]) or !isset($_POST[$k])) ? null : "{$upCase} must not be empty.";
-        };
-        // initializing login fields
-        $newTab = [];
-        for ($i = 0; $i < count($loginFields); $i++) {
-            $newTab[$loginFields[$i]] = ["v" => null, "m" => null];
-        }
-        if (!isset($_POST["accessTypeRadio"])) {
-            $newTab["accessTypeRadio"] = ["v" => $defaultLoginType, "m" => null];
-        }
-        $loginFields = $newTab;
+        $registrationMode = false;
         if (isset($_POST["accessTypeRadio"])) {
-            foreach ($loginFields as $k => $v) {
-                if (isset($_POST["accessTypeRadio"]) && !(($_POST["accessTypeRadio"] == "login") and in_array($k, $registrationFields))) {
-                    $loginFields[$k]["v"] = $fieldToError($k) === null ? $_POST[$k] : "";
-                    $loginFields[$k]["m"] = $fieldToError($k);
-                }
-            }
-        }
-        /**
-         * return true if we can proceed the form
-         * @return bool
-         */
-        $allFieldsAreCorrect = function () use ($loginFields, $fieldToError, $registrationFields) : bool {
-            $return = true;
-            foreach ($loginFields as $k => $v) {
-                if (isset($_POST["accessTypeRadio"]) && (($_POST["accessTypeRadio"] == "login") xor in_array($k, $registrationFields))) {
-                    $return = $return && ($fieldToError($k) == null);
-                }
-            }
-            return $return;
-        };
-        // proceed the form
-        if (isset($_POST["accessTypeRadio"])) {
-            if ($allFieldsAreCorrect()) {
-                switch ($_POST["accessTypeRadio"]) {
-                    case "register":
-                                $loginMessage = "IN REGISTER WITH VALID POSTS";
-                    break;
-                    case "login":
-                        $userRecord = $atlas
-                        ->select(User::class)
-                        ->where('first_name = ', $_POST["firstName"])
-                        ->andWhere('last_name = ', $_POST["lastName"])
-                        ->andWhere('birth_place = ', $_POST["birthPlace"])
-                        ->fetchRecord();
-                        var_dump($userRecord);
-                        if (($userRecord === null) || ($userRecord->hashed_password !== Utils::hashPassword($_POST["pin"]))) {
-                            // wrong email and/or password
-                            $loginMessage = "<font color=\"red\">Mot de passe ou utilisateur incorect (" . sha1($_POST["pin"] . $_ENV["PASSWORD_SALT"]).")</font>";
-                        } else {
-                            $_GET["UID"] = $uid = Utils::generateUID(9);
-                            $url = "/admin";
-                            if ($viewLogger->cookiePoolInstance->areCookieEnabled()) {
-                                $viewLogger->cookiePoolInstance->set(new Cookie("UID", $uid));
-                            } else {
-                                $url = Utils::buildUrlParams($url, ["UID" => $uid]);
-                            }
-                            $viewLogger->sessionInstance->set("user_id", 5);
-                            $viewLogger->redirectTo($httpResponse, $url, $args);
-                            return true;
-                        }
-                    break;
-                }
+            if ($_POST["accessTypeRadio"] === "login") {
+                $registrationMode = false;
             } else {
-                $loginMessage = "<font color=\"red\">Please fill incorrect fields</font>";
+                $registrationMode = true;
             }
         }
         $dateTime = new \DateTime();
@@ -181,9 +109,9 @@ class Admin extends Controller implements ControllerInterface
                 "html_elements" => [
                     [Login::class => [
                         "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message"   => $loginMessage,
+                        "message"   => "test msg",
                         "rand"      => rand(0, 9),
-                        "fields"    => $loginFields,
+                        "registration" => $registrationMode,
                         "html_elements" => $views,
                     ]],
                 ],

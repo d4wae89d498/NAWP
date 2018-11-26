@@ -119,6 +119,7 @@ class ModelsFields
                 "requiered"     => true
             ]],
             UserTable::COLUMNS["role_id"][n]              => [SelectOneField::class, [
+                "icon"          => "fa fa-info",
                 "description"   => "User role",
                 "list"          => $list,
             ]]
