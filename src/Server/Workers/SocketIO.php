@@ -20,6 +20,7 @@ class SocketIO
 
     /**
      * SocketIO constructor.
+     * @throws \App\Ipolitic\Nawpcore\Exceptions\InvalidImplementation
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function __construct()
@@ -34,6 +35,7 @@ class SocketIO
             try {
                 $socket->on("packet", function (array $data) use (&$kernel, $socket) {
                     $kernel->logger->log("Got SOCKET Request", "info");
+                    var_dump($data);
                     try {
                         /**
                          * @var $socket \PHPSocketIO\Socket

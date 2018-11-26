@@ -66,6 +66,7 @@ class Admin extends Controller implements ControllerInterface
      */
     public function login(ViewLogger &$viewLogger, ResponseInterface &$response, array $args = []): bool
     {
+        var_dump($_POST);
         $registrationMode = false;
         if (isset($_POST["accessTypeRadio"])) {
             if ($_POST["accessTypeRadio"] === "login") {
@@ -95,10 +96,11 @@ class Admin extends Controller implements ControllerInterface
         $fieldCollection    ->setViewLogger($viewLogger);
         $fieldCollection    ->fill();
         $fieldCollection    ->checkValidity();
+        $message = print_r($_POST, true);
         //var_dump($fieldCollection->getArrayCopy());
         // rendering the page
         $newBody = $viewLogger->kernel->factories->getStreamFactory()->createStream();
-        $views = $fieldCollection->getViews();
+       $views = $fieldCollection->getViews();
         $newBody->write($viewLogger->render(
             [Header::class => [
                 "page" => "Login",
@@ -109,7 +111,7 @@ class Admin extends Controller implements ControllerInterface
                 "html_elements" => [
                     [Login::class => [
                         "email"     => isset($_POST["email"]) ? $_POST["email"] : null,
-                        "message"   => "test msg",
+                        "message"   => $message,
                         "rand"      => rand(0, 9),
                         "registration" => $registrationMode,
                         "html_elements" => $views,
