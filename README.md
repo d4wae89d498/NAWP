@@ -7,7 +7,6 @@
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/MarcFaussurier)
 
 ## **IPOLITIC/NAWP** 
-###### A simple but powerful future-proof and high performance network oriented framework. It uses combo of both modern typescript and php to deliver amazing performances. 
 
 To install the project, simply run `composer install` for installing server PHP deps. Then run `npm install` or `yarn` in your terminal for installing javascript deps.
 
