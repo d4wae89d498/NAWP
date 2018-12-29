@@ -1,6 +1,5 @@
 [NO MORE MAINTENED, C++/LuaJIT rewriting [NALP] still in progress]
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/MarcFaussurier/NAWP/graphs/commit-activity)
 [![Build Status](https://travis-ci.com/MarcFaussurier/NAWP.svg?branch=master)](https://travis-ci.com/MarcFaussurier/NAWP)
 [![Code Coverage](./tests/clover.svg)](https://github.com/MarcFaussurier/NAWP)
 [![GitHub release](https://img.shields.io/github/tag/MarcFaussurier/NAWP.svg)](https://GitHub.com/MarcFaussurier/NAWP/releases/)
