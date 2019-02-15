@@ -1,4 +1,4 @@
-[NO MORE MAINTENED, C++/LuaJIT rewriting [NALP] still in progress]
+[NO MORE MAINTENED, C++/LuaJIT rewriting still in progress, see : https://github.com/MarcFaussurier/EventLoopForTheEarth]
 
 [![Build Status](https://travis-ci.com/MarcFaussurier/NAWP.svg?branch=master)](https://travis-ci.com/MarcFaussurier/NAWP)
 [![Code Coverage](./tests/clover.svg)](https://github.com/MarcFaussurier/NAWP)
