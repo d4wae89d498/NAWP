@@ -61,17 +61,3 @@ Use `yarn` or `npm run` to run one of the following commands :
  - **Base skeleton** : _Enjoy a fully working CMS with all the basics features that you would expect from it._
  
  - **Extendable architecture** : _Use bundles to share controllers and assets between your projects_
-
-## We are using the best packages out there
-- `twig`..................._For server-side rendering_
-- `twig.js`................_For client-side rendering_
-- `jquery`................._For dom manipulation but with our own javascript states system for perfs. gains._
-- `webpack`................_Fast modules and source code web packing_
-- `typescript`............._Enjoy the best of the javascript powers_
-- `atlas`.................._Models, Models generation and nothing else_
-- `node-sass`.............._.scss files are supported ;)_
-- `socket.io-client`......._socektio client implementation._
-- `nodemon`................_Enjoy server refresh on sourcecode changes !_
-- `iPolitic/Workerman`....._Our own fork of workerman (php async engine)_
-- `iPolitic/phpsocket.io`.._Our own fork of phpsocketio (php socket.io server)_
-- `iPolitic/Bike`......... _Our own fork of Bike (php router)_
