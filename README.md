@@ -54,7 +54,7 @@ Use `yarn` or `npm run` to run one of the following commands :
  
  - **User and admin friendly ORM db models** : _using Atlas_
  
- - **Developer friendly controllers** :  _using our own **POLITIC/SOLEX**_ router
+ - **Developer friendly controllers** 
  
  - **Admin friendly configuration** :  _using a 10 line .env file ( **SYMFONTY/DOTENV** component ) and 2 webpack files_
  
